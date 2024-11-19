@@ -7,7 +7,7 @@
 |:-------------:|:-------:|:-------:|:-------:|
 | **Profile**   | <img src="https://avatars.githubusercontent.com/u/85845302?v=4" width="150"> |<img src="https://avatars.githubusercontent.com/u/128114236?v=4" width="150"> | <img src="https://avatars.githubusercontent.com/u/137850773?v=4" width="150"> |
 | **GitHub ID** | [@yejushin2000](https://github.com/yejushin2000) |[@aaaange](https://github.com/aaaange) | [@Da-413](https://github.com/Da-413) |
-| **Role**      |         |  |
+| **Role**      |         |  |  |
 
 ---
 
@@ -17,13 +17,19 @@
 |:-------------:|:-------:|:-------:|:-------:|
 | **Profile**   | <img src="https://avatars.githubusercontent.com/u/85845302?v=4" width="150"> |<img src="https://avatars.githubusercontent.com/u/128114236?v=4" width="150"> | <img src="https://avatars.githubusercontent.com/u/137850773?v=4" width="150"> |
 | **GitHub ID** | [@yejushin2000](https://github.com/yejushin2000) |[@aaaange](https://github.com/aaaange) | [@Da-413](https://github.com/Da-413) |
-| **Role**      |         |  |
+| **Role**      |         |  |  |
 
 ---
 
 ### 💻 Feature
 
 ---
+
+### 🔑 ERD
+<img src="image/ERD.svg">
+
+---
+
 ### 📆 Calendar
 | 일시 | 내용 |
 |:-------------:|:-------:|
