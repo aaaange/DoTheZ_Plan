@@ -7,7 +7,7 @@
 |:-------------:|:-------:|:-------:|:-------:|
 | **Profile**   | <img src="https://avatars.githubusercontent.com/u/85845302?v=4" width="150"> |<img src="https://avatars.githubusercontent.com/u/128114236?v=4" width="150"> | <img src="https://avatars.githubusercontent.com/u/137850773?v=4" width="150"> |
 | **GitHub ID** | [@yejushin2000](https://github.com/yejushin2000) |[@aaaange](https://github.com/aaaange) | [@Da-413](https://github.com/Da-413) |
-| **Role**      |         |  |  |
+| **Role**      |     인근 은행 조회(MAP)    |  | 메인페이지,  |
 
 ---
 
@@ -17,7 +17,7 @@
 |:-------------:|:-------:|:-------:|:-------:|
 | **Profile**   | <img src="https://avatars.githubusercontent.com/u/85845302?v=4" width="150"> |<img src="https://avatars.githubusercontent.com/u/128114236?v=4" width="150"> | <img src="https://avatars.githubusercontent.com/u/137850773?v=4" width="150"> |
 | **GitHub ID** | [@yejushin2000](https://github.com/yejushin2000) |[@aaaange](https://github.com/aaaange) | [@Da-413](https://github.com/Da-413) |
-| **Role**      |         |  |  |
+| **Role**      |     인근 은행 조회(MAP)    | USER 기능 구현 |  |
 
 ---
 
