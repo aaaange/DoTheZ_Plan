@@ -17,14 +17,14 @@
             placeholder="아이디를 입력해주세요."
             style="flex-grow: 1; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4;"
           />
-          <!-- <button
+          <button
             @click="checkUsername"
             style="padding: 10px 20px; background: #F8C471; border: none; border-radius: 10px; font-size: 16px; color: white; cursor: pointer;"
           >
             중복 확인
           </button>
           <span v-if="usernameCheck === 'success'" style="color: green; font-size: 18px;">✔</span>
-          <span v-else-if="usernameCheck === 'failure'" style="color: red; font-size: 18px;">✖</span> -->
+          <span v-else-if="usernameCheck === 'failure'" style="color: red; font-size: 18px;">✖</span>
         </div>
       </div>
 
@@ -154,30 +154,30 @@ const isCustomDomain = ref(false)
 
 const isPasswordMatch = computed(() => password.value === passwordConfirm.value)
 
-// // 아이디 중복 확인
-// // 아이디 중복 확인
-// async function checkUsername() {
-//   // 중복 확인 요청
-//   if (username.value === '') {
-//     alert('아이디를 입력해주세요.')
-//     return
-//   }
 
-//   try {
-//     // 실제 백엔드 URL로 수정 필요
-//     const response = await axios.post('http://127.0.0.1:8000/accounts/api/v1/check_username/', { username: username.value })
+// 아이디 중복 확인
+async function checkUsername() {
+  // 중복 확인 요청
+  if (username.value === '') {
+    alert('아이디를 입력해주세요.')
+    return
+  }
+
+  try {
+    // 실제 백엔드 URL로 수정 필요
+    const response = await axios.post('http://127.0.0.1:8000/accounts/api/v1/check_username/', { username: username.value })
     
-//     // 서버 응답 처리
-//     if (response.data.isAvailable) {
-//       usernameCheck.value = 'success' // 중복이 없는 경우
-//     } else {
-//       usernameCheck.value = 'failure' // 중복이 있는 경우
-//     }
-//   } catch (error) {
-//     console.error('아이디 중복 확인 중 오류 발생:', error)
-//     alert('서버 오류가 발생했습니다. 다시 시도해주세요.')
-//   }
-// }
+    // 서버 응답 처리
+    if (response.data.isAvailable) {
+      usernameCheck.value = 'success' // 중복이 없는 경우
+    } else {
+      usernameCheck.value = 'failure' // 중복이 있는 경우
+    }
+  } catch (error) {
+    console.error('아이디 중복 확인 중 오류 발생:', error)
+    alert('서버 오류가 발생했습니다. 다시 시도해주세요.')
+  }
+}
 
 
 // 비밀번호 확인
