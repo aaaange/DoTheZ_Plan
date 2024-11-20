@@ -132,3 +132,10 @@ def check_username(request):
     if User.objects.filter(username=username).exists():
         return JsonResponse({'isAvailable': False})  # 중복된 아이디
     return JsonResponse({'isAvailable': True})   # 사용 가능한 아이디
+
+
+@api_view(['GET'])
+def check_authentication(request):
+    if request.user.is_authenticated:
+        return JsonResponse({'is_authenticated': True, 'username': request.user.username})
+    return JsonResponse({'is_authenticated': False})

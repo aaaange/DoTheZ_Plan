@@ -174,8 +174,7 @@ async function checkUsername() {
       usernameCheck.value = 'failure' // 중복이 있는 경우
     }
   } catch (error) {
-    console.error('아이디 중복 확인 중 오류 발생:', error)
-    alert('서버 오류가 발생했습니다. 다시 시도해주세요.')
+    alert('중복 확인에 실패했습니다.')
   }
 }
 
