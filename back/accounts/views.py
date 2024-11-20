@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from .serializers import UserSerializer, RegisterSerializer, ProductSerializer, UserProductSerializer
 from .models import Product, UserProduct
+from django.http import JsonResponse
+from django.contrib.auth.models import User
 
 
 @api_view(['POST'])
@@ -123,3 +125,10 @@ def my_subscribed_products(request):
     products = [user_product.product for user_product in user_products]
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data)
+
+
+def check_username(request):
+    username = request.POST.get('username')
+    if User.objects.filter(username=username).exists():
+        return JsonResponse({'isAvailable': False})  # 중복된 아이디
+    return JsonResponse({'isAvailable': True})   # 사용 가능한 아이디

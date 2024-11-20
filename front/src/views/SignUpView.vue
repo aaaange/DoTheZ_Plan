@@ -28,7 +28,6 @@
         </div>
       </div>
 
-
       <!-- 비밀번호 입력 -->
       <div style="margin-bottom: 20px;">
         <label for="password" style="display: block; color: #585547; font-size: 16px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 400; margin-bottom: 8px;">비밀번호</label>
@@ -56,8 +55,6 @@
         <p v-if="!isPasswordMatch" style="color: red; font-size: 14px; margin-top: 5px;">* 비밀번호가 일치하지 않습니다.</p>
       </div>
 
-
-
       <!-- 이메일 입력 -->
       <div style="margin-bottom: 20px;">
         <label for="email" style="display: block; color: #585547; font-size: 16px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 400; margin-bottom: 8px;">E-Mail</label>
@@ -66,6 +63,7 @@
           <input
             id="email"
             type="text"
+            v-model="emailId"
             placeholder="아이디"
             style="flex-grow: 1; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4;"
           />
@@ -78,7 +76,7 @@
                 placeholder="직접 입력"
                 v-model="customDomain"
                 @blur="toggleCustomDomain(false)"
-                style="width: 100%; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4; box-sizing: border-box;"
+                style="width: 100%; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4;"
               />
             </template>
             <template v-else>
@@ -86,7 +84,7 @@
                 id="email-domain-select"
                 v-model="emailDomain"
                 @change="checkCustomDomain"
-                style="width: 100%; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4; box-sizing: border-box;"
+                style="width: 100%; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4;"
               >
                 <option value="" disabled selected>도메인 선택</option>
                 <option value="naver.com">naver.com</option>
@@ -101,12 +99,14 @@
         </div>
       </div>
 
+
       <!-- 휴대폰 번호 입력 -->
       <div style="margin-bottom: 20px;">
         <label for="phone" style="display: block; color: #585547; font-size: 16px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 400; margin-bottom: 8px;">휴대폰 번호</label>
         <input
           id="phone"
           type="text"
+          v-model="phone"
           placeholder="휴대폰 번호를 입력해주세요. 예: 010-1234-5678"
           style="width: 100%; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4;"
         />
@@ -118,16 +118,14 @@
         <input
           id="birth"
           type="date"
+          v-model="birth"
           style="width: 100%; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4;"
         />
       </div>
 
       <!-- 제출 버튼 -->
       <div style="text-align: center; margin-top: 30px;">
-        <button
-          type="submit"
-          style="padding: 15px 30px; background: #E6AF69; color: #FBF9F4; border: none; border-radius: 15px; font-size: 18px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 700; cursor: pointer;"
-        >
+        <button @click="handleSubmit" style="padding: 15px 30px; background: #E6AF69; color: #FBF9F4; border: none; border-radius: 15px; font-size: 18px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 700; cursor: pointer;">
           회원가입 하기
         </button>
       </div>
@@ -136,62 +134,58 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import axios from 'axios';
+import { ref, computed } from 'vue'
+import { useCounterStore } from '@/stores/counter'
+import axios from 'axios'
 
-// 아이디 --------------------------------------- 수정 요망
+const store = useCounterStore()
 
 // 상태 관리
-const username = ref(''); // 아이디 입력값
-const usernameCheck = ref(''); // 중복 확인 결과 ('success' or 'failure')
+const username = ref('')
+const usernameCheck = ref('')
+const password = ref('')
+const passwordConfirm = ref('')
+const emailId = ref('')
+const phone = ref('')
+const birth = ref('')
+const emailDomain = ref('')
+const customDomain = ref('')
+const isCustomDomain = ref(false)
 
-// 아이디 중복 확인 함수
+const isPasswordMatch = computed(() => password.value === passwordConfirm.value)
+
+// // 아이디 중복 확인
+// // 아이디 중복 확인
 async function checkUsername() {
-  if (!username.value.trim()) {
-    alert('아이디를 입력해주세요.');
-    return;
+  // 중복 확인 요청
+  if (username.value === '') {
+    alert('아이디를 입력해주세요.')
+    return
   }
 
   try {
-    // 백엔드에 아이디 중복 확인 요청
-    const response = await axios.post('/api/check-username', {
-      username: username.value,
-    });
-
-    // 서버 응답에 따라 상태 업데이트
+    // 실제 백엔드 URL로 수정 필요
+    const response = await axios.post('http://127.0.0.1:8000/accounts/api/v1/check_username/', { username: username.value })
+    
+    // 서버 응답 처리
     if (response.data.isAvailable) {
-      usernameCheck.value = 'success'; // 사용 가능
+      usernameCheck.value = 'success' // 중복이 없는 경우
     } else {
-      usernameCheck.value = 'failure'; // 중복된 아이디
+      usernameCheck.value = 'failure' // 중복이 있는 경우
     }
   } catch (error) {
-    console.error('중복 확인 요청 실패:', error);
-    alert('중복 확인 요청 중 오류가 발생했습니다.');
+    console.error('아이디 중복 확인 중 오류 발생:', error)
+    alert('서버 오류가 발생했습니다. 다시 시도해주세요.')
   }
 }
 
 
-
-// 비밀번호 ---------------------------------------
-
-// 상태값 관리
-const password = ref(''); // 비밀번호
-const passwordConfirm = ref(''); // 비밀번호 확인
-const isPasswordMatch = ref(true); // 비밀번호 일치 여부
-
-// 비밀번호 일치 여부 확인
+// 비밀번호 확인
 function checkPasswordMatch() {
-  isPasswordMatch.value = password.value === passwordConfirm.value;
+  // 비밀번호 일치 여부 체크
 }
 
-
-// 이메일 입력 ---------------------------------------
-
-// 상태값 관리
-const emailDomain = ref(''); // 선택한 이메일 도메인
-const customDomain = ref(''); // 직접 입력한 도메인
-const isCustomDomain = ref(false); // 직접 입력 상태 여부
-
+// 이메일 도메인 선택
 // "직접 입력" 선택 시 처리
 function checkCustomDomain() {
   if (emailDomain.value === 'custom') {
@@ -206,9 +200,33 @@ function toggleCustomDomain(isCustom) {
     isCustomDomain.value = isCustom;
   }
 }
+
+// 회원가입 제출
+function handleSubmit() {
+  // 필수 입력 값 검사
+  if (!username.value || !password.value || !emailId.value || !phone.value || !birth.value || !emailDomain.value) {
+    alert('모든 필드를 입력해주세요.')
+    return
+  }
+
+  if (password.value !== passwordConfirm.value) {
+    alert('비밀번호가 일치하지 않습니다.')
+    return
+  }
+
+  // 백엔드 요청
+  const formData = {
+    username: username.value,
+    password1: password.value,
+    password2: passwordConfirm.value,
+    email: `${emailId.value}@${emailDomain.value === 'custom' ? customDomain.value : emailDomain.value}`,
+    phone: phone.value,
+    birth: birth.value,
+  }
+
+  store.signUp(formData)
+}
 </script>
-
-
 
 <style scoped>
 /* 추가적인 스타일을 여기에 넣을 수 있습니다. */
