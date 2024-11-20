@@ -1,89 +1,65 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from .forms import CustomUserCreationForm, CustomUserChangeForm
-from django.contrib.auth import login as auth_login
-from django.contrib.auth import logout as auth_logout
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.decorators import login_required
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from .serializers import UserSerializer, RegisterSerializer
 
-# Create your views here.
-
+@api_view(['POST'])
 def login(request):
-    if request.user.is_authenticated:
-        return redirect('accounts:index') # 추후 수정 에정
-    if request.method == 'POST':
-        form = AuthenticationForm(request, request.POST)
-        if form.is_valid():
-            auth_login(request, form.get_user())
-            return redirect('accounts:index')  ## 추후 수정 예정
-            # return(request, 'accounts/login.html')
-    else:
-        form = AuthenticationForm()
-    context = {
-        'form': form,
-    }
-    return render(request, 'accounts/login.html', context)
+    username = request.data.get('username')
+    password = request.data.get('password')
+    user = authenticate(username=username, password=password)
+    
+    if user:
+        auth_login(request, user)
+        return Response({"message": "Login successful", "user": UserSerializer(user).data}, status=status.HTTP_200_OK)
+    return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
-
-@login_required
+@api_view(['POST'])
 def logout(request):
     auth_logout(request)
-    return redirect('accounts:index') ## 추후 수정 예정
-    # return render(request, 'accounts/login.html') 
+    return Response({"message": "Logged out successfully"}, status=status.HTTP_200_OK)
 
-
+@api_view(['POST'])
 def signup(request):
     if request.user.is_authenticated:
-        return redirect('accounts:index') # 추후 수정 에정
+        return Response({"error": "User already authenticated"}, status=status.HTTP_400_BAD_REQUEST)
 
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            auth_login(request, user)
-            return redirect('accounts:index') # 추후 수정 예정
-    else:
-        form = CustomUserCreationForm()
-    context = {
-        'form': form,
-    }
-    return render(request, 'accounts/signup.html', context)
+    serializer = RegisterSerializer(data=request.data)
+    if serializer.is_valid():
+        user = serializer.save()
+        return Response({"message": "User created successfully", "user": serializer.data}, status=status.HTTP_201_CREATED)
+    return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-
-@login_required
-def delete(request):
-    request.user.delete()
-    auth_logout(request)
-    return redirect('accounts:index') # 추후 수정 예정
-
-
-@login_required
+@api_view(['PUT'])
 def update(request):
-    if request.method == 'POST':
-        form = CustomUserChangeForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('articles:index')
-    else:
-        form = CustomUserChangeForm(instance=request.user)
-    context = {
-        'form' : form,
-    }
-    return render(request, 'accounts/update.html', context)
+    if not request.user.is_authenticated:
+        return Response({"error": "User not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
 
+    serializer = UserSerializer(request.user, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "User updated successfully", "user": serializer.data}, status=status.HTTP_200_OK)
+    return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-@login_required
-def change_password(request, user_pk):
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)
-            return redirect('accounts:index') # 추후 수정 예정
-    else:
-        form = PasswordChangeForm(request.user)
-    context = {
-        'form': form,
-    }
-    return render(request, 'accounts/change_password.html', context)
+@api_view(['POST'])
+def change_password(request):
+    if not request.user.is_authenticated:
+        return Response({"error": "User not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    new_password = request.data.get('new_password')
+    if new_password:
+        request.user.set_password(new_password)
+        request.user.save()
+        return Response({"message": "Password changed successfully"}, status=status.HTTP_200_OK)
+    return Response({"error": "New password is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+def delete(request):
+    if not request.user.is_authenticated:
+        return Response({"error": "User not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    user = request.user
+    auth_logout(request)
+    user.delete()
+    return Response({"message": "User deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
