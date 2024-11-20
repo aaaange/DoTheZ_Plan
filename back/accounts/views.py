@@ -135,7 +135,7 @@ def check_username(request):
 
 
 @api_view(['GET'])
-def check_authentication(request):
+def check_auth(request):
     if request.user.is_authenticated:
         return JsonResponse({'is_authenticated': True, 'username': request.user.username})
-    return JsonResponse({'is_authenticated': False})
+    return JsonResponse({'is_authenticated': True})

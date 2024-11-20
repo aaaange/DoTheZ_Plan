@@ -6,6 +6,7 @@ import ProductListView from '@/views/ProductListView.vue'
 import ExchangeRateView from '@/views/ExchangeRateView.vue'
 import MapView from '@/views/MapView.vue'
 import RecommendView from '@/views/RecommendView.vue'
+import LogOutView from '@/views/LogOutView.vue'
 
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -27,6 +28,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LogInView,
+    },
+    {
+      path: '/logout',
+      name: 'logout',
+      component: LogOutView,
     },
     {
       path: '/profile',

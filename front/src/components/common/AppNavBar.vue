@@ -22,12 +22,36 @@
       </div>
       <div style="height: 32px; justify-content: flex-start; align-items: center; gap: 12px; display: flex">
         <div style="flex: 1 1 0; height: 32px; padding: 8px; background: #E3E3E3; border-radius: 8px; overflow: hidden; border: 1px #767676 solid; justify-content: center; align-items: center; gap: 8px; display: flex">
-          <div v-if="is_authenticated"><RouterLink :to="{ name: 'logout'}"><div style="color: #1E1E1E; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">로그아웃</div></RouterLink></div>
-          <div v-else><RouterLink :to="{ name: 'login' }"><div style="color: #1E1E1E; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">로그인</div></RouterLink></div>
+          <template v-if="isAuthenticated">
+            <RouterLink :to="{ name: 'logout'}">
+              <div style="color: #1E1E1E; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">
+                로그아웃
+              </div>
+            </RouterLink>
+          </template>
+          <template v-else>
+            <RouterLink :to="{ name: 'login' }">
+              <div style="color: #1E1E1E; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">
+                로그인
+              </div>
+            </RouterLink>
+          </template>
         </div>
         <div style="flex: 1 1 0; height: 32px; padding: 8px; background: #2C2C2C; border-radius: 8px; overflow: hidden; border: 1px #2C2C2C solid; justify-content: center; align-items: center; gap: 8px; display: flex">
-          <div v-if="is_authenticated"><RouterLink :to="{ name: 'profile' }"><div style="color: #F5F5F5; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">프로필</div></RouterLink></div>
-          <div v-else><RouterLink :to="{ name: 'signup' }"><div style="color: #F5F5F5; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">회원가입</div></RouterLink></div>
+          <template v-if="isAuthenticated">
+            <RouterLink :to="{ name: 'profile' }">
+              <div style="color: #F5F5F5; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">
+                프로필
+              </div>
+            </RouterLink>
+          </template>
+          <template v-else>
+            <RouterLink :to="{ name: 'signup' }">
+              <div style="color: #F5F5F5; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">
+                회원가입
+              </div>
+            </RouterLink>
+          </template>
         </div>
       </div>
     </div>
@@ -37,29 +61,39 @@
 <script>
 import { RouterLink } from 'vue-router';
 import axios from 'axios';
+import { onUpdated, ref } from 'vue';
+
 
 export default {
   data() {
     return {
-      isAuthenticated: false,
-      username: ''
+      isAuthenticated: ref(false),
+      // username: ''
     };
   },
+
+  created() {
+    this.fetchAuthStatus();
+  },
+
   methods: {
     async fetchAuthStatus() {
       try {
         const response = await axios.get('/api/check-auth/');
+        console.log('API 응답:', response.data.is_authenticated);
         this.isAuthenticated = response.data.is_authenticated;
-        this.username = response.data.username;
+        // this.username = response.data.username;
       } catch (error) {
         console.error('Failed to fetch authentication status:', error);
       }
     }
   },
-  created() {
+
+  onUpdated() {
     this.fetchAuthStatus();
-  }
+  },
 };
+
 </script>
 
 <style scoped>

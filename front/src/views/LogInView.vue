@@ -47,7 +47,8 @@ export default {
     return {
       username: '',
       password: '',
-      errorMessage: ''
+      errorMessage: '',
+      isAuthenticated: false,
     };
   },
   methods: {
