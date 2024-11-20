@@ -3,7 +3,7 @@
     <div style="width: 1280px; height: 32px; padding: 32px; left: 0px; top: 0px; position: absolute; background: white; border-bottom: 1px #D9D9D9 solid; justify-content: flex-start; align-items: center; gap: 24px; display: inline-flex">
       <div style="justify-content: flex-start; align-items: center; gap: 24px; display: flex">
         <div style="height: 35px; justify-content: center; align-items: center; display: flex">
-          <RouterLink :to="{ name: 'mainpage' }"><img src="C:/Users/SSAFY/Downloads/logo.png" alt="logo" style="width: 120px; height: 60px; border: 3.50px"></img></RouterLink>
+          <RouterLink :to="{ name: 'mainpage' }"><img src="../../image/logo.png" alt="logo" style="width: 120px; height: 60px; border: 3.50px"></img></RouterLink>
         </div>
       </div>
       <div style="flex: 1 1 0; height: 32px; justify-content: flex-end; align-items: flex-start; gap: 8px; display: flex">
