@@ -35,21 +35,21 @@
     </div>
   </div>
   <div style="width: 512px; height: 0px; left: 280px; top: 296px; position: absolute; border: 1px #CDC7C0 solid"></div>
-  <img style="width: 97px; height: 78px; left: 430px; top: 552px; position: absolute" src="C:/Users/SSAFY/Downloads/free-icon-map-2086172.png"/>
-  <img style="width: 94px; height: 97px; left: 791px; top: 542px; position: absolute" src="C:/Users/SSAFY/Downloads/free-icon-rating-6962022.png" />
-  <img style="width: 83px; height: 85px; left: 782px; top: 347px; position: absolute" src="C:/Users/SSAFY/Downloads/free-icon-exchange-rate-3309969.png" />
-  <img style="width: 97px; height: 87px; left: 430px; top: 343px; position: absolute" src="C:/Users/SSAFY/Downloads/free-icon-deposit-2132991.png" />
+  <img style="width: 97px; height: 78px; left: 430px; top: 552px; position: absolute" src="../image/free-icon-map-2086172.png"/>
+  <img style="width: 94px; height: 97px; left: 791px; top: 542px; position: absolute" src="../image/free-icon-rating-6962022.png" />
+  <img style="width: 83px; height: 85px; left: 782px; top: 347px; position: absolute" src="../image/free-icon-exchange-rate-3309969.png" />
+  <img style="width: 97px; height: 87px; left: 430px; top: 343px; position: absolute" src="../image/free-icon-deposit-2132991.png" />
   <div style="width: 36px; height: 36px; padding: 4px; left: 945px; top: 404px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
-    <RouterLink :to="{ name: 'exchangerate' }"><img src="C:/Users/SSAFY/Downloads/free-icon-direction-arrow-4939761.png" alt="arrow" style="width: 24px; height: 24px"></img></RouterLink>
+    <RouterLink :to="{ name: 'exchangerate' }"><img src="../image/free-icon-direction-arrow-4939761.png" alt="arrow" style="width: 24px; height: 24px"></img></RouterLink>
   </div>
   <div style="width: 36px; height: 36px; padding: 4px; left: 945px; top: 603px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
-    <RouterLink :to="{ name: 'recommend' }"><img src="C:/Users/SSAFY/Downloads/free-icon-direction-arrow-4939761.png" alt="arrow" style="width: 24px; height: 24px"></img></RouterLink>
+    <RouterLink :to="{ name: 'recommend' }"><img src="../image/free-icon-direction-arrow-4939761.png" alt="arrow" style="width: 24px; height: 24px"></img></RouterLink>
   </div>
   <div style="width: 36px; height: 36px; padding: 4px; left: 579px; top: 603px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
-    <RouterLink :to="{ name: 'map' }"><img src="C:/Users/SSAFY/Downloads/free-icon-direction-arrow-4939761.png" alt="arrow" style="width: 24px; height: 24px"></img></RouterLink>
+    <RouterLink :to="{ name: 'map' }"><img src="../image/free-icon-direction-arrow-4939761.png" alt="arrow" style="width: 24px; height: 24px"></img></RouterLink>
   </div>
   <div style="width: 36px; height: 36px; padding: 4px; left: 579px; top: 404px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
-    <RouterLink :to="{ name: 'productlist' }"><img src="C:/Users/SSAFY/Downloads/free-icon-direction-arrow-4939761.png" alt="arrow" style="width: 24px; height: 24px"></img></RouterLink>
+    <RouterLink :to="{ name: 'productlist' }"><img src="../image/free-icon-direction-arrow-4939761.png" alt="arrow" style="width: 24px; height: 24px"></img></RouterLink>
   </div>
 </template>
 
