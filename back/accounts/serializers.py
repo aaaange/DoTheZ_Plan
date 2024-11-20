@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import User
+from .models import Product, UserProduct
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,3 +27,17 @@ class RegisterSerializer(serializers.ModelSerializer):
             birth=validated_data.get('birth', '2000-01-01')  # 기본값 설정
         )
         return user
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'description']
+
+
+class UserProductSerializer(serializers.ModelSerializer):
+    product_name = serializers.CharField(source='product.name')
+
+    class Meta:
+        model = UserProduct
+        fields = ['product_name', 'product']

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth import get_user_model
 
 
 # Create your models here.
@@ -12,3 +13,13 @@ class User(AbstractUser):
     birth = models.DateField(null=True, blank=True, default='2000-01-01')
 
 
+class Product(models.Model):
+    pass
+
+
+class UserProduct(models.Model):
+    user_id = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='products')
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.product.name}"
