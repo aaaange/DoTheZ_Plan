@@ -59,38 +59,52 @@
 </template>
 
 <script>
-import { RouterLink } from 'vue-router';
+import { ref, onMounted, watch } from 'vue';
+import { useCounterStore } from "@/stores/counter";
 import axios from 'axios';
-import { onUpdated, ref } from 'vue';
-
 
 export default {
-  data() {
-    return {
-      isAuthenticated: ref(false),
-      // username: ''
-    };
-  },
+  setup() {
+    const store = useCounterStore();
+    const isAuthenticated = ref(store.isLogin);
+    const isLoading = ref(true);
 
-  created() {
-    this.fetchAuthStatus();
-  },
-
-  methods: {
-    async fetchAuthStatus() {
+    const checkLoginStatus = async () => {
+      isLoading.value = true;
       try {
-        const response = await axios.get('/api/check-auth/');
-        console.log('API 응답:', response.data.is_authenticated);
-        this.isAuthenticated = response.data.is_authenticated;
-        // this.username = response.data.username;
+        // 토큰이 있는지 확인
+        const token = localStorage.getItem('token');
+        if (token) {
+          // 토큰 유효성 검사 (선택적)
+          const response = await axios.get(`${store.API_URL}/accounts/api/v1/user/`, {
+            headers: { Authorization: `Token ${token}` }
+          });
+          isAuthenticated.value = true;
+        } else {
+          isAuthenticated.value = false;
+        }
       } catch (error) {
-        console.error('Failed to fetch authentication status:', error);
+        console.error('인증 상태 확인 중 오류 발생:', error);
+        isAuthenticated.value = false;
+      } finally {
+        isLoading.value = false;
       }
-    }
-  },
+    };
 
-  onUpdated() {
-    this.fetchAuthStatus();
+    onMounted(() => {
+      checkLoginStatus();
+    });
+
+    // store의 isLogin 상태 변화 감지
+    watch(() => store.isLogin, (newValue) => {
+      isAuthenticated.value = newValue;
+    });
+
+    return {
+      isAuthenticated,
+      isLoading,
+      checkLoginStatus
+    };
   },
 };
 
