@@ -10,9 +10,9 @@
 
         <!-- 사용자 정보 -->
         <div class="user-info" style="position: absolute; top: 180px; left: 110px; right: 110px; display: flex; align-items: center; background-color: #EDEDED; padding: 20px; border-radius: 10px;">
-          <div class="user-avatar" style="width: 120px; height: 120px; background-color: #D9D9D9; border-radius: 50%; margin-right: 20px;"></div>
+          <img :src="userImage" alt="프로필 사진" class="user-avatar" style="width: 120px; height: 120px; border-radius: 50%; margin-right: 20px;"/>
           <div class="user-details">
-            <h2 style="font-size: 28px; color: #585547; margin-bottom: 5px;">{{ userProfile ? userProfile.nickname : '홍길동' }}</h2>
+              <h2 style="font-size: 28px; color: #585547; margin-bottom: 5px;">{{ username ? username : '로그인을 해주세요' }}</h2>
             <p style="font-size: 18px; color: #585547;">작성한 리뷰 {{ userProfile ? userProfile.reviewsCount : '2' }}개</p>
           </div>
         </div>
@@ -20,7 +20,7 @@
         <!-- 가입한 상품 목록 -->
         <div class="product-section" style="position: absolute; top: 350px; left: 110px; right: 110px;">
           <h3 style="font-size: 24px; color: #585547; margin-bottom: 20px;">가입한 상품</h3>
-          <div v-if="userProfile" class="product-list" style="max-height: 350px; overflow-y: auto;">
+          <!-- <div v-if="userProfile" class="product-list" style="max-height: 350px; overflow-y: auto;">
             <div v-for="(product, index) in userProfile.products" :key="index" class="product-item" style="background-color: #F7F4EA; border-radius: 10px; border: 1px solid #585547; padding: 15px; margin-bottom: 10px;">
               <p style="font-size: 18px; color: #585547; font-weight: 500;">{{ product.name }}</p>
               <p style="font-size: 14px; color: #585547;">이자율 {{ product.rate }}</p>
@@ -28,7 +28,7 @@
           </div>
           <div v-else class="login-message" style="display: flex; justify-content: center; align-items: center; height: 200px; font-size: 24px; color: #585547;">
             로그인 해주세요
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -38,16 +38,15 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useCounterStore } from '@/stores/counter';
-import { storeToRefs } from 'pinia';
+import img from '@/image/dothez.jpg'
 
 const store = useCounterStore();
-const { userProfile } = storeToRefs(store);
+const username = ref('')
+const userImage = ref(img); // 아바타 URL을 초기화
 
-onMounted(async () => {
-  if (!userProfile.value) {
-    await store.fetchUserProfile();
-  }
-});
+if (store.userProfile) {
+    username.value = store.userProfile.username;
+}
 </script>
 
 <style scoped>
