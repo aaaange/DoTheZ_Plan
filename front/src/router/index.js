@@ -9,6 +9,7 @@ import RecommendView from '@/views/RecommendView.vue'
 import LogOutView from '@/views/LogOutView.vue'
 
 import { createRouter, createWebHistory } from 'vue-router'
+import ProductDetailView from '@/views/ProductDetailView.vue'
 
 
 const router = createRouter({
@@ -58,6 +59,11 @@ const router = createRouter({
       path: '/recommend',
       name: 'recommend',
       component: RecommendView,
+    },
+    {
+      path: '/productdetail',
+      name: 'productdetail',
+      component: ProductDetailView,
     },
   ],
 })
