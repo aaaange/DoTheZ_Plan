@@ -53,7 +53,7 @@ def fetch_saving_products(request):
             product, created = Product.objects.update_or_create(
                 product_id=item["fin_prdt_cd"],
                 defaults={
-                    "is_saving": True,
+                    "is_saving": True,  # 적금
                     "fin_co_no": item["fin_co_no"],
                     "fin_prdt_nm": item["fin_prdt_nm"],
                     "join_way": item["join_way"],
@@ -72,7 +72,7 @@ def fetch_saving_products(request):
                 product_id=product,
                 save_trm=option["save_trm"],
                 defaults={
-                    "is_saving": True,
+                    "is_saving": True,  # 적금
                     "intr_rate_type_nm": option["intr_rate_type_nm"],
                     "rsrv_type_nm": option.get("rsrv_type_nm", ""),
                     "intr_rate": option["intr_rate"],
@@ -130,7 +130,7 @@ def fetch_deposit_products(request):
             product, created = Product.objects.update_or_create(
                 product_id=item["fin_prdt_cd"],
                 defaults={
-                    "is_saving": False,
+                    "is_saving": False,  # 예금
                     "fin_co_no": item["fin_co_no"],
                     "fin_prdt_nm": item["fin_prdt_nm"],
                     "join_way": item["join_way"],

@@ -31,8 +31,7 @@ class ProductOption(models.Model):
 
 
 class UserProduct(models.Model):
-    user_id = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='products')
-
+    user_id = models.ForeignKey('account.User', on_delete=models.CASCADE, related_name='products')
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     def __str__(self):
