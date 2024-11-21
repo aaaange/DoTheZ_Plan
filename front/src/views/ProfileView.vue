@@ -1,48 +1,65 @@
 <template>
-  <div>
-    <div v-if="userData">
-      <h2>User Profile</h2>
-      <p>User ID: {{ userData.user_id }}</p>
-      <p>Username: {{ userData.username }}</p>
-      <p>Email: {{ userData.email }}</p>
-      <p>Phone: {{ userData.phone }}</p>
-      <p>Birth: {{ userData.birth }}</p>
+  <div style="width: 100%; height: 100vh; padding-top: 119px; background: #F9EB87; justify-content: center; align-items: center; display: inline-flex">
+    <div class="Group6" style="width: 863px; height: 800px; position: relative">
+      <div class="Rectangle1" style="width: 863px; height: 790px; top: 0px; position: absolute; background: #FBF9F4; box-shadow: 6px 9px 4px rgba(0, 0, 0, 0.20); border-radius: 30px">
+        <div class="Group5" style="width: 642px; height: 114px; left: 110px; top: 38px; position: absolute">
+          <div style="width: 278px; height: 65px; top: 0px; position: absolute; color: #585547; font-size: 50px; font-family: IBM Plex Sans KR; font-weight: 700;">내 프로필</div>
+          <div style="width: 385px; left: 5px; top: 75px; position: absolute; color: #585547; font-size: 16px; font-family: IBM Plex Sans KR; font-weight: 300;">회원 프로필 페이지</div>
+          <div class="Line1" style="width: 642px; height: 0px; left: 0px; top: 114px; position: absolute; border-top: 1px solid #CDC7C0;"></div>
+        </div>
+
+        <!-- 사용자 정보 -->
+        <div class="user-info" style="position: absolute; top: 180px; left: 110px; right: 110px; display: flex; align-items: center; background-color: #EDEDED; padding: 20px; border-radius: 10px;">
+          <div class="user-avatar" style="width: 120px; height: 120px; background-color: #D9D9D9; border-radius: 50%; margin-right: 20px;"></div>
+          <div class="user-details">
+            <h2 style="font-size: 28px; color: #585547; margin-bottom: 5px;">{{ userProfile ? userProfile.nickname : '홍길동' }}</h2>
+            <p style="font-size: 18px; color: #585547;">작성한 리뷰 {{ userProfile ? userProfile.reviewsCount : '2' }}개</p>
+          </div>
+        </div>
+
+        <!-- 가입한 상품 목록 -->
+        <div class="product-section" style="position: absolute; top: 350px; left: 110px; right: 110px;">
+          <h3 style="font-size: 24px; color: #585547; margin-bottom: 20px;">가입한 상품</h3>
+          <div v-if="userProfile" class="product-list" style="max-height: 350px; overflow-y: auto;">
+            <div v-for="(product, index) in userProfile.products" :key="index" class="product-item" style="background-color: #F7F4EA; border-radius: 10px; border: 1px solid #585547; padding: 15px; margin-bottom: 10px;">
+              <p style="font-size: 18px; color: #585547; font-weight: 500;">{{ product.name }}</p>
+              <p style="font-size: 14px; color: #585547;">이자율 {{ product.rate }}</p>
+            </div>
+          </div>
+          <div v-else class="login-message" style="display: flex; justify-content: center; align-items: center; height: 200px; font-size: 24px; color: #585547;">
+            로그인 해주세요
+          </div>
+        </div>
+      </div>
     </div>
-    <p v-else>Loading profile information...</p>
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
-import { useRoute } from 'vue-router'; // Vue Router에서 useRoute 훅을 가져옵니다.
+import { useCounterStore } from '@/stores/counter';
+import { storeToRefs } from 'pinia';
 
-export default {
-  setup() {
-    const userData = ref(null);
-    const route = useRoute(); // 현재 라우트 정보를 가져옵니다.
-    const userId = route.params.userId; // URL에서 userId를 가져옵니다.
+const store = useCounterStore();
+const { userProfile } = storeToRefs(store);
 
-    const getProfile = async () => {
-      try {
-        // URL에서 가져온 userId를 사용하여 프로필 정보를 요청합니다.
-        const response = await axios.get(`http://127.0.0.1:8000/accounts/api/v1/profile/${userId}/`, { withCredentials: true });
-        userData.value = response.data; // 사용자 데이터 저장
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-        userData.value = null; // 에러 발생 시 null로 설정
-      }
-    };
-
-    onMounted(() => {
-      getProfile(); // 컴포넌트가 마운트될 때 프로필 정보 요청
-    });
-
-    return { userData };
-  },
-};
+onMounted(async () => {
+  if (!userProfile.value) {
+    await store.fetchUserProfile();
+  }
+});
 </script>
 
 <style scoped>
-/* 스타일을 여기에 추가할 수 있습니다 */
+.product-list::-webkit-scrollbar {
+  width: 5px;
+}
+.product-list::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+}
+.product-list::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 10px;
+}
 </style>
