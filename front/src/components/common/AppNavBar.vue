@@ -1,5 +1,4 @@
 <template>
-  <div style="width: 1280px; height: 832px; position: relative; background: #F9EB87">
     <div style="width: 1280px; height: 32px; padding: 32px; left: 0px; top: 0px; position: absolute; background: white; border-bottom: 1px #D9D9D9 solid; justify-content: flex-start; align-items: center; gap: 24px; display: inline-flex">
       <div style="justify-content: flex-start; align-items: center; gap: 24px; display: flex">
         <div style="height: 35px; justify-content: center; align-items: center; display: flex">
@@ -39,7 +38,7 @@
         </div>
         <div style="flex: 1 1 0; height: 32px; padding: 8px; background: #2C2C2C; border-radius: 8px; overflow: hidden; border: 1px #2C2C2C solid; justify-content: center; align-items: center; gap: 8px; display: flex">
           <template v-if="isAuthenticated">
-            <RouterLink :to="{ name: 'profile' }">
+            <RouterLink :to="{ name: 'profile', params: { userId: user_id } }">
               <div style="color: #F5F5F5; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">
                 프로필
               </div>
@@ -55,7 +54,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -68,18 +66,20 @@ export default {
     const store = useCounterStore();
     const isAuthenticated = ref(store.isLogin);
     const isLoading = ref(true);
+    const user_id = ref(0);
 
     const checkLoginStatus = async () => {
       isLoading.value = true;
       try {
         // 토큰이 있는지 확인
-        const token = localStorage.getItem('token');
+        const token = store.token;
         if (token) {
           // 토큰 유효성 검사 (선택적)
-          const response = await axios.get(`${store.API_URL}/accounts/api/v1/user/`, {
+          const response = await axios.get(`${store.API_URL}/accounts/api/v1/user_info/`, {
             headers: { Authorization: `Token ${token}` }
-          });
+          })
           isAuthenticated.value = true;
+          user_id.value = response.data.pk;
         } else {
           isAuthenticated.value = false;
         }
@@ -103,7 +103,8 @@ export default {
     return {
       isAuthenticated,
       isLoading,
-      checkLoginStatus
+      checkLoginStatus,
+      user_id
     };
   },
 };

@@ -16,6 +16,7 @@ class User(AbstractUser):
 
 
 
+
 # class UserSurvey(models.Model):
 #     id = models.AutoField(primary_key=True)  # PK
 #     user_id = models.IntegerField()  # FK, User 테이블의 ID를 참조
@@ -105,3 +106,4 @@ class User(AbstractUser):
 
 #     def __str__(self):
 #         return f"UserSurvey {self.id} - User {self.user_id}"
+

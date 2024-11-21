@@ -22,5 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('<int:user_pk>/password/', views.change_password, name='change_password'),
     path('accounts/', include('accounts.urls')),
-    path('product/', include('product.urls')),
+    path('product/', include('product.urls'))
+    # path('accounts/', include('dj_rest_auth.urls')),
+    # path('accounts/signup/', include('dj_rest_auth.registration.urls')),
 ]

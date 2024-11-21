@@ -2,8 +2,8 @@ from django.db import models
 
 
 class Product(models.Model):
-    product_id = models.IntegerField()  # 금융상품 코드(PK)
-    is_saving = models.BooleanField()  # T 예금 / F 적금
+    product_id = models.CharField(max_length=255)  # 금융상품 코드(PK)
+    is_saving = models.BooleanField()  
     fin_co_no = models.CharField(max_length=255)
     fin_prdt_nm = models.CharField(max_length=255)
     join_way = models.CharField(max_length=255)

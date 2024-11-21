@@ -29,6 +29,21 @@ environ.Env.read_env(
 # 환경변수를 읽어오기
 API_KEY = env('API_KEY')
 
+import os
+import environ
+
+# 환경변수를 불러올 수 있는 상태로 설정
+env = environ.Env(DEBUG=(bool, True))
+
+# 환경변수를 읽어 올 수 있는 파일을 설정
+environ.Env.read_env(
+    env_file=os.path.join(BASE_DIR, '.env')
+)
+
+# 환경변수를 읽어오기
+PRODUCT_API_KEY = env('PRODUCT_API_KEY')
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
