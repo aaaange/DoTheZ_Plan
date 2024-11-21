@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from .serializers import UserSerializer, RegisterSerializer, ProductSerializer, UserProductSerializer
 from .models import Product, UserProduct, User
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -133,7 +134,11 @@ def check_username(request):
         return JsonResponse({'isAvailable': False})  # 중복된 아이디
     return JsonResponse({'isAvailable': True})   # 사용 가능한 아이디
 
-
 @api_view(['GET'])
-def check_auth(request):
-    return JsonResponse({'is_authenticated': request.user.is_authenticated})
+def user_info(request):
+    if request.user.is_authenticated:
+        return JsonResponse({
+            'username': request.user.username,
+            'is_authenticated': True,
+            'pk': request.user.pk  # 사용자의 pk 추가
+        })
