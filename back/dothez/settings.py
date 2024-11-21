@@ -15,6 +15,19 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+import os
+import environ
+
+# 환경변수를 불러올 수 있는 상태로 설정
+env = environ.Env(DEBUG=(bool, True))
+
+# 환경변수를 읽어올 파일을 설정
+environ.Env.read_env(
+    env_file=os.path.join(BASE_DIR, '.env')
+)
+
+# 환경변수를 읽어오기
+API_KEY = env('API_KEY')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -32,6 +45,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'accounts',
+    'product',
     'rest_framework',
     'rest_framework.authtoken',
     'dj_rest_auth',
