@@ -28,7 +28,7 @@ environ.Env.read_env(
 )
 
 # 환경변수를 읽어오기
-API_KEY = env('API_KEY')
+PRODUCT_API_KEY = env('PRODUCT_API_KEY')
 
 
 # Quick-start development settings - unsuitable for production
