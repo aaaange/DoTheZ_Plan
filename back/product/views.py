@@ -1,173 +1,224 @@
-import requests
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status,  generics
 from django.http import JsonResponse
+
+from django.shortcuts import get_object_or_404, get_list_or_404
+from django.conf import settings
+
 from .models import Product, ProductOption
-from django.conf import settings  # settings에서 API_KEY 가져오기
+from .serializers import DepositProductsSerializer, DepositOptionsSerializer
+import requests
 
 # API 키 및 URL 설정
 API_KEY = settings.PRODUCT_API_KEY
 SAVING_API_URL = "http://finlife.fss.or.kr/finlifeapi/savingProductsSearch.json"
-DEPOSIT_API_URL = "http://finlife.fss.or.kr/finlifeapi/savingProductsSearch.json"
+DEPOSIT_API_URL = "http://finlife.fss.or.kr/finlifeapi/depositProductsSearch.json"
 
-def fetch_saving_products(request):
-    """
-    적금 상품 데이터를 외부 API에서 가져와 저장하는 함수
-    """
-    params = {
-        "auth": API_KEY,
-        "topFinGrpNo": "020000",
-        "pageNo": 1,
-        "format": "json",  # JSON 응답 요청
-    }
-    headers = {
-        "Accept": "application/json",  # 응답 형식 강제 설정
-    }
-    response = requests.get(SAVING_API_URL, params=params, headers=headers)
-
-    # 상태 코드와 응답 본문 출력 (디버깅용)
-    print("Saving API 상태 코드:", response.status_code)
-    print("Saving API 응답 본문:", response.text)
-
-    # JSON 파싱 시도
-    try:
-        data = response.json()
-    except ValueError:
-        return JsonResponse({
-            "error": "잘못된 JSON 응답",
-            "message": f"응답 본문: {response.text}",
-        }, status=500)
-
-    # 상태 코드가 200이 아닌 경우 처리
-    if response.status_code != 200:
-        return JsonResponse({
-            "error": "API 요청 실패",
-            "message": f"상태 코드: {response.status_code}, 응답: {response.text}",
-        }, status=500)
-
-    # API 응답 처리
-    if data.get("result") == "success":
-        base_list = data.get("baseList", [])
-        option_list = data.get("optionList", [])
-
-        # Product 저장
-        for item in base_list:
-            product, created = Product.objects.update_or_create(
-                product_id=item["fin_prdt_cd"],
-                defaults={
-                    "is_saving": True,  # 적금
-                    "fin_co_no": item["fin_co_no"],
-                    "fin_prdt_nm": item["fin_prdt_nm"],
-                    "join_way": item["join_way"],
-                    "mtrt_int": item.get("mtrt_int", ""),
-                    "spcl_cnd": item.get("spcl_cnd", ""),
-                    "join_deny": item["join_deny"],
-                    "etc_note": item.get("etc_note", ""),
-                    "max_limit": item.get("max_limit", 0.0),
-                }
-            )
-
-        # ProductOption 저장
-        for option in option_list:
-            product = Product.objects.get(product_id=option["fin_prdt_cd"])
-            ProductOption.objects.update_or_create(
-                product_id=product,
-                save_trm=option["save_trm"],
-                defaults={
-                    "is_saving": True,  # 적금
-                    "intr_rate_type_nm": option["intr_rate_type_nm"],
-                    "rsrv_type_nm": option.get("rsrv_type_nm", ""),
-                    "intr_rate": option["intr_rate"],
-                    "intr_rate2": option.get("intr_rate2", 0.0),
-                }
-            )
-
-        return JsonResponse({"message": "Saving products saved successfully."})
-    else:
-        return JsonResponse({"error": "Saving products fetch failed.", "details": data}, status=500)
-
-# 예금 데이터 가져오기
-def fetch_deposit_products(request):
-    """
-    예금 상품 데이터를 외부 API에서 가져와 저장하는 함수
-    """
-    params = {
-        "auth": API_KEY,
-        "topFinGrpNo": "020000",  # 올바르게 수정
-        "pageNo": 1,
-        "format": "json",  # JSON 응답 요청
-    }
+@api_view(['GET'])
+def DepositProductListView(request):
+    URL = DEPOSIT_API_URL
+    top_fin_grp_no_values = ['020000', '030300']  # 여러 개의 topFinGrpNo 값
+    all_response_data = []  # 모든 요청의 결과를 저장할 리스트
     
-    # API 요청
-    response = requests.get(DEPOSIT_API_URL, params=params)
+    for topFinGrpNo in top_fin_grp_no_values:
+        params = {
+            'auth': API_KEY,
+            'topFinGrpNo': topFinGrpNo,
+            'pageNo': 1
+        }
+        response = requests.get(URL, params=params).json()
+        all_response_data.append(response)  # 각 요청의 결과를 리스트에 저장
 
-    # 상태 코드와 응답 본문 출력 (디버깅용)
-    print("Deposit API 상태 코드:", response.status_code)
-    print("Deposit API 응답 URL:", response.url)
-    print("Deposit API 응답 본문:", response.text)
+    # 응답 결과를 하나로 합침
+    combined_response = {
+        'message': '성공',
+        'data': all_response_data  # 여러 요청의 결과를 포함
+    }
 
-    # JSON 파싱 시도
-    try:
-        data = response.json()
-    except ValueError:
-        return JsonResponse(
-            {"error": "잘못된 JSON 응답", "message": f"응답 본문: {response.text}"},
-            status=500,
-        )
+    return JsonResponse(combined_response)
 
-    # 상태 코드가 200이 아닌 경우 처리
-    if response.status_code != 200:
-        return JsonResponse(
-            {"error": "Deposit API 요청 실패", "message": f"상태 코드: {response.status_code}, 응답: {response.text}"},
-            status=500,
-        )
 
-    # API 응답 처리
-    if data.get("result") == "success":
-        base_list = data.get("baseList", [])
-        option_list = data.get("optionList", [])
+@api_view(['GET'])
+def save_deposit_products(request):
+    URL = DEPOSIT_API_URL
+    params = {
+        'auth': API_KEY,
+        'topFinGrpNo': '020000',
+        'pageNo': 1
+    }
+    response = requests.get(URL, params=params).json()
+    
+    # Product 모델에서 데이터가 없으면 저장
+    for li in response['result']['baseList']:
+        fin_prdt_cd = li.get('fin_prdt_cd')
+        fin_co_no = li.get('fin_co_no')
+        fin_prdt_nm = li.get('fin_prdt_nm')
+        join_way = li.get('join_way')
+        mtrt_int = li.get('mtrt_int', "")
+        spcl_cnd = li.get('spcl_cnd', "")
+        join_deny = li.get('join_deny', "")
+        etc_note = li.get('etc_note', "")
+        max_limit = li.get('max_limit', 0.0)
 
-        # Product 저장
-        for item in base_list:
-            product, created = Product.objects.update_or_create(
-                product_id=item["fin_prdt_cd"],
-                defaults={
-                    "is_saving": False,  # 예금
-                    "fin_co_no": item["fin_co_no"],
-                    "fin_prdt_nm": item["fin_prdt_nm"],
-                    "join_way": item["join_way"],
-                    "mtrt_int": item.get("mtrt_int", ""),
-                    "spcl_cnd": item.get("spcl_cnd", ""),
-                    "join_deny": item["join_deny"],
-                    "etc_note": item.get("etc_note", ""),
-                    "max_limit": item.get("max_limit", 0.0),
-                }
-            )
-            if created:
-                print(f"새로운 상품 생성: {product.product_id}")
-            else:
-                print(f"기존 상품 업데이트: {product.product_id}")
+        # 이미 존재하는 상품이면 건너뛰기
+        if Product.objects.filter(fin_prdt_cd=fin_prdt_cd).exists():
+            continue
+        
+        save_data_pd = {
+            'fin_prdt_cd': fin_prdt_cd,
+            'is_saving': False,
+            'fin_co_no': fin_co_no,
+            'fin_prdt_nm': fin_prdt_nm,
+            'join_way': join_way,
+            'mtrt_int': mtrt_int,
+            'spcl_cnd': spcl_cnd,
+            'join_deny': join_deny,  # join_deny는 문자열로 전달
+            'etc_note': etc_note,
+            'max_limit': max_limit
+        }
+
+        serializer_pd = DepositProductsSerializer(data=save_data_pd)
+        if serializer_pd.is_valid(raise_exception = True):
+            serializer_pd.save()
+    
+    # ProductOption 저장
+    for li in response['result']['optionList']:
+        product = get_object_or_404(Product, fin_prdt_cd=fin_prdt_cd)
+        Product.objects.get(fin_prdt_cd=fin_prdt_cd)
+        fin_prdt_cd = li.get('fin_prdt_cd')
+        intr_rate_type_nm = li.get('intr_rate_type_nm')
+        intr_rate = li.get('intr_rate', -1) or -1
+        intr_rate2 = li.get('intr_rate2', -1)
+        save_trm = li.get('save_trm', 0)
+
+        # ProductOption이 이미 존재하면 건너뛰기
+        if ProductOption.objects.filter(fin_prdt_cd=fin_prdt_cd).exists():
+            continue
+
+        save_data_op = {
+            'fin_prdt_cd': fin_prdt_cd,  
+            'is_saving': False,
+            'intr_rate_type_nm': intr_rate_type_nm,
+            'intr_rate': intr_rate,
+            'intr_rate2': intr_rate2,
+            'save_trm': save_trm
+        }
+
+        serializer_op = DepositOptionsSerializer(data=save_data_op)
+        if serializer_op.is_valid(raise_exception=True):
+            serializer_op.save(product=product)
+
+    return JsonResponse({'message': '저장 성공!'})
+
+
+
+@api_view(['GET'])
+def SavingProductListView(request):
+    URL = SAVING_API_URL
+    top_fin_grp_no_values = ['020000', '030300']  # 여러 개의 topFinGrpNo 값
+    all_response_data = []  # 모든 요청의 결과를 저장할 리스트
+    
+    for topFinGrpNo in top_fin_grp_no_values:
+        params = {
+            'auth': API_KEY,
+            'topFinGrpNo': topFinGrpNo,
+            'pageNo': 1
+        }
+        response = requests.get(URL, params=params).json()
+        all_response_data.append(response)  # 각 요청의 결과를 리스트에 저장
+
+    # 응답 결과를 하나로 합침
+    combined_response = {
+        'message': '성공',
+        'data': all_response_data  # 여러 요청의 결과를 포함
+    }
+
+    return JsonResponse(combined_response)
+
+
+
+# 적금 저장하기
+@api_view(['GET'])
+def save_saving_products(request):
+    URL = SAVING_API_URL
+    top_fin_grp_no_values = ['020000', '030300']  # 여러 개의 topFinGrpNo 값
+    all_response_data = []
+    
+    for topFinGrpNo in top_fin_grp_no_values:
+        params = {
+            'auth': API_KEY,
+            'topFinGrpNo': topFinGrpNo,
+            'pageNo': 1
+        }
+        response = requests.get(URL, params=params).json()
+        all_response_data.append(response)  # 각 요청에 대한 응답 데이터를 저장
+        
+        # 상품 및 상품 옵션 처리
+        for li in response['result']['baseList']:
+            fin_prdt_cd = li.get('fin_prdt_cd')
+            fin_co_no = li.get('fin_co_no')
+            fin_prdt_nm = li.get('fin_prdt_nm')
+            join_way = li.get('join_way')
+            mtrt_int = li.get('mtrt_int', "")
+            spcl_cnd = li.get('spcl_cnd', "")
+            join_deny = li.get('join_deny', "")
+            etc_note = li.get('etc_note', "")
+            max_limit = li.get('max_limit', 0.0)
+
+            # 이미 존재하는 상품이면 건너뛰기
+            if Product.objects.filter(fin_prdt_cd=fin_prdt_cd).exists():
+                continue
+
+            save_data_pd = {
+                'fin_prdt_cd': fin_prdt_cd,
+                'is_saving': True,
+                'fin_co_no': fin_co_no,
+                'fin_prdt_nm': fin_prdt_nm,
+                'join_way': join_way,
+                'mtrt_int': mtrt_int,
+                'spcl_cnd': spcl_cnd,
+                'join_deny': join_deny,
+                'etc_note': etc_note,
+                'max_limit': max_limit
+            }
+
+            serializer_pd = DepositProductsSerializer(data=save_data_pd)
+            if serializer_pd.is_valid(raise_exception=True):
+                serializer_pd.save()
 
         # ProductOption 저장
-        for option in option_list:
-            try:
-                product = Product.objects.get(product_id=option["fin_prdt_cd"])
-                product_option, created = ProductOption.objects.update_or_create(
-                    product_id=product,
-                    save_trm=option["save_trm"],
-                    defaults={
-                        "is_saving": False,
-                        "intr_rate_type_nm": option["intr_rate_type_nm"],
-                        "rsrv_type_nm": option.get("rsrv_type_nm", ""),
-                        "intr_rate": option["intr_rate"],
-                        "intr_rate2": option.get("intr_rate2", 0.0),
-                    }
-                )
-                if created:
-                    print(f"새로운 상품 옵션 생성: {product_option.save_trm}")
-                else:
-                    print(f"기존 상품 옵션 업데이트: {product_option.save_trm}")
-            except Product.DoesNotExist:
-                print(f"상품 ID {option['fin_prdt_cd']}에 해당하는 Product가 없음")
+        for li in response['result']['optionList']:
+            product = get_object_or_404(Product, fin_prdt_cd=fin_prdt_cd)
+            fin_prdt_cd = li.get('fin_prdt_cd')
+            intr_rate_type_nm = li.get('intr_rate_type_nm')
+            rsrv_type_nm = li.get('rsrv_type_nm')
+            intr_rate = li.get('intr_rate', -1) or -1
+            intr_rate2 = li.get('intr_rate2', -1)
+            save_trm = li.get('save_trm', 0)
 
-        return JsonResponse({"message": "Deposit products saved successfully."})
-    else:
-        return JsonResponse({"error": "Deposit products fetch failed.", "details": data}, status=500)
+            # ProductOption이 이미 존재하면 건너뛰기
+            if ProductOption.objects.filter(fin_prdt_cd=fin_prdt_cd).exists():
+                continue
+
+            save_data_op = {
+                'fin_prdt_cd': fin_prdt_cd,
+                'is_saving': True,
+                'intr_rate_type_nm': intr_rate_type_nm,
+                'rsrv_type_nm': rsrv_type_nm,
+                'intr_rate': intr_rate,
+                'intr_rate2': intr_rate2,
+                'save_trm': save_trm
+            }
+
+            serializer_op = DepositOptionsSerializer(data=save_data_op)
+            if serializer_op.is_valid(raise_exception=True):
+                serializer_op.save(product=product)
+
+    return JsonResponse({'message': '저장 성공!'})
+
+# 상품 상세 조회 API
+class ProductDetailView(generics.RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = DepositProductsSerializer
+    lookup_field = 'fin_prdt_cd'  # URL에서 fin_prdt_cd로 조회
