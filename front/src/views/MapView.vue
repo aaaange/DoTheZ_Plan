@@ -62,21 +62,26 @@ const searchNearbyBanks = (coords) => {
 
 <template>
   <div class="map-view-container">
-    <!-- 검색 입력 컴포넌트 -->
-    <div class="search-container">
-      <SearchInput @search="handleSearch" />
-    </div>
-    
-    <!-- 지도 및 은행 목록 -->
-    <div class="map-and-list-container">
-      <!-- 지도 영역 -->
-      <div class="map-container">
-        <BankMap :onInitMap="initMap" :places="places" />
+    <div class="box">
+      <div class="header">
+        주변 은행 찾기
+      </div>
+      <!-- 검색 입력 컴포넌트 -->
+      <div class="search-container">
+        <SearchInput @search="handleSearch" />
       </div>
       
-      <!-- 은행 목록 영역 -->
-      <div class="bank-list-container">
-        <BankList :places="places" />
+      <!-- 지도 및 은행 목록 -->
+      <div class="map-and-list-container">
+        <!-- 지도 영역 -->
+        <div class="map-container">
+          <BankMap :onInitMap="initMap" :places="places" />
+        </div>
+        
+        <!-- 은행 목록 영역 -->
+        <div class="bank-list-container">
+          <BankList :places="places" />
+        </div>
       </div>
     </div>
   </div>
@@ -84,17 +89,39 @@ const searchNearbyBanks = (coords) => {
 
 <style scoped>
 .map-view-container {
+  width: 100%;
+  height: 100vh;
+  background: #F9EB87;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-  background-color: #f8f9fa;
+  padding: 140px;
+}
+
+.box {
+  width: 90%; /* 너비 설정 */
+  max-width: 900px; /* 최대 너비 설정 */
+  background: #FBF9F4; /* 배경색 */
+  box-shadow: 6px 9px 4px rgba(0, 0, 0, 0.20); /* 그림자 */
+  border-radius: 30px; /* 모서리 둥글게 */
+  padding: 150px; /* 내부 여백 */
+}
+
+.header {
+  width: 500px;
+  height: 65px;
+  color: #585547;
+  font-size: 50px;
+  font-family: 'IBM Plex Sans KR', sans-serif; /* 폰트 패밀리 추가 */
+  font-weight: 800;
+  margin-bottom: 20px;
+  display: flex;
 }
 
 .search-container {
-  width: 100%;
-  max-width: 600px;
-  margin-bottom: 20px;
+  width: 150%;
+  max-width: 800px;
+  margin-bottom: 30px;
   display: flex;
   justify-content: center;
 }
@@ -103,8 +130,8 @@ const searchNearbyBanks = (coords) => {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 100%;
-  max-width: 1200px;
+  width: 90%;
+  max-width: 1000px;
 }
 
 .map-container {
@@ -115,17 +142,17 @@ const searchNearbyBanks = (coords) => {
 }
 
 .bank-list-container {
-  flex: 0 0 35%;
+  flex: 0 0 30%;
   height: 500px;
   overflow-y: auto;
   background-color: white;
   border-radius: 10px;
-  margin-left: 20px;
-  padding: 15px;
+  margin-left: 50px;
+  padding: 30px;
 }
 
 .bank-list-container h2 {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   color: #333;
   margin-bottom: 15px;
