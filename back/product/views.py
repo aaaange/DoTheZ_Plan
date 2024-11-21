@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from .models import Product, ProductOption
 from django.conf import settings  # settings에서 API_KEY 가져오기
 
-API_KEY = settings.API_KEY
+API_KEY = settings.PRODUCT_API_KEY
 
 SAVING_API_URL = "https://finlife.fss.or.kr/finlife/api/fdrmDpstApi/list.do"
 
