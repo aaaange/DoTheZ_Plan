@@ -35,7 +35,12 @@ const router = createRouter({
       component: LogOutView,
     },
     {
-      path: '/profile',
+      path: '/logout',
+      name: 'logout',
+      component: LogOutView,
+    },
+    {
+      path: '/profile/:userId',
       name: 'profile',
       component: ProfileView,
     },

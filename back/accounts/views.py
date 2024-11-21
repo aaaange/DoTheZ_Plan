@@ -71,23 +71,23 @@ def delete(request):
 
 
 @api_view(['GET'])
-def profile(request):
-    person = request.user
-    if not person.is_authenticated:
+def profile(request, user_id):
+    # user_id로 사용자 객체를 가져옵니다.
+    person = get_object_or_404(User, id=user_id)
+
+    # 인증된 사용자만 접근할 수 있도록 합니다.
+    if not request.user.is_authenticated:
         return Response({'error': 'User not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
-    
+
+    # 요청된 사용자의 정보 반환
     data = {
         'user_id': person.id,
         'username': person.username,
         'email': person.email,
         'phone': person.phone,
         'birth': person.birth,
-        'first_name': person.first_name,
-        'last_name': person.last_name,
-        'date_joined': person.date_joined,
-        'is_active': person.is_active
     }
-    
+
     return Response(data)
 
 
