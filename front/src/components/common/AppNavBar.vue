@@ -1,4 +1,5 @@
 <template>
+  <div style="width: 1280px; height: 832px; position: relative; background: #F9EB87">
     <div style="width: 1280px; height: 32px; padding: 32px; left: 0px; top: 0px; position: absolute; background: white; border-bottom: 1px #D9D9D9 solid; justify-content: flex-start; align-items: center; gap: 24px; display: inline-flex">
       <div style="justify-content: flex-start; align-items: center; gap: 24px; display: flex">
         <div style="height: 35px; justify-content: center; align-items: center; display: flex">
@@ -57,6 +58,7 @@
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>

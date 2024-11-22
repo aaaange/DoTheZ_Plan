@@ -61,7 +61,7 @@ const router = createRouter({
       component: RecommendView,
     },
     {
-      path: '/productdetail',
+      path: '/productdetail/:productId',
       name: 'productdetail',
       component: ProductDetailView,
     },

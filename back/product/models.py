@@ -26,6 +26,8 @@ class ProductOption(models.Model):
     intr_rate = models.FloatField()
     intr_rate2 = models.FloatField()
 
+
+
 # class UserProduct(models.Model):
 #     user_id = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='products')
 

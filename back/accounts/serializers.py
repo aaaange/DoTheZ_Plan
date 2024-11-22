@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from .models import User
-# from .models import Product, UserProduct
+from .models import User, UserProduct
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,16 +27,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         return user
 
-
-# class ProductSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Product
-#         fields = ['id', 'name', 'description']
-
-
-# class UserProductSerializer(serializers.ModelSerializer):
-#     product_name = serializers.CharField(source='product.name')
-
-#     class Meta:
-#         model = UserProduct
-#         fields = ['product_name', 'product']
+class UserProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProduct
+        fields = [
+            'id',  # UserProduct 모델의 기본 키
+            'user',  # User 외래 키
+            'product',  # Product 외래 키
+            'joined_at',  # 가입 날짜
+        ]
+        read_only_fields = ['joined_at']  # 자동 생성 필드

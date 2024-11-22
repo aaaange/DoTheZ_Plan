@@ -2,6 +2,11 @@
   <div class="parent-container" style="padding: 80px 0 0 0; text-align: center;">
     <h2 style="color: #585547; font-size: 50px; font-family: 'IBM Plex Sans KR', sans-serif;">전체 상품 목록</h2>
 
+    <!-- 데이터 로딩 중일 때 표시 -->
+    <div v-if="isLoading">
+      <p>데이터를 로딩 중입니다...</p>
+    </div>
+
     <!-- 검색 창 -->
     <div style="margin-top: 20px; display: flex; justify-content: center; gap: 20px;">
       <input type="text" v-model="searchQuery.name" placeholder="상품명 검색" style="padding: 12px; width: 300px; border-radius: 8px; border: 1px solid #D9D9D9; font-size: 16px; outline: none;">
@@ -10,16 +15,13 @@
     </div>
 
     <!-- 상품 리스트 -->
-    <div class="product-list-container" style="margin-top: 40px;">
-      <div class="product-card" v-for="(product, index) in filteredProducts" :key="index">
-        <router-link
-          :to="{ name: 'productdetail' }" 
-          style="display: flex; text-decoration: none; width: 100%;" 
-        >
+    <div class="product-list-container" style="margin-top: 40px;" v-if="!isLoading">
+      <div class="product-card" v-for="(product, index) in allProducts" :key="index">
+        <router-link :to="{ name: 'productdetail', params: { productId: product.fin_prdt_cd } }" style="display: flex; text-decoration: none; width: 100%;">
           <img class="product-image" src="https://via.placeholder.com/80" alt="상품 이미지" style="width: 64px; height: 64px; margin-right: 16px; border-radius: 8px; object-fit: cover;"/>
           <div class="product-details">
             <p class="product-name" style="font-size: 18px; font-weight: 500;">
-              {{ product.name }}
+              금융상품명 : {{ product.fin_prdt_nm }}<br>
             </p>
           </div>
         </router-link>
@@ -29,35 +31,36 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
-  name: "ProductList", // 컴포넌트 명시적으로 지정
   data() {
     return {
+      allProducts: [],  // 전체 제품 리스트
       searchQuery: {
-        name: "",
-        category: "",
-        price: "",
+        name: '',      // 상품명 검색
+        category: '',  // 카테고리 검색
+        price: null,   // 가격 검색
       },
-      products: [
-        { name: "상품 이름 1", category: "전자", price: 100 },
-        { name: "상품 이름 2", category: "의류", price: 50 },
-        { name: "상품 이름 3", category: "가전", price: 300 },
-        { name: "상품 이름 4", category: "전자", price: 150 },
-        { name: "상품 이름 5", category: "의류", price: 70 },
-        { name: "상품 이름 6", category: "가전", price: 200 },
-        { name: "상품 이름 7", category: "전자", price: 250 },
-      ],
+      isLoading: true,  // 데이터 로딩 상태
     };
   },
-  computed: {
-    filteredProducts() {
-      return this.products.filter(product => {
-        return (
-          product.name.toLowerCase().includes(this.searchQuery.name.toLowerCase()) &&
-          product.category.toLowerCase().includes(this.searchQuery.category.toLowerCase()) &&
-          (this.searchQuery.price ? product.price <= this.searchQuery.price : true)
-        );
-      });
+  mounted() {
+    // 서버에서 데이터를 가져오는 메소드 호출
+    this.fetchProducts();
+  },
+  methods: {
+    async fetchProducts() {
+      try {
+        // 서버에서 데이터 요청
+        const response = await axios.get('http://127.0.0.1:8000/product/');
+        const data = response.data;
+        this.allProducts = data;  // 전체 상품 리스트 저장
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      } finally {
+        this.isLoading = false;  // 로딩이 끝났음을 표시
+      }
     },
   },
 };

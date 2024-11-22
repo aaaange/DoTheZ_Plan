@@ -11,7 +11,7 @@
       <div class="product-name-box">
         <!-- 상품 이름 왼쪽에 이미지 추가 -->
         <img class="product-image" src="" alt="상품 이미지" />
-        <span class="product-name">{{ productName }}</span>
+        <span class="product-name">{{ productInfo.fin_prdt_cd }}</span>
         <!-- 상품 가입 페이지로 이동 버튼을 상품 이름 옆에 배치 -->
         <button class="action-button">상품 가입 페이지로 이동</button>
       </div>
@@ -19,8 +19,7 @@
       <!-- 상품 상세 정보 -->
       <div class="product-details-container">
         <div v-for="(info, index) in productInfo" :key="index" class="product-info">
-          <span class="product-label">{{ info.label }}</span>
-          <span class="product-info-text">{{ info.value }}</span>
+          <span class="product-label">{{ index }} : {{ info }}</span>
         </div>
       </div>
 
@@ -32,17 +31,37 @@
   </div>
 </template>
 
-<script setup>
-// 백엔드에서 받아오는 상품 정보 예시
-const productName = "상품 이름";
-const productInfo = [
-  { label: "상품 정보 2", value: "상품 정보 7" },
-  { label: "상품 정보 3", value: "상품 정보 3" },
-  { label: "상품 정보 4", value: "상품 정보 4" },
-  { label: "상품 정보 5", value: "상품 정보 5" },
-  { label: "상품 정보 6", value: "상품 정보 6" },
-  { label: "상품 정보 7", value: "상품 정보 7" },
-];
+<script>
+import axios from 'axios';
+import { ref } from 'vue';
+
+export default {
+  data() {
+    return {
+      productInfo: [],  // 전체 제품 리스트
+    };
+  },
+  mounted() {
+    // 서버에서 데이터를 가져오는 메소드 호출
+    this.fetchProducts();
+  },
+  methods: {
+    async fetchProducts() {
+      try {
+        // 서버에서 데이터 요청
+        const productCode = this.$route.params.productId;
+        const response = await axios.get(`http://127.0.0.1:8000/product/product_detail/${productCode}`);
+        const info = response.data;
+        this.productInfo = info;  // 상품 상세 정보를 저장
+        console.log(info)
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      } finally {
+        this.isLoading = false;  // 로딩이 끝났음을 표시
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
