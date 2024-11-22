@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import ProductTotalListView
 
 appname = 'product'
 urlpatterns = [
@@ -12,6 +13,8 @@ urlpatterns = [
     path('saving/<str:fin_prdt_cd>/', views.ProductDetailView.as_view(), name='product_detail'),  # 적금 상세 조회
     
     path('save-deposit-products/', views.save_deposit_products, name='save_deposit_products'),
-    path('save-saving-projects/', views.save_saving_products, name='save_saving_products'),
+    path('save-saving-products/', views.save_saving_products, name='save_saving_products'),
+
+    path('', ProductTotalListView.as_view(), name='product_total_list'), # 전체 리스트
     # path('')
 ]
