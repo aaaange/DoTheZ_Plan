@@ -22,11 +22,14 @@
       <div style="height: 32px; justify-content: flex-start; align-items: center; gap: 12px; display: flex">
         <div style="flex: 1 1 0; height: 32px; padding: 8px; background: #E3E3E3; border-radius: 8px; overflow: hidden; border: 1px #767676 solid; justify-content: center; align-items: center; gap: 8px; display: flex">
           <template v-if="isAuthenticated">
-            <RouterLink :to="{ name: 'logout'}">
+            <!-- <RouterLink  @click="logOut">
               <div style="color: #1E1E1E; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">
                 로그아웃
               </div>
-            </RouterLink>
+            </RouterLink> -->
+            <a href="#" @click.prevent="logOut" style="color: #1E1E1E; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word;">
+              로그아웃
+            </a>
           </template>
           <template v-else>
             <RouterLink :to="{ name: 'login' }">
@@ -100,11 +103,17 @@ export default {
       isAuthenticated.value = newValue;
     });
 
+    const logOut = () => {
+      store.logOut(); // store에서 logOut 호출
+    };
+
     return {
       isAuthenticated,
       isLoading,
       checkLoginStatus,
-      user_id
+      user_id,
+      logOut,
+
     };
   },
 };

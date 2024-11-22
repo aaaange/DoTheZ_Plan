@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
@@ -20,7 +21,8 @@ def login(request):
     
     if user:
         auth_login(request, user)
-        return Response({"message": "Login successful", "user": UserSerializer(user).data}, status=status.HTTP_200_OK)
+        token, created = Token.objects.get_or_create(user=user)  # 사용자에게 토큰 생성
+        return Response({"message": "Login successful", "user": UserSerializer(user).data, "key": token.key }, status=status.HTTP_200_OK)
     return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
