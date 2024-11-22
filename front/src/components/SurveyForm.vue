@@ -1,4 +1,4 @@
-<template>
+\<template>
   <div class="background">
     <div class="container">
       <h1>나와 꼭 맞는 상품을 알아봐요</h1>
@@ -100,7 +100,18 @@
 </template>
 
 <script>
+import axios from 'axios';
+// import { useCounterStore } from '@/stores/counter';
+
+// store = useCounterStore()
 export default {
+  // setup() {
+  //   const store = useCounterStore();  // useCounterStore 호출
+  //   const token = store.token;  // store에서 token 가져오기
+  //   return {
+  //     token,  // 반환하여 컴포넌트에서 사용
+  //   };
+  // },
   data() {
     return {
       surveyQuestions: [
@@ -156,7 +167,7 @@ export default {
         },
         
       ],
-      formData: {},
+      formData: { },
       submitted: false,
       errorMessage: "",
     };
@@ -180,7 +191,7 @@ export default {
     });
   },
   methods: {
-    submitForm() {
+    async submitForm() {
       const incompleteField = this.surveyQuestions.find(
         (question) =>
           this.formData[question.field] === null || this.formData[question.field] === ""
@@ -191,8 +202,19 @@ export default {
         return;
       }
       this.errorMessage = "";
-      this.submitted = true;
-    },
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/surveys/user-survey/', this.formData, {
+          // headers: {
+          //   'Content-Type': 'survey/json',
+          // },
+        });
+        this.submitted = true;
+        console.log('서버 응답', response.data)
+      } catch (error) {
+        this.errorMessage = '서버에 오류가 발생했습니다. 다시 시도해주세요.'
+        console.error('서버 요청 오류:', error)
+      }
+    }
   },
 };
 </script>
