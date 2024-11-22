@@ -88,5 +88,6 @@ export const useCounterStore = defineStore('counter', () => {
         console.log(err); // 에러 처리
       });
   };
+  
   return { signUp, token, isLogin, logIn, API_URL, userProfile, logOut };
 });

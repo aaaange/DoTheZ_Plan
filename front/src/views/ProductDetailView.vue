@@ -6,7 +6,7 @@
         <h2 class="page-title">상품 상세 정보</h2>
         <hr class="title-divider" />
       </div>
-      
+
       <!-- 상품 이름 박스 -->
       <div class="product-name-box">
         <!-- 상품 이름 왼쪽에 이미지 추가 -->
@@ -19,13 +19,15 @@
       <!-- 상품 상세 정보 -->
       <div class="product-details-container">
         <div v-for="(info, index) in productInfo" :key="index" class="product-info">
-          <span class="product-label">{{ index }} : {{ info }}</span>
+          <span class="product-label">{{ info }}</span>
         </div>
       </div>
 
       <!-- 버튼 섹션 -->
       <div class="button-container">
-        <button class="action-button">내 상품에 등록</button>
+        <button class="action-button" @click="toggleSubscription">
+          내 상품에 등록
+        </button>
       </div>
     </div>
   </div>
@@ -64,12 +66,23 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { ref } from 'vue';
+import { useCounterStore } from "@/stores/counter";
+import axios from "axios";
 
 export default {
+  setup() {
+    const store = useCounterStore();  // useCounterStore 호출
+    const token = store.token;  // store에서 token 가져오기
+
+    return {
+      token,  // 반환하여 컴포넌트에서 사용
+      isSubscribed: false, // 상품 등록 상태
+    };
+  },
   data() {
     return {
+      productInfo: {}, // 제품 상세 정보
+      isSubscribed: false, // 상품 등록 상태
       productInfo: [],  // 전체 제품 리스트
       productImageUrl: '', // 상품 이미지 URL 추가
       newReviewContent: '', // 리뷰 내용
@@ -87,15 +100,50 @@ export default {
       ] // 리뷰 목록
     };
   },
+
   mounted() {
     // 서버에서 데이터를 가져오는 메소드 호출
     this.fetchProducts();
   },
+
   methods: {
     async fetchProducts() {
       try {
-        // 서버에서 데이터 요청
         const productCode = this.$route.params.productId;
+        const response = await axios.get(
+          `http://127.0.0.1:8000/product/product_detail/${productCode}`
+        );
+        this.productInfo = response.data; // 상품 상세 정보 저장
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      }
+    },
+
+    // 상품 등록 토글
+    async toggleSubscription() {
+      try {
+        const productId = this.$route.params.productId; // 현재 상품 ID
+
+        // Authorization 헤더에 token을 포함시켜 요청
+        const response = await axios.post(
+          `http://127.0.0.1:8000/accounts/api/v1/subscribe/${productId}/`,
+          {},
+          {
+            headers: { Authorization: `Token ${this.token}` }  // this.token 사용
+          }
+        );
+
+        // 서버 응답 메시지 출력
+        alert(response.data.message);
+
+        // 응답 데이터에서 사용자 가입 상품 목록을 업데이트하거나 처리
+        console.log("Subscribed products:", response.data.user_products);
+
+        // 상태 갱신 (옵션)
+        this.isSubscribed = !this.isSubscribed;
+      } catch (error) {
+        console.error("Error toggling subscription:", error);
+        alert("상품 등록에 실패했습니다. 다시 시도해주세요.");
         const response = await axios.get(`http://127.0.0.1:8000/product/product_detail/${productCode}`);
         const info = response.data;
         this.productInfo = info;  // 상품 상세 정보를 저장

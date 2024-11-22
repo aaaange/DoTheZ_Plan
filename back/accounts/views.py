@@ -1,7 +1,8 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from .serializers import UserSerializer, RegisterSerializer
@@ -98,6 +99,7 @@ def profile(request, user_id):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def toggle_product_subscription(request, fin_prdt_cd):
     user = request.user  # 로그인한 사용자
     product = get_object_or_404(Product, fin_prdt_cd=fin_prdt_cd)  # 해당 금융 상품
@@ -108,11 +110,11 @@ def toggle_product_subscription(request, fin_prdt_cd):
     if not created:
         # 이미 가입한 경우, 탈퇴
         user_product.delete()
-        message = 'Successfully unsubscribed from the product.'
+        message = '성공적으로 삭제되었습니다.'
         status_code = status.HTTP_200_OK
     else:
         # 상품에 가입한 경우
-        message = 'Successfully subscribed to the product.'
+        message = '성공적으로 등록되었습니다.'
         status_code = status.HTTP_201_CREATED
 
     # 사용자가 가입한 금융 상품 목록을 직렬화해서 반환
