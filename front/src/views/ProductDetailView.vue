@@ -31,11 +31,43 @@
       </div>
     </div>
   </div>
+  <!-- 리뷰 섹션 -->
+  <div class="review-page" style="width: 100%; min-height: 100vh; background: #F9EB87; display: flex; justify-content: center; align-items: center; padding: 20px;">
+    <div class="review-container" style="width: 800px; background: #FBF9F4; padding: 40px; border-radius: 20px; box-shadow: 6px 9px 4px rgba(0, 0, 0, 0.2);">
+      <!-- <h1 style="color: #585547; font-size: 32px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 700; margin-bottom: 10px;">상품 상세 페이지</h1> -->
+
+      <!-- 리뷰 내용 입력 및 버튼 배치 -->
+      <div style="display: flex; align-items: center; margin-bottom: 20px;">
+        <input
+          id="review-content"
+          type="text"
+          v-model="newReviewContent"
+          placeholder="리뷰를 입력해주세요."
+          style="flex-grow: 1; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4;"
+        />
+        <button @click="submitReview" style="padding: 10px 20px; background: #E6AF69; color: #FBF9F4; border: none; border-radius: 15px; font-size: 18px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 700; cursor: pointer; margin-left: 10px;">
+          리뷰 작성하기
+        </button>
+      </div>
+
+      <!-- 작성된 리뷰 목록 -->
+      <div v-for="(review, index) in reviews" :key="index" style="margin-top: 30px; padding: 15px; border: 1px solid #E6AF69; border-radius: 10px; margin-bottom: 10px; background: #FBF9F4;">
+        <div style="font-size: 14px; color: #585547;">{{ review.username }} | {{ review.date }}</div>
+        <div style="font-size: 16px; color: #585547; margin-top: 10px;">{{ review.content }}</div>
+        <div style="margin-top: 10px;">
+          <button @click="editReview(index)" style="padding: 5px 10px; background: #E6AF69; color: #FBF9F4; border: none; border-radius: 10px; font-size: 14px; cursor: pointer;">수정</button>
+          <button @click="deleteReview(index)" style="padding: 5px 10px; background: #E6AF69; color: #FBF9F4; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; margin-left: 10px;">삭제</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script>
 import { useCounterStore } from "@/stores/counter";
 import axios from "axios";
+import { ref } from 'vue';
 
 export default {
   setup() {
@@ -49,6 +81,19 @@ export default {
   },
   data() {
     return {
+      newReviewContent: '', // 리뷰 내용
+      reviews: [
+        {
+          username: '닉네임12345',
+          date: '2024-11-22 15:30',
+          content: '해당 메세지는 댓글 내용입니다.'
+        },
+        {
+          username: '닉네임67890',
+          date: '2024-11-21 10:20',
+          content: '해당 메세지는 다른 댓글 내용입니다.'
+        }
+      ], // 리뷰 목록
       productInfo: {}, // 제품 상세 정보
       isSubscribed: false, // 상품 등록 상태
     };
@@ -99,6 +144,32 @@ export default {
         alert("상품 등록에 실패했습니다. 다시 시도해주세요.");
       }
     },
+
+    submitReview() {
+      if (!this.newReviewContent) return;
+      this.reviews.push({
+        username: '새로운 사용자',
+        date: new Date().toLocaleString(),
+        content: this.newReviewContent
+      });
+      this.newReviewContent = '';
+    },
+
+    editReview(index) {
+    const updatedContent = prompt('수정할 내용을 입력하세요:', this.reviews[index].content);
+    if (updatedContent !== null && updatedContent.trim() !== '') {
+      this.reviews[index].content = updatedContent;
+      this.reviews[index].date = new Date().toLocaleString();
+    }
+  },
+
+
+
+    deleteReview(index) {
+      if (confirm('정말 삭제하시겠습니까?')) {
+        this.reviews.splice(index, 1);
+      }
+    }
   },
 };
 </script>
