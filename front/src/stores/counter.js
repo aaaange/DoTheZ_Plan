@@ -14,6 +14,7 @@ export const useCounterStore = defineStore('counter', () => {
   // 로그인 여부를 computed로 처리
   const isLogin = computed(() => token.value !== null);
 
+
   // 회원가입 요청
   const signUp = function (payload) {
     const { username, password1, password2, email, phone, birth } = payload;
@@ -63,12 +64,14 @@ export const useCounterStore = defineStore('counter', () => {
       } else {
         console.error('토큰이 없거나 잘못된 응답을 받았습니다.')
       }
+
     })
     .catch((err) => {
       console.log('로그인 실패:', err.response || err.message);  // 로그인 실패 시 콘솔에 오류 메시지 출력
       alert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
     });
   };
+
   // [추가기능] 로그아웃
   const logOut = function () {
     axios({

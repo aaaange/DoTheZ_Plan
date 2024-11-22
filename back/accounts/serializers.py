@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import User
-from .models import Product, UserProduct
+# from .models import Product, UserProduct
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,15 +29,15 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ['id', 'name', 'description']
+# class ProductSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Product
+#         fields = ['id', 'name', 'description']
 
 
-class UserProductSerializer(serializers.ModelSerializer):
-    product_name = serializers.CharField(source='product.name')
+# class UserProductSerializer(serializers.ModelSerializer):
+#     product_name = serializers.CharField(source='product.name')
 
-    class Meta:
-        model = UserProduct
-        fields = ['product_name', 'product']
+#     class Meta:
+#         model = UserProduct
+#         fields = ['product_name', 'product']

@@ -4,9 +4,12 @@ from rest_framework.authtoken.models import Token
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
-from .serializers import UserSerializer, RegisterSerializer, ProductSerializer, UserProductSerializer
-from .models import Product, UserProduct, User
+from .serializers import UserSerializer, RegisterSerializer
+# from .serializers import UserSerializer, RegisterSerializer, ProductSerializer, UserProductSerializer
+# from .models import Product, UserProduct, User
+from .models import User
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -93,40 +96,40 @@ def profile(request, user_id):
     return Response(data)
 
 
-@api_view(['POST'])
-def toggle_product_subscription(request, product_pk):
-    user = request.user  # 로그인한 사용자
-    product = get_object_or_404(Product, pk=product_pk)  # 해당 금융 상품
+# @api_view(['POST'])
+# def toggle_product_subscription(request, product_pk):
+#     user = request.user  # 로그인한 사용자
+#     product = get_object_or_404(Product, pk=product_pk)  # 해당 금융 상품
 
-    # 사용자가 이미 이 상품에 가입되어 있는지 확인
-    user_product, created = UserProduct.objects.get_or_create(user=user, product=product)
+#     # 사용자가 이미 이 상품에 가입되어 있는지 확인
+#     user_product, created = UserProduct.objects.get_or_create(user=user, product=product)
 
-    if not created:
-        # 이미 가입한 경우, 탈퇴
-        user_product.delete()
-        message = 'Successfully unsubscribed from the product.'
-        status_code = status.HTTP_200_OK
-    else:
-        # 상품에 가입한 경우
-        message = 'Successfully subscribed to the product.'
-        status_code = status.HTTP_201_CREATED
+#     if not created:
+#         # 이미 가입한 경우, 탈퇴
+#         user_product.delete()
+#         message = 'Successfully unsubscribed from the product.'
+#         status_code = status.HTTP_200_OK
+#     else:
+#         # 상품에 가입한 경우
+#         message = 'Successfully subscribed to the product.'
+#         status_code = status.HTTP_201_CREATED
 
-    # 사용자가 가입한 금융 상품 목록을 직렬화해서 반환
-    user_products = UserProduct.objects.filter(user=user)
-    serializer = ProductSerializer([user_product.product for user_product in user_products], many=True)
+#     # 사용자가 가입한 금융 상품 목록을 직렬화해서 반환
+#     user_products = UserProduct.objects.filter(user=user)
+#     serializer = ProductSerializer([user_product.product for user_product in user_products], many=True)
 
-    return Response({
-        'message': message,
-        'user_products': serializer.data  # 가입한 금융 상품 목록
-    }, status=status_code)
+#     return Response({
+#         'message': message,
+#         'user_products': serializer.data  # 가입한 금융 상품 목록
+#     }, status=status_code)
 
-@api_view(['GET'])
-def my_subscribed_products(request):
-    user = request.user
-    user_products = UserProduct.objects.filter(user=user)
-    products = [user_product.product for user_product in user_products]
-    serializer = ProductSerializer(products, many=True)
-    return Response(serializer.data)
+# @api_view(['GET'])
+# def my_subscribed_products(request):
+#     user = request.user
+#     user_products = UserProduct.objects.filter(user=user)
+#     products = [user_product.product for user_product in user_products]
+#     serializer = ProductSerializer(products, many=True)
+#     return Response(serializer.data)
 
 @api_view(['POST'])
 def check_username(request):
@@ -135,7 +138,11 @@ def check_username(request):
         return JsonResponse({'isAvailable': False})  # 중복된 아이디
     return JsonResponse({'isAvailable': True})   # 사용 가능한 아이디
 
-
 @api_view(['GET'])
-def check_auth(request):
-    return JsonResponse({'is_authenticated': request.user.is_authenticated})
+def user_info(request):
+    if request.user.is_authenticated:
+        return JsonResponse({
+            'username': request.user.username,
+            'is_authenticated': True,
+            'pk': request.user.pk  # 사용자의 pk 추가
+        })
