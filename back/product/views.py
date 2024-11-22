@@ -58,11 +58,13 @@ def save_deposit_products(request):
         for li in response['result']['baseList']:
             fin_prdt_cd = li.get('fin_prdt_cd')
             fin_co_no = li.get('fin_co_no')
+            kor_co_nm = li.get('kor_co_nm')
             fin_prdt_nm = li.get('fin_prdt_nm')
             join_way = li.get('join_way')
             mtrt_int = li.get('mtrt_int', "")
             spcl_cnd = li.get('spcl_cnd', "")
             join_deny = li.get('join_deny', "")
+            join_member = li.get('join_member',"")
             etc_note = li.get('etc_note', "")
             max_limit = li.get('max_limit', 0.0)
 
@@ -74,11 +76,13 @@ def save_deposit_products(request):
                 'fin_prdt_cd': fin_prdt_cd,
                 'is_saving': False,
                 'fin_co_no': fin_co_no,
+                'kor_co_nm': kor_co_nm,
                 'fin_prdt_nm': fin_prdt_nm,
                 'join_way': join_way,
                 'mtrt_int': mtrt_int,
                 'spcl_cnd': spcl_cnd,
                 'join_deny': join_deny,
+                'join_member': join_member,
                 'etc_note': etc_note,
                 'max_limit': max_limit
             }
@@ -165,11 +169,13 @@ def save_saving_products(request):
         for li in response['result']['baseList']:
             fin_prdt_cd = li.get('fin_prdt_cd')
             fin_co_no = li.get('fin_co_no')
+            kor_co_nm = li.get('kor_co_nm')
             fin_prdt_nm = li.get('fin_prdt_nm')
             join_way = li.get('join_way')
             mtrt_int = li.get('mtrt_int', "")
             spcl_cnd = li.get('spcl_cnd', "")
             join_deny = li.get('join_deny', "")
+            join_member = li.get('join_member', "")
             etc_note = li.get('etc_note', "")
             max_limit = li.get('max_limit', 0.0)
 
@@ -181,11 +187,13 @@ def save_saving_products(request):
                 'fin_prdt_cd': fin_prdt_cd,
                 'is_saving': True,
                 'fin_co_no': fin_co_no,
+                'kor_co_nm' : kor_co_nm,
                 'fin_prdt_nm': fin_prdt_nm,
                 'join_way': join_way,
                 'mtrt_int': mtrt_int,
                 'spcl_cnd': spcl_cnd,
                 'join_deny': join_deny,
+                'join_member': join_member,
                 'etc_note': etc_note,
                 'max_limit': max_limit
             }
