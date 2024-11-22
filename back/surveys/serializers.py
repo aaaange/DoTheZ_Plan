@@ -5,7 +5,7 @@ class UserSurveySerializer(serializers.ModelSerializer):
     class Meta:
         model = UserSurvey
         fields = [
-            'user_id',
+            # 'user_id',
             'deposit_or_saving',
             'minimum_deposit',
             'investment_period',

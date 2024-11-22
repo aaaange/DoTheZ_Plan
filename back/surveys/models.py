@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 class UserSurvey(models.Model):
     id = models.AutoField(primary_key=True)  # PK
-    user_id = models.IntegerField()  # FK, User 테이블의 ID를 참조
+    # user_id = models.IntegerField()  # FK, User 테이블의 ID를 참조
     created_at = models.DateTimeField(auto_now_add=True)  # 설문 제출일
     deposit_or_saving = models.BooleanField()  # 예금/적금
     minimum_deposit = models.FloatField()  # 최소 예치금/월 최소 투자 금액
