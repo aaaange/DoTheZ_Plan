@@ -202,26 +202,30 @@ export default {
   width: 100%;
   height: 100vh;
   background-color: #F9EB87;
-  top: 100px;
+  position: relative; /* 이 부분을 유지 */
 }
 
 .container {
   max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+  margin: 0 auto; /* auto로 중앙 정렬 */
+  padding: 50px;
   background: #f9f9f9;
-  border-radius: 8px;
+  border-radius: 30px;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
   font-family: "Roboto", sans-serif;
-  height: 600px; 
+  height: 700px; 
   display: flex;
   flex-direction: column;
+  position: relative; /* 이 부분을 추가해서 박스만 위치 조정 */
+  top: 100px; /* 박스를 아래로 내리기 위한 값 */
 }
 
 h1 {
   color: #2c3e50;
   text-align: center;
   margin-bottom: 20px;
+  font-size: 50px;
+  justify-content: left;
 }
 
 .survey-form {
