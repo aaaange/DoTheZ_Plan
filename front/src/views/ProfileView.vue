@@ -43,7 +43,7 @@
           style="position: absolute; top: 180px; left: 110px; right: 110px; display: flex; align-items: center; background-color: #EDEDED; padding: 20px; border-radius: 10px;"
         >
           <img
-            :src="userImage"
+            src="/src/image/dothez.jpg"
             alt="프로필 사진"
             class="user-avatar"
             style="width: 120px; height: 120px; border-radius: 50%; margin-right: 20px;"
@@ -55,7 +55,7 @@
               {{ username ? username : "로그인을 해주세요" }}
             </h2>
             <p style="font-size: 18px; color: #585547;">
-              작성한 리뷰 {{ userProfile ? userProfile.reviewsCount : "2" }}개
+              <!-- 작성한 리뷰 {{ userProfile ? userProfile.reviewsCount : "2" }}개 -->
             </p>
           </div>
         </div>
@@ -66,7 +66,7 @@
           style="position: absolute; top: 350px; left: 110px; right: 110px;"
         >
           <h3 style="font-size: 24px; color: #585547; margin-bottom: 20px;">
-            가입한 상품
+            가입한 상품: {{ my_products }}
           </h3>
           <!-- <div v-if="userProfile" class="product-list" style="max-height: 350px; overflow-y: auto;">
             <div v-for="(product, index) in userProfile.products" :key="index" class="product-item" style="background-color: #F7F4EA; border-radius: 10px; border: 1px solid #585547; padding: 15px; margin-bottom: 10px;">
@@ -85,12 +85,8 @@
 
 
 <script>
-import { ref } from "vue";
 import { useCounterStore } from "@/stores/counter";
 import axios from "axios";
-// import img from "@/image/dothez.jpg";
-
-// const userImage = ref(img);
 
 export default {
   setup() {
@@ -104,23 +100,40 @@ export default {
   data() {
     return {
       username: '', // 제품 상세 정보
+      user_id: '',
+      my_products: [ ],
     };
   },
 
   mounted() {
     // 서버에서 데이터를 가져오는 메소드 호출
     this.fetchProfiles();
+    this.fetchProducts()
   },
 
   methods: {
     async fetchProfiles() {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:8000/accounts/api/v1/user_info/`,
+          'http://127.0.0.1:8000/accounts/api/v1/user_info/',
         {
           headers: { Authorization: `Token ${this.token}` }  // this.token 사용
         })
         this.username = response.data.username; // 상품 상세 정보 저장
+        this.user_id = response.data.pk
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      }
+    },
+    async fetchProducts() {
+      try {
+        const response = await axios.get(
+          'http://127.0.0.1:8000/accounts/api/v1/my/',
+        {
+          headers: { Authorization: `Token ${this.token}` }  // this.token 사용
+        })
+        console.log(response.data)
+        this.my_products = response.data
       } catch (error) {
         console.error("Error fetching product data:", error);
       }
@@ -128,29 +141,6 @@ export default {
   },
 }
 </script>
-
-<!-- 
-<script setup>
-import { ref } from "vue";
-import { useCounterStore } from "@/stores/counter";
-import img from "@/image/dothez.jpg";
-
-const store = useCounterStore();
-const username = ref("");
-const userImage = ref(img);
-
-
-if (store.userProfile) {
-  username.value = store.userProfile.username;
-}
-
-const deleteAccount = () => {
-  if (confirm("정말 탈퇴하시겠습니까?")) {
-    // 여기에 탈퇴 로직 추가
-    console.log("탈퇴 처리 로직 실행");
-  }
-};
-</script> -->
 
 <style scoped>
 .product-list::-webkit-scrollbar {

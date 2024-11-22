@@ -48,7 +48,6 @@ export const useCounterStore = defineStore('counter', () => {
 
     axios.post(`${API_URL}/accounts/api/v1/login/`, { username, password })
     .then((res) => {
-      console.log(res.data);
       if (res.data.key) {
         token.value = res.data.key;  // 로그인 성공 시 받은 토큰 저장
         localStorage.setItem('token', res.data.key);  // 토큰을 로컬 스토리지에 저장
