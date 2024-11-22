@@ -83,6 +83,53 @@
   </div>
 </template>
 
+
+<script>
+import { ref } from "vue";
+import { useCounterStore } from "@/stores/counter";
+import axios from "axios";
+// import img from "@/image/dothez.jpg";
+
+// const userImage = ref(img);
+
+export default {
+  setup() {
+    const store = useCounterStore();  // useCounterStore 호출
+    const token = store.token;  // store에서 token 가져오기
+
+    return {
+      token,  // 반환하여 컴포넌트에서 사용
+    };
+  },
+  data() {
+    return {
+      username: '', // 제품 상세 정보
+    };
+  },
+
+  mounted() {
+    // 서버에서 데이터를 가져오는 메소드 호출
+    this.fetchProfiles();
+  },
+
+  methods: {
+    async fetchProfiles() {
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:8000/accounts/api/v1/user_info/`,
+        {
+          headers: { Authorization: `Token ${this.token}` }  // this.token 사용
+        })
+        this.username = response.data.username; // 상품 상세 정보 저장
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      }
+    },
+  },
+}
+</script>
+
+<!-- 
 <script setup>
 import { ref } from "vue";
 import { useCounterStore } from "@/stores/counter";
@@ -91,6 +138,7 @@ import img from "@/image/dothez.jpg";
 const store = useCounterStore();
 const username = ref("");
 const userImage = ref(img);
+
 
 if (store.userProfile) {
   username.value = store.userProfile.username;
@@ -102,7 +150,7 @@ const deleteAccount = () => {
     console.log("탈퇴 처리 로직 실행");
   }
 };
-</script>
+</script> -->
 
 <style scoped>
 .product-list::-webkit-scrollbar {
