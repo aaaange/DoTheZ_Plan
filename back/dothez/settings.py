@@ -169,3 +169,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_COOKIE_NAME = 'sessionid'  # 기본 세션 쿠키 이름
+SESSION_COOKIE_AGE = 3600  # 쿠키 만료 시간 (1시간)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # 브라우저 닫을 때 세션 만료 여부
+SESSION_COOKIE_SECURE = False  # 로컬 개발 시 False로 설정
