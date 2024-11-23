@@ -123,9 +123,16 @@ def toggle_product_subscription(request, fin_prdt_cd):
 
     return Response({
         'message': message,
-        'user_products': serializer.data  # 가입한 금융 상품 목록
+        'user_products': serializer.data,  # 가입한 금융 상품 목록
     }, status=status_code)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def check_state(request, fin_prdt_cd):
+    user = request.user  # 로그인한 사용자
+    product = get_object_or_404(Product, fin_prdt_cd=fin_prdt_cd)  # 해당 금융 상품
+    state = UserProduct.objects.filter(user=user, product=product).exists()
+    return Response({ 'state': state })
 
 @api_view(['GET'])
 def my_subscribed_products(request):
