@@ -16,7 +16,7 @@
         <RouterLink :to="{ name: 'map' }"><div style="color: #1E1E1E; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">가까운 은행 찾기</div></RouterLink>
       </div>
       <div style="padding: 8px; border-radius: 8px; justify-content: center; align-items: center; gap: 8px; display: flex">
-        <RouterLink :to="{ name: 'recommend' }"><div style="color: #1E1E1E; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">금융 상품 추천</div></RouterLink>
+        <RouterLink :to="{ name: 'survey' }"><div style="color: #1E1E1E; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word">금융 상품 추천</div></RouterLink>
       </div>
     </div>
     <div style="height: 32px; justify-content: flex-start; align-items: center; gap: 12px; display: flex">

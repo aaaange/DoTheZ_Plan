@@ -101,17 +101,8 @@
 
 <script>
 import axios from 'axios';
-// import { useCounterStore } from '@/stores/counter';
 
-// store = useCounterStore()
 export default {
-  // setup() {
-  //   const store = useCounterStore();  // useCounterStore 호출
-  //   const token = store.token;  // store에서 token 가져오기
-  //   return {
-  //     token,  // 반환하여 컴포넌트에서 사용
-  //   };
-  // },
   data() {
     return {
       surveyQuestions: [
@@ -165,7 +156,6 @@ export default {
           type: "enum",
           options: ["낮음", "보통", "높음"],
         },
-        
       ],
       formData: { },
       submitted: false,
@@ -204,12 +194,13 @@ export default {
       this.errorMessage = "";
       try {
         const response = await axios.post('http://127.0.0.1:8000/surveys/user-survey/', this.formData, {
-          // headers: {
-          //   'Content-Type': 'survey/json',
-          // },
         });
+        console.log('서버 응답:', response.data);
         this.submitted = true;
-        console.log('서버 응답', response.data)
+
+        // 추천 결과로 이동 (현재 페이지에서 RecommendProd가 표시됨)
+        this.$router.push('/recommend'); // 필요하면 router 처리
+          
       } catch (error) {
         this.errorMessage = '서버에 오류가 발생했습니다. 다시 시도해주세요.'
         console.error('서버 요청 오류:', error)

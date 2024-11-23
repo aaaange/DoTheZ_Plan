@@ -5,6 +5,7 @@ import ProfileView from '@/views/ProfileView.vue'
 import ProductListView from '@/views/ProductListView.vue'
 import ExchangeRateView from '@/views/ExchangeRateView.vue'
 import MapView from '@/views/MapView.vue'
+import SurveyView from '@/views/SurveyView.vue'
 import RecommendView from '@/views/RecommendView.vue'
 import LogOutView from '@/views/LogOutView.vue'
 
@@ -54,6 +55,11 @@ const router = createRouter({
       path: '/map',
       name: 'map',
       component: MapView,
+    },
+    {
+      path: '/survey',
+      name: 'survey',
+      component: SurveyView,
     },
     {
       path: '/recommend',
