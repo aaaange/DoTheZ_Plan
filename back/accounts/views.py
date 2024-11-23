@@ -135,8 +135,6 @@ def my_subscribed_products(request):
     serializer = DepositProductsSerializer(products, many=True)
     return Response(serializer.data)
 
-import pandas as pd
-import numpy as np
 import base64
 import io
 from matplotlib import pyplot as plt
