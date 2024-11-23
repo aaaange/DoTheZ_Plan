@@ -1,13 +1,14 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status,  generics
 from django.http import JsonResponse
 
 from django.shortcuts import get_object_or_404, get_list_or_404
 from django.conf import settings
 
-from .models import Product, ProductOption
-from .serializers import DepositProductsSerializer, DepositOptionsSerializer
+from .models import Product, ProductOption, Review
+from .serializers import DepositProductsSerializer, DepositOptionsSerializer, ReviewSerializer
 import requests
 
 # API 키 및 URL 설정
@@ -237,9 +238,51 @@ class ProductDetailView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = DepositProductsSerializer
     lookup_field = 'fin_prdt_cd'  # URL에서 fin_prdt_cd로 조회
-
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        reviews = Review.objects.filter(product=instance)
+        review_serializer = ReviewSerializer(reviews, many=True)
+        data = serializer.data
+        data['reviews'] = review_serializer.data
+        return Response(data)
+    
 
 # 전체 상품 리스트 조회 API
 class ProductTotalListView(generics.ListAPIView):
     queryset = Product.objects.all()  # 모든 상품을 가져옴
     serializer_class = DepositProductsSerializer  # DepositProductsSerializer를 사용
+
+
+@api_view(['GET'])
+def review_list(request):
+    reviews = Review.objects.all()
+    serializer = ReviewSerializer(reviews, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def review_create(request, fin_prdt_cd):
+    product = get_object_or_404(Product, fin_prdt_cd=fin_prdt_cd)
+    serializer = ReviewSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save(product=product, user=request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def review_update_delete(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    
+    if request.user != review.user:
+        return Response({"detail": "권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+    
+    if request.method == 'PUT':
+        serializer = ReviewSerializer(review, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+    
+    elif request.method == 'DELETE':
+        review.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
