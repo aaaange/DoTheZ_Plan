@@ -9,8 +9,8 @@ from .serializers import UserSerializer, RegisterSerializer
 # from .serializers import UserSerializer, RegisterSerializer, ProductSerializer, UserProductSerializer
 # from .models import Product, UserProduct, User
 from .models import User, UserProduct
-from product.models import Product
-from product.serializers import DepositProductsSerializer
+from product.models import Product, ProductOption
+from product.serializers import DepositProductsSerializer, DepositOptionsSerializer
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 
@@ -134,6 +134,44 @@ def my_subscribed_products(request):
     products = [user_product.product for user_product in user_products]
     serializer = DepositProductsSerializer(products, many=True)
     return Response(serializer.data)
+
+import pandas as pd
+import numpy as np
+import base64
+import io
+from matplotlib import pyplot as plt
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def subcribed_products_graph(request):
+    user = request.user
+    user_products = UserProduct.objects.filter(user=user)
+    product_pks = [user_product.product_id for user_product in user_products]
+    product_options = ProductOption.objects.filter(product=product_pks)
+    
+    # 데이터 준비
+    product_names = [option.product.name for option in product_options]  # 제품 이름
+    intr_rates = [option.intr_rate for option in product_options]  # 금리
+
+    # 그래프 생성
+    plt.figure(figsize=(10, 6))
+    plt.bar(product_names, intr_rates, color='skyblue')
+    plt.xlabel('Product Name')
+    plt.ylabel('Interest Rate (%)')
+    plt.title('Comparison of Interest Rates by Product')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+
+    # 그래프를 이미지로 변환
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_base64 = base64.b64encode(buffer.read()).decode('utf-8')
+    buffer.close()
+    plt.close()
+
+    # 응답 반환
+    return Response({"graph": image_base64})
 
 
 @api_view(['POST'])
