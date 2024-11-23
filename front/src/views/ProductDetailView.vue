@@ -26,7 +26,7 @@
       <!-- 버튼 섹션 -->
       <div class="button-container">
         <button class="action-button" @click="toggleSubscription">
-          내 상품에 등록
+          {{ isSubscribed ? '내 상품에 삭제' : '내 상품에 등록' }}
         </button>
       </div>
     </div>
@@ -67,16 +67,42 @@
 <script>
 import { useCounterStore } from "@/stores/counter";
 import axios from "axios";
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import { useRoute } from "vue-router";
 
 export default {
   setup() {
     const store = useCounterStore();  // useCounterStore 호출
     const token = store.token;  // store에서 token 가져오기
+    const route = useRoute();
+    const isSubscribed = ref(null)
+    const productId = route.params.productId;
+
+    const fetchSubscriptionStatus = async () => {
+      try {
+        // Authorization 헤더에 token을 포함시켜 요청
+        const response = await axios.get(
+          `http://127.0.0.1:8000/accounts/api/v1/check_state/${productId}/`,
+          {
+            headers: { Authorization: `Token ${token}` }  // this.token 사용
+          }
+        );
+        isSubscribed.value = response.data.state;
+        console.log(isSubscribed.value)
+
+      } catch (error) {
+        console.error('구독 상태를 가져오는 중 오류 발생:', error);
+      }
+    };
+
+    // 3. 컴포넌트가 로드될 때 초기값 로드
+    onMounted(() => {
+      fetchSubscriptionStatus();
+    });
 
     return {
       token,  // 반환하여 컴포넌트에서 사용
-      isSubscribed: false, // 상품 등록 상태
+      isSubscribed,
     };
   },
   data() {
@@ -95,7 +121,6 @@ export default {
         }
       ], // 리뷰 목록
       productInfo: {}, // 제품 상세 정보
-      isSubscribed: false, // 상품 등록 상태
     };
   },
 
@@ -137,8 +162,8 @@ export default {
         // 응답 데이터에서 사용자 가입 상품 목록을 업데이트하거나 처리
         console.log("Subscribed products:", response.data.user_products);
 
-        // 상태 갱신 (옵션)
-        this.isSubscribed = !this.isSubscribed;
+        this.isSubscribed = !this.isSubscribed
+
       } catch (error) {
         console.error("Error toggling subscription:", error);
         alert("상품 등록에 실패했습니다. 다시 시도해주세요.");
