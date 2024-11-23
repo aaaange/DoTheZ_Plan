@@ -46,11 +46,11 @@
             src="/src/image/dothez.jpg"
             alt="프로필 사진"
             class="user-avatar"
-            style="width: 120px; height: 120px; border-radius: 50%; margin-right: 20px;"
-          />
+            style="width: 120px; height: 120px; border-radius: 50%; margin-right: 20px; margin-left: 15px;"
+            />
           <div class="user-details">
             <h2
-              style="font-size: 28px; color: #585547; margin-bottom: 5px;"
+              style="font-size: 30px; color: #585547; margin-top: 0px; margin-bottom: 50px; margin-left:20px"
             >
               {{ username ? username : "로그인을 해주세요" }}
             </h2>
@@ -59,24 +59,24 @@
             </p>
           </div>
         </div>
-
         <!-- 가입한 상품 목록 -->
         <div
           class="product-section"
           style="position: absolute; top: 350px; left: 110px; right: 110px;"
         >
           <h3 style="font-size: 24px; color: #585547; margin-bottom: 20px;">
-            가입한 상품: {{ my_products }}
+            가입한 상품
           </h3>
-          <!-- <div v-if="userProfile" class="product-list" style="max-height: 350px; overflow-y: auto;">
-            <div v-for="(product, index) in userProfile.products" :key="index" class="product-item" style="background-color: #F7F4EA; border-radius: 10px; border: 1px solid #585547; padding: 15px; margin-bottom: 10px;">
-              <p style="font-size: 18px; color: #585547; font-weight: 500;">{{ product.name }}</p>
-              <p style="font-size: 14px; color: #585547;">이자율 {{ product.rate }}</p>
+          <div class="product-list" style="max-height: 350px; overflow-y: auto;">
+            <div v-if="my_products.length > 0">
+              <div v-for="(product, index) in my_products" :key="index" class="product-item" style="background-color: #F7F4EA; border-radius: 10px; border: 1px solid #585547; padding: 15px; margin-bottom: 10px;">
+                <p style="font-size: 18px; color: #585547; font-weight: 500;">{{ product.fin_prdt_nm }}</p>
+              </div>
+            </div>
+            <div v-else class="no-products" style="display: flex; justify-content: center; align-items: center; height: 100px; font-size: 18px; color: #585547;">
+              가입한 상품이 없습니다.
             </div>
           </div>
-          <div v-else class="login-message" style="display: flex; justify-content: center; align-items: center; height: 200px; font-size: 24px; color: #585547;">
-            로그인 해주세요
-          </div> -->
         </div>
       </div>
     </div>
