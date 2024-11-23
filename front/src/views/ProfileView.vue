@@ -77,6 +77,16 @@
               가입한 상품이 없습니다.
             </div>
           </div>
+          <!-- 그래프 표시 영역 추가 -->
+          <!-- <div class="graph-section" style="position: absolute; top: 720px; left: 110px; right: 110px;">
+            <h3 style="font-size: 24px; color: #585547; margin-bottom: 20px;">가입 상품 금리 비교</h3>
+            <div v-if="graph" class="graph-container">
+              <img :src="'data:image/png;base64,' + graph" alt="Interest Rate Graph" style="width: 100%; max-width: 600px;">
+            </div>
+            <div v-else class="no-graph" style="display: flex; justify-content: center; align-items: center; height: 100px; font-size: 18px; color: #585547;">
+              그래프를 불러오는 중입니다...
+            </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -102,13 +112,15 @@ export default {
       username: '', // 제품 상세 정보
       user_id: '',
       my_products: [ ],
+      // graph: null,
     };
   },
 
   mounted() {
     // 서버에서 데이터를 가져오는 메소드 호출
-    this.fetchProfiles();
+    this.fetchProfiles()
     this.fetchProducts()
+    // this.fetchGraphs()
   },
 
   methods: {
@@ -138,6 +150,19 @@ export default {
         console.error("Error fetching product data:", error);
       }
     },
+    // async fetchGraphs() {
+    //   try {
+    //     const response = await axios.get(
+    //       'http://127.0.0.1:8000/accounts/api/v1/product_graph/',
+    //     {
+    //       headers: { Authorization: `Token ${this.token}` }  // this.token 사용
+    //     })
+    //     console.log(response.data)
+    //     this.graph = response.data.graph
+    //   } catch (error) {
+    //     console.error("Error fetching graph data:", error);
+    //   }
+    // },
     // 탈퇴하기 기능
     async deleteAccount() {
       if (!this.token) {
