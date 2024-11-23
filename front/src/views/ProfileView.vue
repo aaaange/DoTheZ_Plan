@@ -155,15 +155,18 @@ export default {
           });
 
           if (response.status === 204) {
-            // alert("탈퇴가 완료되었습니다.");
-            if (confirm("탈퇴가 완료되었습니다.")) {
-              this.token = null; // 인증 토큰 비우기
-              localStorage.removeItem('token');  // 로컬 스토리지에서 토큰 삭제
-              // router.push('/'); // 메인 페이지로 리디렉션
-              this.$router.push({ name: "login" });  // 탈퇴 후 로그인 페이지로 리디렉션
-            }
+            alert("탈퇴가 완료되었습니다.");
+            
+            // 토큰 삭제
+            this.token = null; 
+            localStorage.removeItem("token");
+
+            // 메인 페이지로 이동 후 새로고침
+            this.$router.push({ name: "mainpage" }).then(() => {
+              window.location.reload(); // 새로고침
+            });
           }
-        } catch (error) {
+        }  catch (error) {
           alert("탈퇴 처리에 실패했습니다. 다시 시도해주세요.");
           console.error(error);
         }
