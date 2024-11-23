@@ -1,6 +1,6 @@
 <template>
-  <div class="signup-page" style="width: 100%; height: 100vh; background: #F9EB87; display: flex; justify-content: center; align-items: center;">
-    <div class="signup-container" style="width: 800px; background: #FBF9F4; padding: 40px; border-radius: 20px; box-shadow: 6px 9px 4px rgba(0, 0, 0, 0.2);">
+  <div class="signup-page" style="width: 100%; height: 100vh; background: #F9EB87; display: flex; justify-content: center; align-items: center; ">
+    <div class="signup-container" style="width: 800px; background: #FBF9F4; çpadding: 40px; border-radius: 20px; box-shadow: 6px 9px 4px rgba(0, 0, 0, 0.2);">
       <h1 style="color: #585547; font-size: 32px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 700; margin-bottom: 10px;">회원가입</h1>
       <p style="color: #585547; font-size: 16px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 300; margin-bottom: 30px;">어서오세요! 두더Z와 깊이 있는 금융 생활 해요 :)</p>
 
