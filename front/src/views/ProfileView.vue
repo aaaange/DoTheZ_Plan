@@ -138,8 +138,39 @@ export default {
         console.error("Error fetching product data:", error);
       }
     },
+    // 탈퇴하기 기능
+    async deleteAccount() {
+      if (!this.token) {
+        alert("로그인 후 탈퇴할 수 있습니다.");
+        return;
+      }
+
+      if (confirm("정말 탈퇴하시겠습니까?")) {
+        try {
+          // 탈퇴 API 호출
+          const response = await axios.delete("http://127.0.0.1:8000/accounts/api/v1/delete/", {
+            headers: {
+              Authorization: `Token ${this.token}`,  // 토큰을 헤더에 포함
+            },
+          });
+
+          if (response.status === 204) {
+            // alert("탈퇴가 완료되었습니다.");
+            if (confirm("탈퇴가 완료되었습니다.")) {
+              this.token = null; // 인증 토큰 비우기
+              localStorage.removeItem('token');  // 로컬 스토리지에서 토큰 삭제
+              // router.push('/'); // 메인 페이지로 리디렉션
+              this.$router.push({ name: "login" });  // 탈퇴 후 로그인 페이지로 리디렉션
+            }
+          }
+        } catch (error) {
+          alert("탈퇴 처리에 실패했습니다. 다시 시도해주세요.");
+          console.error(error);
+        }
+      }
+    },
   },
-}
+};
 </script>
 
 <style scoped>
