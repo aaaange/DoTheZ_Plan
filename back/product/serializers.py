@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, ProductOption
+from .models import Product, ProductOption, Review
 
 class DepositProductsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,3 +12,8 @@ class DepositOptionsSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('product',)
         
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
+        read_only_fields = ('product','user',)

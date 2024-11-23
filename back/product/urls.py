@@ -16,5 +16,7 @@ urlpatterns = [
     path('save-saving-products/', views.save_saving_products, name='save_saving_products'),
 
     path('', views.ProductTotalListView.as_view(), name='product_total_list'), # 전체 리스트
-    # path('')
+    path('reviews/', views.review_list, name='review_list'),
+    path('product_detail/<str:fin_prdt_cd>/reviews/', views.review_create, name='review_create'),
+    path('reviews/<int:review_id>/', views.review_update_delete, name='review_update_delete'),
 ]

@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 
 class Product(models.Model):
@@ -26,12 +27,9 @@ class ProductOption(models.Model):
     intr_rate = models.FloatField()
     intr_rate2 = models.FloatField()
 
-
-
-# class UserProduct(models.Model):
-#     user_id = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='products')
-
-#     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
-
-#     def __str__(self):
-#         return f"{self.user_id} - {self.product_id}"
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
