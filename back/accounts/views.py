@@ -137,36 +137,56 @@ def my_subscribed_products(request):
 
 import base64
 import io
+import matplotlib
+matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def subcribed_products_graph(request):
+def subscribed_products_graph(request):
     user = request.user
     user_products = UserProduct.objects.filter(user=user)
     product_pks = [user_product.product_id for user_product in user_products]
-    product_options = ProductOption.objects.filter(product=product_pks)
+    product_options = ProductOption.objects.filter(product__in=product_pks)
     
     # 데이터 준비
     product_names = [option.product.name for option in product_options]  # 제품 이름
-    intr_rates = [option.intr_rate for option in product_options]  # 금리
+    intr_rates = [option.intr_rate for option in product_options]  # 기본 금리
+    max_intr_rates = [option.intr_rate2 for option in product_options]  # 최고 우대 금리
 
     # 그래프 생성
-    plt.figure(figsize=(10, 6))
-    plt.bar(product_names, intr_rates, color='skyblue')
-    plt.xlabel('Product Name')
-    plt.ylabel('Interest Rate (%)')
-    plt.title('Comparison of Interest Rates by Product')
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
+    with plt.style.context('seaborn-darkgrid'):  # 스타일 적용
+        plt.figure(figsize=(10, 6))
+        
+        # 막대 위치 설정
+        bar_width = 0.35
+        x_indices = range(len(product_names))
+        
+        # 막대 생성
+        plt.bar(x_indices, intr_rates, width=bar_width, label='기본 금리', color='skyblue')
+        plt.bar(
+            [x + bar_width for x in x_indices],
+            max_intr_rates,
+            width=bar_width,
+            label='최고 우대 금리',
+            color='orange'
+        )
+        
+        # 그래프 꾸미기
+        plt.xlabel('상품명')
+        plt.ylabel('금리 (%)')
+        plt.title('가입한 상품의 금리 비교')
+        plt.xticks([x + bar_width / 2 for x in x_indices], product_names, rotation=45, ha='right')
+        plt.legend()
+        plt.tight_layout()
 
-    # 그래프를 이미지로 변환
-    buffer = io.BytesIO()
-    plt.savefig(buffer, format='png')
-    buffer.seek(0)
-    image_base64 = base64.b64encode(buffer.read()).decode('utf-8')
-    buffer.close()
-    plt.close()
+        # 그래프를 이미지로 변환
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format='png')
+        buffer.seek(0)
+        image_base64 = base64.b64encode(buffer.read()).decode('utf-8')
+        buffer.close()
+        plt.close()
 
     # 응답 반환
     return Response({"graph": image_base64})
