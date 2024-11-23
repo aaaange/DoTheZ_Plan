@@ -1,11 +1,14 @@
 from rest_framework import serializers
 from .models import UserSurvey
+from accounts.models import User
 
 class UserSurveySerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())  # user 필드는 ForeignKey로 연결되므로 PrimaryKey로 처리
+
     class Meta:
         model = UserSurvey
         fields = [
-            # 'user_id',
+            'user',  # 외래키 필드를 'user'로 수정
             'deposit_or_saving',
             'minimum_deposit',
             'investment_period',
