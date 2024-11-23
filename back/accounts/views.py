@@ -139,7 +139,11 @@ import base64
 import io
 import matplotlib
 matplotlib.use('Agg')
+from matplotlib import rc
 from matplotlib import pyplot as plt
+
+rc('font', family='Malgun Gothic')  # Windows: 맑은 고딕
+plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -150,12 +154,12 @@ def subscribed_products_graph(request):
     product_options = ProductOption.objects.filter(product__in=product_pks)
     
     # 데이터 준비
-    product_names = [option.product.name for option in product_options]  # 제품 이름
+    product_names = [option.product.fin_prdt_nm for option in product_options]  # 제품 이름
     intr_rates = [option.intr_rate for option in product_options]  # 기본 금리
     max_intr_rates = [option.intr_rate2 for option in product_options]  # 최고 우대 금리
 
     # 그래프 생성
-    with plt.style.context('seaborn-darkgrid'):  # 스타일 적용
+    with plt.style.context('ggplot'):  # 스타일 적용
         plt.figure(figsize=(10, 6))
         
         # 막대 위치 설정
