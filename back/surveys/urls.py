@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 
-appname="surveys"
+app_name="surveys"
 urlpatterns = [
     path('api/v1/user-survey/<int:user>/', views.user_survey_view, name='user-survey'),                             # 설문조사 데이터 저장
     path('api/v1/product-filtering/<int:user_survey_id>/', views.recommend_product, name='recommend_product'),      # 필터링 데이터 조회

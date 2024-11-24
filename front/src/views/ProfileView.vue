@@ -59,22 +59,24 @@
             </p>
           </div>
         </div>
-        <!-- 가입한 상품 목록 -->
-        <div
-          class="product-section"
-          style="position: absolute; top: 350px; left: 110px; right: 110px;"
-        >
-          <h3 style="font-size: 24px; color: #585547; margin-bottom: 20px;">
-            가입한 상품
-          </h3>
-          <div class="product-list" style="max-height: 350px; overflow-y: auto;">
-            <div v-if="my_products.length > 0">
-              <div v-for="(product, index) in my_products" :key="index" class="product-item" style="background-color: #F7F4EA; border-radius: 10px; border: 1px solid #585547; padding: 15px; margin-bottom: 10px;">
-                <p style="font-size: 18px; color: #585547; font-weight: 500;">{{ product.fin_prdt_nm }}</p>
+        <div>
+          <!-- 가입한 상품 목록 -->
+          <div
+            class="product-section"
+            style="position: absolute; top: 350px; left: 110px; right: 110px;"
+          >
+            <h3 style="font-size: 24px; color: #585547; margin-bottom: 20px;">
+              가입한 상품
+            </h3>
+            <div class="product-list" style="max-height: 350px; overflow-y: auto;">
+              <div v-if="my_products.length > 0">
+                <div v-for="(product, index) in my_products" :key="index" class="product-item" style="background-color: #F7F4EA; border-radius: 10px; border: 1px solid #585547; padding: 15px; margin-bottom: 10px;">
+                  <p style="font-size: 18px; color: #585547; font-weight: 500;">{{ product.fin_prdt_nm }}</p>
+                </div>
               </div>
-            </div>
-            <div v-else class="no-products" style="display: flex; justify-content: center; align-items: center; height: 100px; font-size: 18px; color: #585547;">
-              가입한 상품이 없습니다.
+              <div v-else class="no-products" style="display: flex; justify-content: center; align-items: center; height: 100px; font-size: 18px; color: #585547;">
+                가입한 상품이 없습니다.
+              </div>
             </div>
           </div>
           <!-- 그래프 표시 영역 추가 -->
@@ -144,7 +146,7 @@ export default {
         {
           headers: { Authorization: `Token ${this.token}` }  // this.token 사용
         })
-        console.log(response.data)
+
         this.my_products = response.data
       } catch (error) {
         console.error("Error fetching product data:", error);
@@ -157,7 +159,7 @@ export default {
         {
           headers: { Authorization: `Token ${this.token}` }  // this.token 사용
         })
-        console.log(response.data)
+
         this.graph = response.data.graph
       } catch (error) {
         console.error("Error fetching graph data:", error);

@@ -7,6 +7,7 @@ export const useCounterStore = defineStore('counter', () => {
   const API_URL = 'http://127.0.0.1:8000';  // API URL
   const token = ref(localStorage.getItem('token') || null);  // 로그인 상태를 나타내는 token 변수
   const router = useRouter();  // Vue Router 인스턴스
+  const userId = ref(null)
 
   // 로그인 여부를 computed로 처리
   const isLogin = computed(() => token.value !== null);
@@ -51,7 +52,11 @@ export const useCounterStore = defineStore('counter', () => {
       if (res.data.key) {
         token.value = res.data.key;  // 로그인 성공 시 받은 토큰 저장
         localStorage.setItem('token', res.data.key);  // 토큰을 로컬 스토리지에 저장
-  
+
+        // 유저 아이디 저장
+        // userId.value = res.data.user.id
+        // localStorage.setItem('user_id', res.data.user.id);
+
         console.log('로그인 성공');  // 로그인 성공 메시지 콘솔에 출력
         router.push({ name: 'mainpage' });  // 로그인 후 메인 페이지로 이동
       } else {
@@ -82,5 +87,5 @@ export const useCounterStore = defineStore('counter', () => {
       });
   };
   
-  return { signUp, token, isLogin, logIn, API_URL, logOut };
+  return { signUp, token, isLogin, logIn, API_URL, logOut, userId };
 });

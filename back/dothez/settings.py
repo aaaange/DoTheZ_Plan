@@ -28,6 +28,7 @@ environ.Env.read_env(
 
 # 환경변수를 읽어오기
 PRODUCT_API_KEY = env('PRODUCT_API_KEY')
+EXCHANGE_API_KEY = env('EXCHANGE_API_KEY')
 
 
 # Quick-start development settings - unsuitable for production
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'accounts',
     'product',
     'surveys',
+    'exchange',
     'rest_framework',
     'rest_framework.authtoken',
     'dj_rest_auth',
