@@ -5,7 +5,7 @@
       <p class="sub-title">오늘도 두더Z와 함께!</p>
 
       <!-- 아이디 입력 -->
-      <div class="input-group">
+      <div class="input-group-1">
         <label for="username">아이디</label>
         <input
           id="username"
@@ -16,7 +16,7 @@
       </div>
 
       <!-- 비밀번호 입력 -->
-      <div class="input-group">
+      <div class="input-group-1">
         <label for="password">비밀번호</label>
         <input
           id="password"
@@ -107,19 +107,19 @@ export default {
   margin-bottom: 30px;
 }
 
-.input-group {
+.input-group-1 {
   margin-bottom: 20px;
   text-align: left;
 }
 
-.input-group label {
+.input-group-1 label {
   color: #585547;
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 8px;
 }
 
-.input-group input {
+.input-group-1 input {
   width: 100%;
   padding: 10px;
   border: 1px solid #CDC7C0;
