@@ -14,6 +14,7 @@
             v-model="amount"
             placeholder="0"
             class="input"
+            @input="convertCurrency"
           />
           <!-- 출발 통화 드롭박스 클릭 시 표시 -->
           <div class="currency" @click="toggleFromDropdown">
@@ -23,18 +24,12 @@
           <div v-if="isFromDropdownVisible">
             <select
               v-model="selectedFromCurrency"
-              @change="updateSelectedFromCurrencyName(); convertCurrency(); toggleFromDropdown()"
+              @change="updateSelectedFromCurrencyName(); fetchExchangeRate(); toggleFromDropdown()"
               class="currency-dropdown"
             >
-              <option value="KRW">대한민국 원 (KRW)</option>
-              <option value="USD">미국 달러 (USD)</option>
-              <option value="EUR">유로 (EUR)</option>
-              <option value="JPY">일본 엔 (JPY)</option>
-              <option value="GBP">영국 파운드 (GBP)</option>
-              <option value="AUD">호주 달러 (AUD)</option>
-              <option value="CAD">캐나다 달러 (CAD)</option>
-              <option value="INR">인도 루피 (INR)</option>
-              <option value="CNY">중국 위안 (CNY)</option>
+              <option v-for="currency in currencies" :key="currency.code" :value="currency.code">
+                {{ currency.name }} ({{ currency.code }})
+              </option>
             </select>
           </div>
         </div>
@@ -54,18 +49,12 @@
           <div v-if="isToDropdownVisible">
             <select
               v-model="selectedToCurrency"
-              @change="updateSelectedToCurrencyName(); convertCurrency(); toggleToDropdown()"
+              @change="updateSelectedToCurrencyName(); fetchExchangeRate(); toggleToDropdown()"
               class="currency-dropdown"
             >
-              <option value="KRW">대한민국 원 (KRW)</option>
-              <option value="USD">미국 달러 (USD)</option>
-              <option value="EUR">유로 (EUR)</option>
-              <option value="JPY">일본 엔 (JPY)</option>
-              <option value="GBP">영국 파운드 (GBP)</option>
-              <option value="AUD">호주 달러 (AUD)</option>
-              <option value="CAD">캐나다 달러 (CAD)</option>
-              <option value="INR">인도 루피 (INR)</option>
-              <option value="CNY">중국 위안 (CNY)</option>
+              <option v-for="currency in currencies" :key="currency.code" :value="currency.code">
+                {{ currency.name }} ({{ currency.code }})
+              </option>
             </select>
           </div>
         </div>
@@ -86,9 +75,9 @@ export default {
   data() {
     return {
       amount: 1,
-      exchangeRate: 0.00071, // 기본 환율 값
-      historicalRates: [0.00071, 0.00072, 0.00073, 0.00071, 0.00069, 0.00070], // 예시 데이터
-      labels: ["11/22", "11/21", "11/20", "11/19", "11/18", "11/17"], // 예시 날짜
+      exchangeRate: 0.0,
+      historicalRates: [], // 환율 그래프 데이터
+      labels: [], // 환율 그래프 날짜
 
       // 드롭다운 상태 및 선택된 통화
       isFromDropdownVisible: false,
@@ -99,6 +88,19 @@ export default {
       // 선택된 통화 이름
       selectedFromCurrencyName: "대한민국 원",
       selectedToCurrencyName: "미국 달러",
+
+      // 사용 가능한 통화 목록
+      currencies: [
+        { code: "KRW", name: "대한민국 원" },
+        { code: "USD", name: "미국 달러" },
+        { code: "EUR", name: "유로" },
+        { code: "JPY", name: "일본 엔" },
+        { code: "GBP", name: "영국 파운드" },
+        { code: "AUD", name: "호주 달러" },
+        { code: "CAD", name: "캐나다 달러" },
+        { code: "INR", name: "인도 루피" },
+        { code: "CNY", name: "중국 위안" },
+      ],
     };
   },
   computed: {
@@ -113,9 +115,13 @@ export default {
     // 환율 데이터 API 호출
     async fetchExchangeRate() {
       try {
-        const response = await fetch("http://localhost:8000/api/exchange-rate");
+        const response = await fetch(
+          `http://localhost:8000/api/exchange-rate?from=${this.selectedFromCurrency}&to=${this.selectedToCurrency}`
+        );
         const data = await response.json();
         this.exchangeRate = data.usdRate; // API에서 환율 값 가져오기
+        this.historicalRates = data.historicalRates || [];
+        this.labels = data.labels || [];
         this.updateChart(); // 환율 차트 업데이트
       } catch (error) {
         console.error("환율 데이터를 가져오는 중 오류 발생:", error);
@@ -160,37 +166,24 @@ export default {
     },
     // 출발 통화 이름 업데이트
     updateSelectedFromCurrencyName() {
-      const currencyNames = {
-        KRW: "대한민국 원",
-        USD: "미국 달러",
-        EUR: "유로",
-        JPY: "일본 엔",
-        GBP: "영국 파운드",
-        AUD: "호주 달러",
-        CAD: "캐나다 달러",
-        INR: "인도 루피",
-        CNY: "중국 위안",
-      };
-      this.selectedFromCurrencyName = currencyNames[this.selectedFromCurrency] || "대한민국 원";
+      const selected = this.currencies.find(
+        (currency) => currency.code === this.selectedFromCurrency
+      );
+      this.selectedFromCurrencyName = selected ? selected.name : "대한민국 원";
     },
     // 도착 통화 이름 업데이트
     updateSelectedToCurrencyName() {
-      const currencyNames = {
-        KRW: "대한민국 원",
-        USD: "미국 달러",
-        EUR: "유로",
-        JPY: "일본 엔",
-        GBP: "영국 파운드",
-        AUD: "호주 달러",
-        CAD: "캐나다 달러",
-        INR: "인도 루피",
-        CNY: "중국 위안",
-      };
-      this.selectedToCurrencyName = currencyNames[this.selectedToCurrency] || "미국 달러";
+      const selected = this.currencies.find(
+        (currency) => currency.code === this.selectedToCurrency
+      );
+      this.selectedToCurrencyName = selected ? selected.name : "미국 달러";
     },
     // 환율 변환 처리
     convertCurrency() {
-      console.log(`Converting ${this.selectedFromCurrency} to ${this.selectedToCurrency}`);
+      // 변환된 금액 계산
+      console.log(
+        `Converting ${this.selectedFromCurrency} to ${this.selectedToCurrency}`
+      );
     },
   },
 };
