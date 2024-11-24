@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Product, ProductOption, Review
+from accounts.serializers import UserSerializer
 
 class DepositProductsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,6 +14,7 @@ class DepositOptionsSerializer(serializers.ModelSerializer):
         read_only_fields = ('product',)
         
 class ReviewSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
     class Meta:
         model = Review
         fields = '__all__'

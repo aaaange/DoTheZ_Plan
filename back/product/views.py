@@ -271,8 +271,8 @@ def review_create(request, fin_prdt_cd):
 
 @api_view(['PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
-def review_update_delete(request, review_id):
-    review = get_object_or_404(Review, id=review_id)
+def review_update_delete(request, fin_prdt_cd, review_id):
+    review = get_object_or_404(Review, id=review_id, product__fin_prdt_cd=fin_prdt_cd)
     
     if request.user != review.user:
         return Response({"detail": "권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
@@ -286,3 +286,10 @@ def review_update_delete(request, review_id):
     elif request.method == 'DELETE':
         review.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+@api_view(['GET'])
+def product_review_list(request, fin_prdt_cd):
+    # 특정 상품에 대한 리뷰만 필터링
+    reviews = Review.objects.filter(product=fin_prdt_cd)
+    serializer = ReviewSerializer(reviews, many=True)
+    return Response(serializer.data)
