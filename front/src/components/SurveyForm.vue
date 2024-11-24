@@ -101,8 +101,18 @@
 
 <script>
 import axios from 'axios';
+import { useCounterStore } from '@/stores/counter';
+import { storeToRefs } from 'pinia';
 
 export default {
+  // setup() {
+  //   const store = useCounterStore()
+  //   const userId = storeToRefs(store)
+
+  //   return {
+  //     userId
+  //   }
+  // },
   data() {
     return {
       surveyQuestions: [
@@ -193,8 +203,7 @@ export default {
       }
       this.errorMessage = "";
       try {
-        const response = await axios.post('http://127.0.0.1:8000/surveys/user-survey/', this.formData, {
-        });
+        const response = await axios.post(`http://127.0.0.1:8000/surveys/api/v1/user-survey/${this.userId}/`, this.formData);
         console.log('서버 응답:', response.data);
         this.submitted = true;
 
