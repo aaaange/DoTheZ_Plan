@@ -17,6 +17,8 @@ urlpatterns = [
 
     path('', views.ProductTotalListView.as_view(), name='product_total_list'), # 전체 리스트
     path('reviews/', views.review_list, name='review_list'),
-    path('product_detail/<str:fin_prdt_cd>/reviews/', views.review_create, name='review_create'),
-    path('reviews/<int:review_id>/', views.review_update_delete, name='review_update_delete'),
+    path('product_detail/<str:fin_prdt_cd>/reviews/', views.product_review_list, name='detail_review_list'), # 상품별 리뷰 조회
+    path('product_detail/<str:fin_prdt_cd>/reviews/create/', views.review_create, name='review_create'), # 리뷰 생성
+    path('product_detail/<str:fin_prdt_cd>/reviews/<int:review_id>/', views.review_update_delete, name='review_update_delete'), # 리뷰 수정 및 삭제
+
 ]
