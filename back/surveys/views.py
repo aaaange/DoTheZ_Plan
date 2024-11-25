@@ -20,8 +20,8 @@ def user_survey_view(request):
     elif request.method == 'POST':
         serializer = UserSurveySerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()  # 데이터 저장
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            user_survey_instance  = serializer.save()  # 데이터 저장
+            return Response(UserSurveySerializer(user_survey_instance).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
@@ -43,9 +43,7 @@ def recommend_product(request, user_survey_id):
     deposit_or_saving = user_survey.deposit_or_saving
     minimum_deposit = user_survey.minimum_deposit
     investment_period = user_survey.investment_period
-    # expected_return = user_survey.expected_return
     interest_rate_type = user_survey.interest_rate_type
-    # investment_goal = user_survey.investment_goal
 
     # 예금/적금에 맞는 금융상품 필터링
     products = Product.objects.filter(is_saving=deposit_or_saving)
@@ -62,10 +60,6 @@ def recommend_product(request, user_survey_id):
         product_options = ProductOption.objects.filter(fin_prdt_cd=product.fin_prdt_cd)
 
         for option in product_options:
-            # 투자 기간 기준 필터링 (옵션의 save_trm이 투자 기간 조건에 맞는지 확인)
-            # if investment_period and option.save_trm < investment_period:
-            #     continue  # 조건에 맞지 않는 옵션은 건너뛰기
-
             # 금리 유형 기준 필터링
             if interest_rate_type and option.intr_rate_type_nm != interest_rate_type:
                 continue  # 조건에 맞지 않는 옵션은 건너뛰기
@@ -78,20 +72,20 @@ def recommend_product(request, user_survey_id):
                 option.intr_rate,           # 금리
                 option.intr_rate_type_nm    # 금리 유형
             )
-
             # 결과 데이터 추가
             product_data.append({
+                '상품 코드': str(product.fin_prdt_cd),
                 '상품 이름': product.fin_prdt_nm,
                 '금융 회사': product.kor_co_nm,
                 '저축 금리 유형': option.intr_rate_type_nm,
                 '저축 금리': option.intr_rate,
                 '저축 기간': option.save_trm,
                 '최고 우대 금리': option.intr_rate2,
-                '예상 수익': expected_profit  # 예상 수익 추가
+                '예상 수익': int(expected_profit)  # 예상 수익 추가
             })
 
     # 예상 수익을 기준으로 정렬 (내림차순)
-    sorted_product_data = sorted(product_data, key=lambda x: x['예상 수익'], reverse=True)
+    sorted_product_data = sorted(product_data, key=lambda x: x['예상 수익'], reverse=True)[:3]
 
     return JsonResponse({'recommended_products': sorted_product_data})
 

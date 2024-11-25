@@ -122,7 +122,7 @@ export default {
         { field: "expected_return", label: "요구 수익률", type: "float" },
         { field: "fixed_income", label: "고정 수입", type: "float" },
         { field: "main_bank", label: "주 거래 은행", type: "text" },
-        { field: "current_assets", label: "현재 자산", type: "json" },
+        { field: "current_assets", label: "현재 자산", type: "float" },
         {
           field: "interest_rate_type",
           label: "저축 금리 유형",
@@ -169,6 +169,7 @@ export default {
       formData: { },
       submitted: false,
       errorMessage: "",
+      user_survey_id: '',
     };
   },
   computed: {
@@ -225,14 +226,15 @@ export default {
       this.formData.user = this.user_id;
 
       try {
-        const response = await axios.post('http://127.0.0.1:8000/surveys/api/v1/user-survey/', this.formData);
+        const response = await axios.post(`http://127.0.0.1:8000/surveys/api/v1/user-survey/`, this.formData);
         console.log('서버 응답:', response.data);
         this.submitted = true;
-        
+        this.user_survey_id = response.data.id
+        console.log(this.user_survey_id)
 
-        // 추천 결과로 이동 (현재 페이지에서 RecommendProd가 표시됨)
-        this.$router.push('/recommend'); // 필요하면 router 처리
-          
+        // 추천 결과로 이동 (현재 페이지에서 Recommend가 표시됨)
+        this.$router.push({ name: 'recommend', params: { userSurveyId: this.user_survey_id } }); // 필요하면 router 처리
+        
       } catch (error) {
         if (error.response) {
           this.errorMessage = `서버 오류: ${error.response.data.message || '알 수 없는 오류'}`;

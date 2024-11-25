@@ -123,7 +123,7 @@
           <p style="color: #585547; font-size: 14px; font-weight: 400;">
             몇 가지 질문을 통해 고객님께 알맞은 금융 상품을 추천해드립니다.
           </p>
-          <RouterLink :to="{ name: 'recommend' }">
+          <RouterLink :to="{ name: 'survey' }">
             <button style="margin-top: 10px; padding: 10px 20px; background: #e6af69; color: white; border: none; border-radius: 8px; cursor: pointer;">
               바로가기
             </button>

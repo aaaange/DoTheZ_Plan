@@ -81,11 +81,5 @@ class UserSurvey(models.Model):
         ]
     )
 
-    def current_asset_default():
-        return {
-        "현금": 5000000,
-        "주식": 20000000,
-        "부동산": 100000000
-    }
-    current_assets = models.JSONField(default=current_asset_default)  # 현재 자산 (JSON 형식)
+    current_assets = models.IntegerField()  # 현재 자산
 
