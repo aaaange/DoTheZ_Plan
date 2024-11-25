@@ -29,7 +29,7 @@
         <p>조건에 맞는 상품이 없습니다.</p>
       </div>
       <div class="product-card" v-for="(option, index) in filteredProducts" :key="index">
-        <router-link :to="{ name: 'productdetail', params: { productId: option.fin_prdt_cd } }" 
+        <router-link :to="{ name: 'productdetail', params: { productId: option.product.fin_prdt_cd } }" 
           style="display: flex; text-decoration: none; width: 100%; align-items: center;">
           <!-- 은행 로고 이미지 -->
           <img class="product-image" 

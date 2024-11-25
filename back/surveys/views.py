@@ -81,11 +81,13 @@ def recommend_product(request, user_survey_id):
                 '저축 금리': option.intr_rate,
                 '저축 기간': option.save_trm,
                 '최고 우대 금리': option.intr_rate2,
-                '예상 수익': int(expected_profit)  # 예상 수익 추가
+                '예상 수익': expected_profit  # 예상 수익 추가
             })
 
     # 예상 수익을 기준으로 정렬 (내림차순)
     sorted_product_data = sorted(product_data, key=lambda x: x['예상 수익'], reverse=True)[:3]
+    for i in range(len(sorted_product_data)):
+        sorted_product_data[i]['예상 수익'] = int(sorted_product_data[i]['예상 수익'])
 
     return JsonResponse({'recommended_products': sorted_product_data})
 
