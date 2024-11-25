@@ -9,7 +9,7 @@ from .serializers import UserSerializer, RegisterSerializer
 # from .serializers import UserSerializer, RegisterSerializer, ProductSerializer, UserProductSerializer
 # from .models import Product, UserProduct, User
 from .models import User, UserProduct
-from product.models import Product, ProductOption
+from product.models import Product, ProductOption, Review
 from product.serializers import DepositProductsSerializer, DepositOptionsSerializer
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -218,3 +218,14 @@ def user_info(request):
             'is_authenticated': True,
             'pk': request.user.pk  # 사용자의 pk 추가
         })
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_review_count(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    review_count = Review.objects.filter(user=user).count()
+    return Response({
+        'user_id': user.id,
+        'username': user.username,
+        'review_count': review_count,
+    })
