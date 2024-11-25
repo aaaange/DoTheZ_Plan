@@ -89,6 +89,3 @@ class UserSurvey(models.Model):
     }
     current_assets = models.JSONField(default=current_asset_default)  # 현재 자산 (JSON 형식)
 
-    def __str__(self):
-        return f"UserSurvey {self.id} - User {self.user_id}"
-
