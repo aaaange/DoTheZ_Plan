@@ -55,7 +55,7 @@
             현재 판매 중인 예금, 적금 상품을 한눈에 확인할 수 있습니다.
           </p>
           <RouterLink :to="{ name: 'productlist' }">
-            <button style="margin-top: 10px; padding: 10px 20px; background: #e6af69; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            <button class ='action-button' style="margin-top: 10px; padding: 10px 20px; background: #e6af69; color: white; border: none; border-radius: 8px; cursor: pointer;">
               바로가기
             </button>
           </RouterLink>
@@ -78,7 +78,7 @@
             선택하신 국가와 원화와의 환율을 계산할 수 있습니다.
           </p>
           <RouterLink :to="{ name: 'exchangerate' }">
-            <button style="margin-top: 10px; padding: 10px 20px; background: #e6af69; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            <button class ='action-button' style="margin-top: 10px; padding: 10px 20px; background: #e6af69; color: white; border: none; border-radius: 8px; cursor: pointer;">
               바로가기
             </button>
           </RouterLink>
@@ -101,7 +101,7 @@
             지도 위에서 가까운 은행을 찾아 정보를 확인할 수 있습니다.
           </p>
           <RouterLink :to="{ name: 'map' }">
-            <button style="margin-top: 10px; padding: 10px 20px; background: #e6af69; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            <button class ='action-button' style="margin-top: 10px; padding: 10px 20px; background: #e6af69; color: white; border: none; border-radius: 8px; cursor: pointer;">
               바로가기
             </button>
           </RouterLink>
@@ -124,7 +124,7 @@
             몇 가지 질문을 통해 고객님께 알맞은 금융 상품을 추천해드립니다.
           </p>
           <RouterLink :to="{ name: 'survey' }">
-            <button style="margin-top: 10px; padding: 10px 20px; background: #e6af69; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            <button class ='action-button' style="margin-top: 10px; padding: 10px 20px; background: #e6af69; color: white; border: none; border-radius: 8px; cursor: pointer;">
               바로가기
             </button>
           </RouterLink>
@@ -133,3 +133,15 @@
     </div>
   </div>
 </template>
+<style scoped>
+
+.action-button{
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s ease;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+.action-button:hover {
+  background: #E6AF69;
+  transform: scale(1.05);
+}
+</style>
