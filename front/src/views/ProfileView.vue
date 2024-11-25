@@ -1,11 +1,11 @@
 <template>
   <div
-    style="width: 100%; height: 100vh; padding-top: 119px; background: #F9EB87; justify-content: center; align-items: center; display: inline-flex"
+    style="width: 100%; height: 100%; padding-top: 119px; background: #F9EB87; justify-content: center; align-items: center; display: inline-flex"
   >
     <div class="Group6" style="width: 863px; height: 800px; position: relative">
       <div
         class="Rectangle1"
-        style="width: 863px; height: 790px; top: 0px; position: absolute; background: #FBF9F4; box-shadow: 6px 9px 4px rgba(0, 0, 0, 0.20); border-radius: 30px"
+        style="width: 1000px; height: 800px; top: 0px; position: absolute; justify-content: center; background: #FBF9F4; box-shadow: 6px 9px 4px rgba(0, 0, 0, 0.20); border-radius: 30px"
       >
         <!-- 상단 영역 -->
         <div
@@ -59,36 +59,38 @@
             </p>
           </div>
         </div>
-        <div>
-          <!-- 가입한 상품 목록 -->
-          <div
-            class="product-section"
-            style="position: absolute; top: 350px; left: 110px; right: 110px;"
-          >
-            <h3 style="font-size: 24px; color: #585547; margin-bottom: 20px;">
-              가입한 상품
-            </h3>
-            <div class="product-list" style="max-height: 350px; overflow-y: auto;">
-              <div v-if="my_products.length > 0">
-                <div v-for="(product, index) in my_products" :key="index" class="product-item" style="background-color: #F7F4EA; border-radius: 10px; border: 1px solid #585547; padding: 15px; margin-bottom: 10px;">
-                  <p style="font-size: 18px; color: #585547; font-weight: 500;">{{ product.fin_prdt_nm }}</p>
+        <div style="margin-top: 370px; width: 90%;">
+          <div style="max-height: 400px; overflow-y: auto; position: relative; margin-left: 100px;">
+            <!-- 가입한 상품 목록 -->
+            <div
+              class="product-section"
+              style="margin-bottom: 30px;"
+            >
+              <h3 style="font-size: 24px; color: #585547; margin-bottom: 20px;">
+                가입한 상품
+              </h3>
+              <div class="product-list" style="max-height: 350px;">
+                <div v-if="my_products.length > 0">
+                  <div v-for="(product, index) in my_products" :key="index" class="product-item" style="background-color: #F7F4EA; border-radius: 10px; border: 1px solid #585547; padding: 15px; margin-bottom: 10px;">
+                    <p style="font-size: 18px; color: #585547; font-weight: 500;">{{ product.fin_prdt_nm }}</p>
+                  </div>
+                </div>
+                <div v-else class="no-products" style="display: flex; justify-content: center; align-items: center; height: 100px; font-size: 18px; color: #585547;">
+                  가입한 상품이 없습니다.
                 </div>
               </div>
-              <div v-else class="no-products" style="display: flex; justify-content: center; align-items: center; height: 100px; font-size: 18px; color: #585547;">
-                가입한 상품이 없습니다.
+            </div>
+            <!-- 그래프 표시 영역 추가 -->
+            <div class="graph-section" style="margin-top: 100px;">
+              <h3 style="font-size: 24px; color: #585547; margin-bottom: 20px;">가입 상품 금리 비교</h3>
+              <div v-if="graph" class="graph-container">
+                <img :src="'data:image/png;base64,' + graph" alt="Interest Rate Graph" style="width: 100%; max-width: 600px; margin-left: 50px;">
+              </div>
+              <div v-else class="no-graph" style="display: flex; justify-content: center; align-items: center; height: 100px; font-size: 18px; color: #585547;">
+                그래프를 불러오는 중입니다...
               </div>
             </div>
-          </div>
-          <!-- 그래프 표시 영역 추가 -->
-          <div class="graph-section" style="position: absolute; top: 720px; left: 110px; right: 110px;">
-            <h3 style="font-size: 24px; color: #585547; margin-bottom: 20px;">가입 상품 금리 비교</h3>
-            <div v-if="graph" class="graph-container">
-              <img :src="'data:image/png;base64,' + graph" alt="Interest Rate Graph" style="width: 100%; max-width: 600px;">
-            </div>
-            <div v-else class="no-graph" style="display: flex; justify-content: center; align-items: center; height: 100px; font-size: 18px; color: #585547;">
-              그래프를 불러오는 중입니다...
-            </div>
-          </div>
+          </div> 
         </div>
       </div>
     </div>
