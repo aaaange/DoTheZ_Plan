@@ -70,8 +70,7 @@
 
 <script>
 import { Chart, registerables } from "chart.js";
-import axios from 'axios'
-
+import axios from "axios";
 
 export default {
   data() {
@@ -84,12 +83,12 @@ export default {
       // 드롭다운 상태 및 선택된 통화
       isFromDropdownVisible: false,
       isToDropdownVisible: false,
-      selectedFromCurrency: "KRW", // 기본값 (출발 통화)
-      selectedToCurrency: "USD", // 기본값 (목적 통화)
+      selectedFromCurrency: "USD", // 기본값 (출발 통화)
+      selectedToCurrency: "KRW", // 기본값 (목적 통화)
 
       // 선택된 통화 이름
-      selectedFromCurrencyName: "대한민국 원",
-      selectedToCurrencyName: "미국 달러",
+      selectedFromCurrencyName: "미국 달러",
+      selectedToCurrencyName: "대한민국 원",
 
       // 사용 가능한 통화 목록
       currencies: [
@@ -123,7 +122,6 @@ export default {
   },
   computed: {
     convertedAmount() {
-      
       return (this.amount * this.exchangeRate).toFixed(5); // 환율 변환 후 소수점 5자리로 표시
     },
   },
@@ -134,65 +132,78 @@ export default {
   methods: {
     // 환율 데이터 API 호출
     async fetchExchangeRate() {
+      const today = new Date();
+      const dateArray = [];
+
+      // 오늘을 포함한 5일간의 날짜 계산
+      for (let i = 0; i < 5; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() - i); // 오늘부터 5일 전까지
+        dateArray.push(date.toISOString().split("T")[0]); // 'yyyy-mm-dd' 형식으로 저장
+      }
       try {
-        
-        const response = await axios.get("http://127.0.0.1:8000/exchange/api/v1/exchange/", {
+      // 각 날짜에 대해 API 요청을 보냄
+      const requests = dateArray.map((date) =>
+        axios.get("http://127.0.0.1:8000/exchange/api/v1/exchange/", {
           params: {
-            searchDate: new Date().toISOString().split("T")[0], // 오늘 날짜
+            searchDate: date,
             from: this.selectedFromCurrency,
             to: this.selectedToCurrency,
           },
-        });
-        // 응답 데이터 로그 추가
-        console.log("API 응답 데이터:", response.data); // 로그로 확인
+        })
+      );
 
-        const data = response.data;
+        // 여러 요청을 동시에 보냄 (병렬 요청)
+        const responses = await Promise.all(requests);
 
-         // 선택된 통화 로그 추가
-        console.log("선택된 출발 통화:", this.selectedFromCurrency);
-        console.log("선택된 도착 통화:", this.selectedToCurrency);
+        // 데이터를 처리
+        const historicalRates = [];
+        const labels = [];
 
-        // 수정: selectedFromCurrency와 selectedToCurrency에 해당하는 데이터를 찾아 deal_bas_r 값을 설정
-        const fromCurrency = data.find(item => item.cur_unit === this.selectedFromCurrency);
-        const toCurrency = data.find(item => item.cur_unit === this.selectedToCurrency);
+        // responses를 순회하여 환율 데이터 추출
+        responses.forEach((response, index) => {
+          const data = response.data;
 
-        // fromCurrency와 toCurrency가 존재하는지 확인
-        if (fromCurrency && toCurrency) {
-          // deal_bas_r 값을 가져와 숫자로 변환 (공백 제거)
-          const fromRate = parseFloat(fromCurrency.deal_bas_r.replace(",", "").trim());
-          const toRate = parseFloat(toCurrency.deal_bas_r.replace(",", "").trim());
+          const fromCurrency = data.find((item) => item.cur_unit === this.selectedFromCurrency);
+          const toCurrency = data.find((item) => item.cur_unit === this.selectedToCurrency);
 
-          // NaN인 경우 기본값 설정
-          if (isNaN(fromRate) || isNaN(toRate)) {
-            console.error("유효하지 않은 환율 값:", fromCurrency.deal_bas_r, toCurrency.deal_bas_r);
-            this.exchangeRate = 0; // 기본값으로 0 설정
-          } else {
-            // 환율 계산: (fromRate / toRate)으로 계산
-            // this.exchangeRate = toRate/ fromRate;
-
-            // 교차 환율 계산 (KRW -> selectedFromCurrency -> selectedToCurrency)
-            this.exchangeRate = (fromRate/1) * toRate;
+          if (fromCurrency && toCurrency) {
+            const fromRate = parseFloat(fromCurrency.deal_bas_r.replace(",", "").trim());
+            const toRate = parseFloat(toCurrency.deal_bas_r.replace(",", "").trim());
+            historicalRates.push(isNaN(fromRate) || isNaN(toRate) ? 0 : (fromRate / 1) * toRate);
           }
-        } else {
-          console.error("선택한 통화 정보가 없습니다.");
-          this.exchangeRate = 0; // 선택한 통화가 없으면 기본값 0 설정
-        }
-        this.historicalRates = data.map(item => item.deal_bas_r); // 과거 환율 데이터
-        this.labels = data.map(item => item.search_date); // 그래프에 사용할 날짜 데이터
-        this.updateChart(); // 환율 차트 업데이트
-      } catch (error) {
+
+          // 각 응답의 날짜를 라벨로 사용
+          labels.push(dateArray[index]);
+        });
+
+        // 날짜 순서를 반대로 뒤집기
+        this.historicalRates = historicalRates.reverse();
+        this.labels = labels.reverse();
+
+        // 선택된 통화 이름 갱신
+        this.updateSelectedToCurrencyName(); // 이름 갱신
+
+        // exchangeRate 값을 갱신 (환율 계산)
+        const fromCurrency = this.historicalRates[this.historicalRates.length - 1]; // 마지막 날짜 기준
+        this.exchangeRate = fromCurrency || 0; // 환율 값 설정
+        this.updateChart(); // 차트 업데이트
+
+        } catch (error) {
         console.error("환율 데이터를 가져오는 중 오류 발생:", error);
-      }
-    },
+        }
+        },
     // 환율 변동 그래프 업데이트
     updateChart() {
-      const ctx = document.getElementById("exchangeRateChart").getContext("2d");
-      // 기존 차트가 있으면 삭제
-      if (this.chartInstance) {
-        this.chartInstance.destroy(); // 수정된 부분: 기존 차트 삭제
+      if (!this.historicalRates.length || !this.labels.length) {
+        console.warn("차트 데이터를 생성할 수 없습니다: 데이터가 비어있습니다."); 
+        return;
       }
 
-      // 새로운 차트 생성
+      const ctx = document.getElementById("exchangeRateChart").getContext("2d");
+      if (this.chartInstance) {
+        this.chartInstance.destroy();
+      }
       this.chartInstance = new Chart(ctx, {
         type: "line",
         data: {
@@ -217,37 +228,27 @@ export default {
         },
       });
     },
-    // 출발 통화와 도착 통화 변경 시 환율 가져오기
-    async updateExchangeRate() {
-      await this.fetchExchangeRate();
-    },
-    // 출발 통화 드롭다운 열기/닫기
     toggleFromDropdown() {
       this.isFromDropdownVisible = !this.isFromDropdownVisible;
-      this.isToDropdownVisible = false; // 다른 드롭다운은 닫기
+      this.isToDropdownVisible = false;
     },
-    // 도착 통화 드롭다운 열기/닫기
     toggleToDropdown() {
       this.isToDropdownVisible = !this.isToDropdownVisible;
-      this.isFromDropdownVisible = false; // 다른 드롭다운은 닫기
+      this.isFromDropdownVisible = false;
     },
-    // 출발 통화 이름 업데이트
     updateSelectedFromCurrencyName() {
       const selected = this.currencies.find(
         (currency) => currency.code === this.selectedFromCurrency
       );
       this.selectedFromCurrencyName = selected ? selected.name : "대한민국 원";
     },
-    // 도착 통화 이름 업데이트
     updateSelectedToCurrencyName() {
       const selected = this.currencies.find(
         (currency) => currency.code === this.selectedToCurrency
       );
       this.selectedToCurrencyName = selected ? selected.name : "미국 달러";
     },
-    // 환율 변환 처리
     convertCurrency() {
-      // 변환된 금액 계산
       console.log(
         `Converting ${this.selectedFromCurrency} to ${this.selectedToCurrency}`
       );
@@ -290,6 +291,7 @@ export default {
   margin: 20px 0;
   font-size: 16px;
   color: #585547;
+  
 }
 .exchange-rate {
   font-size: 32px;
@@ -330,8 +332,10 @@ export default {
   border-radius: 5px;
 }
 .chart-container {
-  margin-top: 30px;
-  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
+  height: 100%;
 }
 </style>
