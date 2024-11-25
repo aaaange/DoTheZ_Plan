@@ -28,7 +28,7 @@ class UserSurveySerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         # 모든 필드가 존재하는지 검사
-        missing_fields = [field for field in self.fields if field not in data]
+        missing_fields = [field for field in self.fields if field not in data and field != 'current_assets']
         if missing_fields:
             raise serializers.ValidationError({f: "This field is required." for f in missing_fields})
         
