@@ -90,25 +90,30 @@ const searchNearbyBanks = (coords) => {
 <style scoped>
 .map-view-container {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background: #F9EB87;
-  display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 140px;
+  display: inline-flex;
 }
 
 .box {
-  width: 90%; /* 너비 설정 */
-  max-width: 900px; /* 최대 너비 설정 */
-  background: #FBF9F4; /* 배경색 */
-  box-shadow: 6px 9px 4px rgba(0, 0, 0, 0.20); /* 그림자 */
-  border-radius: 30px; /* 모서리 둥글게 */
-  padding: 150px; /* 내부 여백 */
+  width: 1000px; /* 너비 설정 */
+  margin: 0 auto;
+  padding: 50px;
+  background: #FBF9F4;
+  border-radius: 30px;
+  box-shadow: 6px 9px 4px rgba(0, 0, 0, 0.20);
+  font-family: "Roboto", sans-serif;
+  height: 70%; 
+  display: flex;
+  flex-direction: column;
+  position: absolute; /* 이 부분을 추가해서 박스만 위치 조정 */
+  top: 140px; /* 박스를 아래로 내리기 위한 값 */
 }
 
 .header {
-  width: 500px;
+  width: 100%;
   height: 65px;
   color: #585547;
   font-size: 50px;
@@ -116,43 +121,39 @@ const searchNearbyBanks = (coords) => {
   font-weight: 800;
   margin-bottom: 20px;
   display: flex;
+  justify-content: center;
 }
 
 .search-container {
-  width: 150%;
-  max-width: 800px;
-  margin-bottom: 30px;
   display: flex;
+  width: 100%;
+  margin-bottom: 30px;
   justify-content: center;
 }
 
 .map-and-list-container {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 90%;
-  max-width: 1000px;
+  justify-content: center;
+  margin-top: 70px;
 }
 
 .map-container {
-  flex: 0 0 60%;
-  height: 500px;
+  flex: 0 0 50%;
   border-radius: 10px;
+  height: 500px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .bank-list-container {
-  flex: 0 0 30%;
-  height: 500px;
-  overflow-y: auto;
-  background-color: white;
+  flex: 0 0 35%;
+  height: 700px;
   border-radius: 10px;
-  margin-left: 50px;
-  padding: 30px;
+  margin-left: 30px;
+  padding: 20px;
 }
 
 .bank-list-container h2 {
-  font-size: 20px;
+  font-size: 30px;
   font-weight: bold;
   color: #333;
   margin-bottom: 15px;

@@ -23,7 +23,7 @@ const handleSearch = () => {
       @keyup.enter="handleSearch"
       class="search-input"
     />
-    <button @click="handleSearch" class="search-button">검색</button>
+    <button @click="handleSearch" class="search-button product-item">검색</button>
   </div>
 </template>
 
@@ -36,13 +36,13 @@ const handleSearch = () => {
 }
 
 .search-input {
-  width: 80%;
-  padding: 10px;
+  width: 50%;
+  padding: 20px;
   border-radius: 25px;
   border: 1px solid #ccc;
-  font-size: 16px;
+  font-size: 20px;
   outline: none;
-  margin-right: 10px;
+  margin-right: 20px;
 }
 
 .search-input:focus {
@@ -50,16 +50,21 @@ const handleSearch = () => {
 }
 
 .search-button {
-  padding: 10px 20px;
+  padding: 18px 30px;
   border-radius: 25px;
   background-color: #E6AF69;
   color: white;
-  font-size: 16px;
+  font-size: 20px;
   border: none;
   cursor: pointer;
 }
 
 .search-button:hover {
   background-color: #E6AF69;
+}
+
+.product-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 </style>

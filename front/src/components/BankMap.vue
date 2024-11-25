@@ -64,9 +64,7 @@ onMounted(initMap);
 <style scoped>
 #map {
   width: 100%;
-  height: 500px;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
+  height: 100%;
+  border-radius: 10px;
 }
 </style>
