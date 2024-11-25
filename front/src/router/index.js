@@ -63,7 +63,7 @@ const router = createRouter({
       component: SurveyView,
     },
     {
-      path: '/recommend',
+      path: '/recommend/:userSurveyId',
       name: 'recommend',
       component: RecommendView,
     },

@@ -9,10 +9,14 @@
           <div class="product-info">
             <div class="product-rank">{{ index + 1 }}</div>
             <div class="product-details">
-              <p class="product-name">{{ product.name }}</p>
+              <p class="product-name">상품 이름 : {{ product['상품 이름'] }}</p>
+              <p class="product-name">은행 이름 : {{ product['금융 회사'] }}</p>
+              <p class="product-name">예상 수익 : {{ product['예상 수익'] }}원</p>
             </div>
           </div>
-          <button class="join-button">가입하기</button>
+          <router-link :to="'/productdetail/' + String(product['상품 코드'])">
+            <button class="join-button">가입하기</button>
+          </router-link>
         </li>
       </ul>
     </div>
@@ -20,14 +24,25 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+  import { ref, onMounted } from 'vue';
+  import axios from 'axios';
+  import { useRoute } from 'vue-router';
 
-// 예시 추천 데이터
-const recommendedProducts = reactive([
-  { name: "튼튼 금융", details: "고수익 예금 상품" },
-  { name: "튼튼 금융", details: "장기 적금 상품" },
-  { name: "튼튼 금융", details: "저위험 투자 상품" },
-]);
+  const recommendedProducts = ref([]);
+  const route = useRoute(); // useRoute 훅 사용하여 현재 라우트 정보 가져오기
+  const userSurveyId = route.params.userSurveyId; // URL 파라미터에서 user_survey_id 추출
+  const user_survey_id = parseInt(userSurveyId, 10)
+
+  // API 요청하여 상품 리스트 가져오기
+  onMounted(async () => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/surveys/api/v1/product-filtering/${user_survey_id}/`);
+      recommendedProducts.value = response.data.recommended_products;
+      console.log(recommendedProducts.value)
+    } catch (error) {
+      console.error("상품 추천 정보를 가져오는 데 실패했습니다:", error);
+    }
+  }); 
 </script>
 
 <style scoped>
@@ -71,6 +86,10 @@ h1 {
   padding: 20px;
   margin-bottom: 15px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.product-details {
+  text-align: left;
 }
 
 /* 상품 순위 스타일 */
