@@ -82,7 +82,7 @@
         </div>
 
         <!-- 제출 버튼 -->
-        <button type="submit" class="submit-button">제출하기</button>
+        <button type="submit" class="submit-button action-button">제출하기</button>
       </form>
 
       <!-- 경고 메시지 -->
@@ -382,5 +382,10 @@ h1 {
   background: #ecf0f1;
   padding: 15px;
   border-radius: 8px;
+}
+
+.action-button:hover {
+  background: #E6AF69;
+  transform: scale(1.05);
 }
 </style>
