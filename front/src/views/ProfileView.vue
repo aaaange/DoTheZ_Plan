@@ -50,12 +50,12 @@
             />
           <div class="user-details">
             <h2
-              style="font-size: 30px; color: #585547; margin-top: 0px; margin-bottom: 50px; margin-left:20px"
+              style="font-size: 30px; color: #585547; margin-top: 0px; margin-bottom: 10px; margin-left:20px"
             >
               {{ username ? username : "로그인을 해주세요" }}
             </h2>
-            <p style="font-size: 18px; color: #585547;">
-              <!-- 작성한 리뷰 {{ userProfile ? userProfile.reviewsCount : "2" }}개 -->
+            <p style="font-size: 18px; color: #585547; margin-left:20px">
+              작성한 리뷰 {{ reviewCount ? reviewCount : "0" }}개
             </p>
           </div>
         </div>
@@ -118,16 +118,23 @@ export default {
       user_id: '',
       my_products: [ ],
       graph: null,
+      reviewCount: 0,
     };
   },
-
+  props: {
+    userId: {
+      type: Number,
+      required: true,
+    },
+  },
   mounted() {
     // 서버에서 데이터를 가져오는 메소드 호출
-    this.fetchProfiles()
+    this.fetchProfiles().then(() => {
+      this.fetchUserReviewCount()
+    })
     this.fetchProducts()
-    this.fetchGraphs()
+    this.fetchGraphs() 
   },
-
   methods: {
     async fetchProfiles() {
       try {
@@ -166,6 +173,24 @@ export default {
         this.graph = response.data.graph
       } catch (error) {
         console.error("Error fetching graph data:", error);
+      }
+    },
+    async fetchUserReviewCount() {
+      try {
+        if (!this.user_id) {
+          console.log("사용자 ID를 가져오지 못했습니다.");
+          return;
+        }
+        const response = await axios.get(
+          `http://127.0.0.1:8000/accounts/api/v1/profile/${this.user_id}/reviews/count/`, 
+          {
+            headers: {
+              Authorization: `Token ${this.token}`
+            }
+          })
+          this.reviewCount = response.data.review_count
+      } catch (error) {
+        console.log("댓글 수를 불러오는 중 오류 발생: ", error)
       }
     },
     // 탈퇴하기 기능
