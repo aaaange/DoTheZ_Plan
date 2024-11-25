@@ -30,7 +30,7 @@
 
         <!-- 탈퇴하기 버튼 -->
         <button
-          class="delete-button"
+          class="delete-button product-item"
           style="position: absolute; top: 40px; right: 40px; background: #E6AF69; color: white; border: none; border-radius: 5px; padding: 10px 15px; cursor: pointer; font-size: 16px;"
           @click="deleteAccount"
         >
@@ -40,7 +40,7 @@
         <!-- 사용자 정보 -->
         <div
           class="user-info"
-          style="position: absolute; top: 180px; left: 110px; right: 110px; display: flex; align-items: center; background-color: #EDEDED; padding: 20px; border-radius: 10px;"
+          style="position: absolute; top: 190px; left: 110px; right: 110px; display: flex; align-items: center; background-color: #EDEDED; padding: 20px; border-radius: 10px;"
         >
           <img
             src="@/image/dothez.jpg"

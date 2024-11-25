@@ -293,7 +293,7 @@ h1 {
   padding-left: 22px;
   background: #ffffff;
   border: 1px solid #dcdcdc;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 .question-label {
