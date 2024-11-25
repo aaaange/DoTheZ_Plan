@@ -249,23 +249,26 @@ export default {
 <style>
 .background {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background-color: #F9EB87;
+  justify-content: center;
+  align-items: center; 
+  display: inline-flex;
 }
 
 .container {
-  max-width: 800px;
+  width: 1000px;
   margin: 0 auto; /* auto로 중앙 정렬 */
   padding: 50px;
-  background: #f9f9f9;
+  background: #FBF9F4;
   border-radius: 30px;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 6px 9px 4px rgba(0, 0, 0, 0.20);
   font-family: "Roboto", sans-serif;
-  height: 700px; 
+  height: 70%; 
   display: flex;
   flex-direction: column;
-  position: relative; /* 이 부분을 추가해서 박스만 위치 조정 */
-  top: 200px; /* 박스를 아래로 내리기 위한 값 */
+  position: absolute; /* 이 부분을 추가해서 박스만 위치 조정 */
+  top: 140px; /* 박스를 아래로 내리기 위한 값 */
 }
 
 h1 {

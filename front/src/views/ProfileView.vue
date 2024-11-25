@@ -62,17 +62,18 @@
         <div style="margin-top: 370px; width: 90%;">
           <div style="max-height: 400px; overflow-y: auto; position: relative; margin-left: 100px;">
             <!-- 가입한 상품 목록 -->
-            <div
-              class="product-section"
-              style="margin-bottom: 30px;"
-            >
+            <div class="product-section" style="margin-bottom: 30px;">
               <h3 style="font-size: 24px; color: #585547; margin-bottom: 20px;">
                 가입한 상품
               </h3>
               <div class="product-list" style="max-height: 350px;">
                 <div v-if="my_products.length > 0">
-                  <div v-for="(product, index) in my_products" :key="index" class="product-item" style="background-color: #F7F4EA; border-radius: 10px; border: 1px solid #585547; padding: 15px; margin-bottom: 10px;">
-                    <p style="font-size: 18px; color: #585547; font-weight: 500;">{{ product.fin_prdt_nm }}</p>
+                  <div v-for="(product, index) in my_products" :key="index" class="product-item" 
+                      style="background-color: #F7F4EA; border-radius: 10px; border: 1px solid #585547; padding: 15px; margin-bottom: 10px;">
+                    <router-link :to="{ name: 'productdetail', params: { productId: product.fin_prdt_cd } }" 
+                      style="display: block; text-decoration: none;">
+                      <p style="font-size: 18px; color: #585547; font-weight: 500;">{{ product.fin_prdt_nm }}</p>
+                    </router-link>
                   </div>
                 </div>
                 <div v-else class="no-products" style="display: flex; justify-content: center; align-items: center; height: 100px; font-size: 18px; color: #585547;">
@@ -216,5 +217,9 @@ export default {
 .product-list::-webkit-scrollbar-track {
   background-color: #f1f1f1;
   border-radius: 10px;
+}
+.product-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 </style>
