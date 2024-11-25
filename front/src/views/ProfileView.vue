@@ -1,61 +1,97 @@
 <template>
-  <div class="parent-container">
-    <div class="card-container">
-      <!-- 타이틀 섹션 -->
-      <div class="title-section">
-        <h2 class="page-title">상품 상세 정보</h2>
-        <hr class="title-divider" />
-      </div>
-      <!-- 상품 이름 박스 -->
-      <div class="product-name-box">
-        <!-- 상품 이름 왼쪽에 이미지 추가 -->
-        <img class="product-image" :src="getBankImage(productInfo.kor_co_nm)" :alt="productInfo.kor_co_nm" />
-        <span class="product-name">{{ productInfo.fin_prdt_nm }}</span>
-      </div>
-      <!-- 상품 상세 정보 -->
-      <div class="product-details-container">
-        <div v-for="(value, key) in productInfo" :key="key" class="product-info">
-          <div class="product-label-box">
-            <span class="product-label">{{ fieldMappings[key] || key }}</span>
+  <div
+    style="width: 100%; height: 100%; padding-top: 119px; background: #F9EB87; justify-content: center; align-items: center; display: inline-flex"
+  >
+    <div class="Group6" style="width: 863px; height: 800px; position: relative">
+      <div
+        class="Rectangle1"
+        style="width: 1000px; height: 800px; top: 0px; position: absolute; justify-content: center; background: #FBF9F4; box-shadow: 6px 9px 4px rgba(0, 0, 0, 0.20); border-radius: 30px"
+      >
+        <!-- 상단 영역 -->
+        <div
+          class="Group5"
+          style="width: 642px; height: 114px; left: 110px; top: 38px; position: absolute"
+        >
+          <div
+            style="width: 278px; height: 65px; top: 0px; position: absolute; color: #585547; font-size: 50px; font-family: IBM Plex Sans KR; font-weight: 700;"
+          >
+            내 프로필
           </div>
-          <div class="product-value-box">
-            <span class="product-value">{{ value }}</span>
+          <div
+            style="width: 385px; left: 5px; top: 75px; position: absolute; color: #585547; font-size: 16px; font-family: IBM Plex Sans KR; font-weight: 300;"
+          >
+            회원 프로필 페이지
           </div>
+          <div
+            class="Line1"
+            style="width: 642px; height: 0px; left: 0px; top: 114px; position: absolute; border-top: 1px solid #CDC7C0;"
+          ></div>
         </div>
-      </div>
-      <!-- 버튼 섹션 -->
-      <div class="button-container">
-        <button class="action-button" @click="toggleSubscription" :style="{ backgroundColor: isSubscribed ? '#585547' : '#E6AF69', color: '#FBF9F4' }">
-          {{ isSubscribed ? '내 상품에 삭제' : '내 상품에 등록' }}
+
+        <!-- 탈퇴하기 버튼 -->
+        <button
+          class="delete-button product-item"
+          style="position: absolute; top: 40px; right: 40px; background: #E6AF69; color: white; border: none; border-radius: 5px; padding: 10px 15px; cursor: pointer; font-size: 16px;"
+          @click="deleteAccount"
+        >
+          탈퇴하기
         </button>
-      </div>
-    </div>
 
-    <!-- 리뷰 섹션 -->
-    <div class="review-page" style="width: 870px; background: #F9EB87; justify-content: center;">
-      <div class="review-container" style="width: 800px; background: #FBF9F4; padding: 40px; border-radius: 20px; box-shadow: 6px 9px 4px rgba(0, 0, 0, 0.2);">
-        <!-- 리뷰 내용 입력 및 버튼 배치 -->
-        <div style="display: flex; align-items: center; margin-bottom: 20px;">
-          <input id="review-content" type="text" v-model="newReviewContent" placeholder="리뷰를 입력해주세요." @keydown.enter="submitReview"
-                 style="flex-grow: 1; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4;" />
-          <button @click="submitReview" class="action-button"
-                  style="padding: 10px 20px; background: #E6AF69; color: #FBF9F4; border: none; border-radius: 15px; font-size: 18px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 700; cursor: pointer; margin-left: 10px;">
-            리뷰 작성하기
-          </button>
-        </div>
-
-        <!-- 작성된 리뷰 목록 -->
-        <div v-for="(review, index) in reviews" :key="index"
-             style="margin-top: 30px; padding: 15px; border: 1px solid #E6AF69; border-radius: 10px; margin-bottom: 10px; background: #FBF9F4;">
-          <div style="font-size: 14px; color: #585547;">{{ review.user.username }} | {{ review.created_at }}</div>
-          <div style="font-size: 16px; color: #585547; margin-top: 10px;">{{ review.content }}</div>
-          <div style="margin-top: 10px;">
-            <button @click="editReview(review)" class="action-button"
-                    style="padding: 5px 10px; background: #E6AF69; color: #FBF9F4; border: none; border-radius: 10px; font-size: 14px; cursor: pointer;">수정</button>
-            <button @click="deleteReview(review)" class="action-button"
-                    style="padding: 5px 10px; background: #E6AF69; color: #FBF9F4; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; margin-left:
-                    10px;">삭제</button>
+        <!-- 사용자 정보 -->
+        <div
+          class="user-info"
+          style="position: absolute; top: 190px; left: 110px; right: 110px; display: flex; align-items: center; background-color: #EDEDED; padding: 20px; border-radius: 10px;"
+        >
+          <img
+            src="@/image/dothez.jpg"
+            alt="프로필 사진"
+            class="user-avatar"
+            style="width: 120px; height: 120px; border-radius: 50%; margin-right: 20px; margin-left: 15px;"
+            />
+          <div class="user-details">
+            <h2
+              style="font-size: 30px; color: #585547; margin-top: 0px; margin-bottom: 10px; margin-left:20px"
+            >
+              {{ username ? username : "로그인을 해주세요" }}
+            </h2>
+            <p style="font-size: 18px; color: #585547; margin-left:20px">
+              작성한 리뷰 {{ reviewCount ? reviewCount : "0" }}개
+            </p>
           </div>
+        </div>
+        <div style="margin-top: 370px; width: 90%;">
+          <div style="max-height: 400px; overflow-y: auto; position: relative; margin-left: 100px;">
+            <!-- 가입한 상품 목록 -->
+            <div class="product-section" style="margin-bottom: 30px;">
+              <h3 style="font-size: 24px; color: #585547; margin-bottom: 20px;">
+                가입한 상품
+              </h3>
+              <div class="product-list" style="max-height: 350px;">
+                <div v-if="my_products.length > 0">
+                  <div v-for="(product, index) in my_products" :key="index" class="product-item" 
+                      style="background-color: #F7F4EA; border-radius: 10px; border: 1px solid #585547; padding: 15px; margin-bottom: 10px;">
+                    <router-link :to="{ name: 'productdetail', params: { productId: product.fin_prdt_cd } }" 
+                      style="display: block; text-decoration: none;">
+                      <p style="font-size: 18px; color: #585547; font-weight: 500;">{{ product.fin_prdt_nm }}</p>
+                    </router-link>
+                  </div>
+                </div>
+                <div v-else class="no-products" style="display: flex; justify-content: center; align-items: center; height: 100px; font-size: 18px; color: #585547;">
+                  가입한 상품이 없습니다.
+                </div>
+              </div>
+            </div>
+            <!-- 그래프 표시 영역 추가 -->
+            <div class="graph-section" style="margin-top: 100px;">
+              <h3 style="font-size: 24px; color: #585547; margin-bottom: 20px;">가입 상품 금리 비교</h3>
+              <div v-if="graph" class="graph-container">
+                <img :src="'data:image/png;base64,' + graph" alt="Interest Rate Graph" style="width: 100%; max-width: 600px; margin-left: 50px;">
+              </div>
+              <div v-else class="no-graph" style="display: flex; justify-content: center; align-items: center; height: 100px; font-size: 18px; color: #585547;">
+                그래프를 불러오는 중입니다...
+              </div>
+            </div>
+          </div> 
         </div>
       </div>
     </div>
