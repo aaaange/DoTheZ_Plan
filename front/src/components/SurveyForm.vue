@@ -1,4 +1,4 @@
-\<template>
+<template>
   <div class="background">
     <div class="container">
       <h1>나와 꼭 맞는 상품을 알아봐요</h1>
@@ -102,19 +102,18 @@
 <script>
 import axios from 'axios';
 import { useCounterStore } from '@/stores/counter';
-import { storeToRefs } from 'pinia';
 
 export default {
-  // setup() {
-  //   const store = useCounterStore()
-  //   const userId = storeToRefs(store)
-
-  //   return {
-  //     userId
-  //   }
-  // },
+  setup() {
+    const store = useCounterStore();  // useCounterStore 호출
+    const token = store.token;  // store에서 token 가져오기
+    return {
+      token,  // 반환하여 컴포넌트에서 사용
+    };
+  },
   data() {
     return {
+      user_id: '',
       surveyQuestions: [
         { field: "deposit_or_saving", label: "예금/적금", type: "boolean" },
         { field: "age", label: "만 나이", type: "int" },
@@ -189,30 +188,58 @@ export default {
     this.surveyQuestions.forEach((question) => {
       this.formData[question.field] = null;
     });
+    this.formData.user = null;
+    this.fetchProfiles()
   },
   methods: {
+    async fetchProfiles() {
+      try {
+        const response = await axios.get(
+          'http://127.0.0.1:8000/accounts/api/v1/user_info/',
+        {
+          headers: { Authorization: `Token ${this.token}` }  // this.token 사용
+        })
+        this.user_id = response.data.pk
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      }
+    },
     async submitForm() {
       const incompleteField = this.surveyQuestions.find(
         (question) =>
           this.formData[question.field] === null || this.formData[question.field] === ""
       );
+
       if (incompleteField) {
         this.errorMessage = `${incompleteField.label} 항목을 입력해 주세요.`;
         this.submitted = false;
         return;
       }
+
+      if (!this.user_id) {
+        this.errorMessage = "사용자 정보를 불러오는 데 실패했습니다.";
+        return;
+      }
+
       this.errorMessage = "";
+      this.formData.user = this.user_id;
+
       try {
-        const response = await axios.post(`http://127.0.0.1:8000/surveys/api/v1/user-survey/${this.userId}/`, this.formData);
+        const response = await axios.post('http://127.0.0.1:8000/surveys/api/v1/user-survey/', this.formData);
         console.log('서버 응답:', response.data);
         this.submitted = true;
+        
 
         // 추천 결과로 이동 (현재 페이지에서 RecommendProd가 표시됨)
         this.$router.push('/recommend'); // 필요하면 router 처리
           
       } catch (error) {
-        this.errorMessage = '서버에 오류가 발생했습니다. 다시 시도해주세요.'
-        console.error('서버 요청 오류:', error)
+        if (error.response) {
+          this.errorMessage = `서버 오류: ${error.response.data.message || '알 수 없는 오류'}`;
+        } else {
+          this.errorMessage = '서버에 오류가 발생했습니다. 다시 시도해주세요.';
+        }
+        console.error('서버 요청 오류:', error);
       }
     }
   },
@@ -224,7 +251,6 @@ export default {
   width: 100%;
   height: 100vh;
   background-color: #F9EB87;
-  position: relative; /* 이 부분을 유지 */
 }
 
 .container {
@@ -239,7 +265,7 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative; /* 이 부분을 추가해서 박스만 위치 조정 */
-  top: 100px; /* 박스를 아래로 내리기 위한 값 */
+  top: 200px; /* 박스를 아래로 내리기 위한 값 */
 }
 
 h1 {
