@@ -69,7 +69,9 @@
 </template>
 
 <script>
-import { Chart } from "chart.js";
+import { Chart, registerables } from "chart.js";
+import axios from 'axios'
+
 
 export default {
   data() {
@@ -91,37 +93,92 @@ export default {
 
       // 사용 가능한 통화 목록
       currencies: [
-        { code: "KRW", name: "대한민국 원" },
-        { code: "USD", name: "미국 달러" },
-        { code: "EUR", name: "유로" },
-        { code: "JPY", name: "일본 엔" },
-        { code: "GBP", name: "영국 파운드" },
+        { code: "AED", name: "아랍에미리트 디르함" },
         { code: "AUD", name: "호주 달러" },
+        { code: "BHD", name: "바레인 디나르" },
+        { code: "BND", name: "브루나이 달러" },
         { code: "CAD", name: "캐나다 달러" },
-        { code: "INR", name: "인도 루피" },
-        { code: "CNY", name: "중국 위안" },
+        { code: "CHF", name: "스위스 프랑" },
+        { code: "CNH", name: "중국 위안" },
+        { code: "DKK", name: "덴마크 크로네" },
+        { code: "EUR", name: "유럽연합 유로" },
+        { code: "GBP", name: "영국 파운드" },
+        { code: "HKD", name: "홍콩 달러" },
+        { code: "IDR(100)", name: "인도네시아 루피아" },
+        { code: "JPY(100)", name: "일본 엔" },
+        { code: "KRW", name: "한국 원" },
+        { code: "KWD", name: "쿠웨이트 디나르" },
+        { code: "MYR", name: "말레이시아 링깃" },
+        { code: "NOK", name: "노르웨이 크로네" },
+        { code: "NZD", name: "뉴질랜드 달러" },
+        { code: "SAR", name: "사우디 리얄" },
+        { code: "SEK", name: "스웨덴 크로나" },
+        { code: "SGD", name: "싱가포르 달러" },
+        { code: "THB", name: "태국 달러" },
+        { code: "USD", name: "미국 달러" },
       ],
+      // 차트 인스턴스를 저장할 변수
+      chartInstance: null,
     };
   },
   computed: {
     convertedAmount() {
+      
       return (this.amount * this.exchangeRate).toFixed(5); // 환율 변환 후 소수점 5자리로 표시
     },
   },
   created() {
     this.fetchExchangeRate(); // 초기 환율 데이터 가져오기
+    Chart.register(...registerables);
   },
   methods: {
     // 환율 데이터 API 호출
     async fetchExchangeRate() {
       try {
-        const response = await fetch(
-          `http://localhost:8000/api/exchange-rate?from=${this.selectedFromCurrency}&to=${this.selectedToCurrency}`
-        );
-        const data = await response.json();
-        this.exchangeRate = data.usdRate; // API에서 환율 값 가져오기
-        this.historicalRates = data.historicalRates || [];
-        this.labels = data.labels || [];
+        
+        const response = await axios.get("http://127.0.0.1:8000/exchange/api/v1/exchange/", {
+          params: {
+            searchDate: new Date().toISOString().split("T")[0], // 오늘 날짜
+            from: this.selectedFromCurrency,
+            to: this.selectedToCurrency,
+          },
+        });
+        // 응답 데이터 로그 추가
+        console.log("API 응답 데이터:", response.data); // 로그로 확인
+
+        const data = response.data;
+
+         // 선택된 통화 로그 추가
+        console.log("선택된 출발 통화:", this.selectedFromCurrency);
+        console.log("선택된 도착 통화:", this.selectedToCurrency);
+
+        // 수정: selectedFromCurrency와 selectedToCurrency에 해당하는 데이터를 찾아 deal_bas_r 값을 설정
+        const fromCurrency = data.find(item => item.cur_unit === this.selectedFromCurrency);
+        const toCurrency = data.find(item => item.cur_unit === this.selectedToCurrency);
+
+        // fromCurrency와 toCurrency가 존재하는지 확인
+        if (fromCurrency && toCurrency) {
+          // deal_bas_r 값을 가져와 숫자로 변환 (공백 제거)
+          const fromRate = parseFloat(fromCurrency.deal_bas_r.replace(",", "").trim());
+          const toRate = parseFloat(toCurrency.deal_bas_r.replace(",", "").trim());
+
+          // NaN인 경우 기본값 설정
+          if (isNaN(fromRate) || isNaN(toRate)) {
+            console.error("유효하지 않은 환율 값:", fromCurrency.deal_bas_r, toCurrency.deal_bas_r);
+            this.exchangeRate = 0; // 기본값으로 0 설정
+          } else {
+            // 환율 계산: (fromRate / toRate)으로 계산
+            // this.exchangeRate = toRate/ fromRate;
+
+            // 교차 환율 계산 (KRW -> selectedFromCurrency -> selectedToCurrency)
+            this.exchangeRate = (fromRate/1) * toRate;
+          }
+        } else {
+          console.error("선택한 통화 정보가 없습니다.");
+          this.exchangeRate = 0; // 선택한 통화가 없으면 기본값 0 설정
+        }
+        this.historicalRates = data.map(item => item.deal_bas_r); // 과거 환율 데이터
+        this.labels = data.map(item => item.search_date); // 그래프에 사용할 날짜 데이터
         this.updateChart(); // 환율 차트 업데이트
       } catch (error) {
         console.error("환율 데이터를 가져오는 중 오류 발생:", error);
@@ -130,7 +187,13 @@ export default {
     // 환율 변동 그래프 업데이트
     updateChart() {
       const ctx = document.getElementById("exchangeRateChart").getContext("2d");
-      new Chart(ctx, {
+      // 기존 차트가 있으면 삭제
+      if (this.chartInstance) {
+        this.chartInstance.destroy(); // 수정된 부분: 기존 차트 삭제
+      }
+
+      // 새로운 차트 생성
+      this.chartInstance = new Chart(ctx, {
         type: "line",
         data: {
           labels: this.labels,
@@ -153,6 +216,10 @@ export default {
           },
         },
       });
+    },
+    // 출발 통화와 도착 통화 변경 시 환율 가져오기
+    async updateExchangeRate() {
+      await this.fetchExchangeRate();
     },
     // 출발 통화 드롭다운 열기/닫기
     toggleFromDropdown() {
@@ -211,16 +278,18 @@ export default {
   font-size: 40px;
   font-weight: 700;
   margin-bottom: 10px;
+  color: #585547;
 }
 .subtitle {
   font-size: 16px;
   font-weight: 300;
-  color: #666;
+  color: #585547;
   margin-bottom: 30px;
 }
 .exchange-info {
   margin: 20px 0;
   font-size: 16px;
+  color: #585547;
 }
 .exchange-rate {
   font-size: 32px;
@@ -246,10 +315,11 @@ export default {
   width: 150px;
   border: none;
   background: transparent;
+  color: #585547;
 }
 .currency {
   font-size: 16px;
-  color: #1f77b4;
+  color: #e6af69;
   cursor: pointer;
   margin-left: 10px;
 }
