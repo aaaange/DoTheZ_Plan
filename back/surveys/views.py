@@ -9,7 +9,7 @@ from product.models import Product, ProductOption
 
 
 @api_view(['GET', 'POST'])
-def user_survey_view(request, user):
+def user_survey_view(request):
     # GET 요청: 저장된 모든 UserSurvey 데이터 조회
     if request.method == 'GET':
         surveys = UserSurvey.objects.all()  # 모든 설문 데이터 가져오기

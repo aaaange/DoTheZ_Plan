@@ -43,7 +43,7 @@
           style="position: absolute; top: 180px; left: 110px; right: 110px; display: flex; align-items: center; background-color: #EDEDED; padding: 20px; border-radius: 10px;"
         >
           <img
-            src="/src/image/dothez.jpg"
+            src="@/image/dothez.jpg"
             alt="프로필 사진"
             class="user-avatar"
             style="width: 120px; height: 120px; border-radius: 50%; margin-right: 20px; margin-left: 15px;"
