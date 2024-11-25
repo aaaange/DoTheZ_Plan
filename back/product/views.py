@@ -253,6 +253,10 @@ class ProductTotalListView(generics.ListAPIView):
     queryset = Product.objects.all()  # 모든 상품을 가져옴
     serializer_class = DepositProductsSerializer  # DepositProductsSerializer를 사용
 
+class ProductOptionTotalListView(generics.ListAPIView):
+    queryset = ProductOption.objects.all()  # 모든 상품을 가져옴
+    serializer_class = DepositOptionsSerializer  # DepositOptionsSerializer를 사용
+
 
 @api_view(['GET'])
 def review_list(request):
