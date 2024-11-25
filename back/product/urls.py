@@ -16,6 +16,8 @@ urlpatterns = [
     path('save-saving-products/', views.save_saving_products, name='save_saving_products'),
 
     path('', views.ProductTotalListView.as_view(), name='product_total_list'), # 전체 리스트
+    path('options/', views.ProductOptionTotalListView.as_view(), name='ProductOptionTotalListView'),   # 전체 옵션 리스트
+
     path('reviews/', views.review_list, name='review_list'),
     path('product_detail/<str:fin_prdt_cd>/reviews/', views.product_review_list, name='detail_review_list'), # 상품별 리뷰 조회
     path('product_detail/<str:fin_prdt_cd>/reviews/create/', views.review_create, name='review_create'), # 리뷰 생성

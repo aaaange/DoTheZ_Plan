@@ -8,6 +8,7 @@ class DepositProductsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class DepositOptionsSerializer(serializers.ModelSerializer):
+    product = DepositProductsSerializer(read_only=True)
     class Meta:
         model = ProductOption
         fields = '__all__'
