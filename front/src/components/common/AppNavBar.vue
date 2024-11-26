@@ -1,79 +1,37 @@
 <template>
-  <div style="width: 100vw; height: 96px; padding: 0; margin: 0; position: fixed; top: 0; left: 0; right: 0; background: white; border-bottom: 1px solid #D9D9D9; justify-content: space-between; align-items: center; gap: 12px; display: flex; box-sizing: border-box;">
-    <div style="justify-content: flex-start; align-items: center; gap: 12px; display: flex;">
-      <div style="height: 60px; justify-content: center; align-items: center; display: flex;">
-        <RouterLink :to="{ name: 'mainpage' }">
-          <img src="../../image/logo.png" alt="logo" style="width: 120px; height: 60px; border: 3.50px;">
-        </RouterLink>
+  <div class="navbar">
+    <div class="navbar-left">
+      <RouterLink :to="{ name: 'mainpage' }">
+        <img src="../../image/logo.png" alt="logo" class="logo" />
+      </RouterLink>
+    </div>
+    <div class="navbar-center">
+      <RouterLink :to="{ name: 'productlist' }" class="nav-link">상품 조회</RouterLink>
+      <RouterLink :to="{ name: 'exchangerate' }" class="nav-link">환율 조회</RouterLink>
+      <RouterLink :to="{ name: 'map' }" class="nav-link">가까운 은행 찾기</RouterLink>
+      <RouterLink :to="{ name: 'survey' }" class="nav-link">금융 상품 추천</RouterLink>
+    </div>
+    <div class="navbar-right">
+      <div class="auth-button">
+        <template v-if="isAuthenticated">
+          <a href="#" @click.prevent="logOut" class="btn">로그아웃</a>
+        </template>
+        <template v-else>
+          <RouterLink :to="{ name: 'login' }" class="btn">로그인</RouterLink>
+        </template>
+      </div>
+      <div class="profile-button">
+        <template v-if="isAuthenticated">
+          <RouterLink :to="{ name: 'profile', params: { userId: user_id } }" class="btn_a profile-btn">프로필</RouterLink>
+        </template>
+        <template v-else>
+          <RouterLink :to="{ name: 'signup' }" class="btn_a profile-btn">회원가입</RouterLink>
+        </template>
       </div>
     </div>
-    <div style="flex: 1; height: 32px; justify-content: flex-end; align-items: flex-start; gap: 4px; display: flex; flex-wrap: nowrap;">
-      <div style="padding: 8px; border-radius: 8px; justify-content: center; align-items: center; gap: 8px; display: flex;">
-        <RouterLink :to="{ name: 'productlist' }">
-          <div style="color: #1E1E1E; font-size: 14px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word;">
-            상품 조회
-          </div>
-        </RouterLink>
-      </div>
-      <div style="padding: 8px; border-radius: 8px; justify-content: center; align-items: center; gap: 8px; display: flex;">
-        <RouterLink :to="{ name: 'exchangerate' }">
-          <div style="color: #1E1E1E; font-size: 14px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word;">
-            환율 조회
-          </div>
-        </RouterLink>
-      </div>
-      <div style="padding: 8px; border-radius: 8px; justify-content: center; align-items: center; gap: 8px; display: flex;">
-        <RouterLink :to="{ name: 'map' }">
-          <div style="color: #1E1E1E; font-size: 14px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word;">
-            가까운 은행 찾기
-          </div>
-        </RouterLink>
-      </div>
-      <div style="padding: 8px; border-radius: 8px; justify-content: center; align-items: center; gap: 8px; display: flex;">
-        <RouterLink :to="{ name: 'survey' }">
-          <div style="color: #1E1E1E; font-size: 14px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word;">
-            금융 상품 추천
-          </div>
-        </RouterLink>
-      </div>
-    </div>
-    <div style="height: 32px; justify-content: flex-end; align-items: center; gap: 8px; display: flex;">
-  <div style="flex-shrink: 0; height: 32px; padding: 8px; background: #E3E3E3; border-radius: 8px; overflow: hidden; border: 1px #767676 solid; justify-content: center; align-items: center; gap: 8px; display: flex;">
-    <template v-if="isAuthenticated">
-      <a href="#" @click.prevent="logOut" style="color: #1E1E1E; font-size: 14px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word;">
-        로그아웃
-      </a>
-    </template>
-    <template v-else>
-      <RouterLink :to="{ name: 'login' }">
-        <div style="color: #1E1E1E; font-size: 14px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word;">
-          로그인
-        </div>
-      </RouterLink>
-    </template>
-  </div>
-  
-  <!-- 프로필 버튼 -->
-  <div style="flex-shrink: 0; height: 32px; padding: 8px; background: #2C2C2C; border-radius: 8px; overflow: hidden; border: 1px #2C2C2C solid; justify-content: center; align-items: center; gap: 8px; display: flex; margin-right: 12px;">
-    <template v-if="isAuthenticated">
-      <RouterLink :to="{ name: 'profile', params: { userId: user_id } }">
-        <div style="color: #F5F5F5; font-size: 14px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word;">
-          프로필
-        </div>
-      </RouterLink>
-    </template>
-    <template v-else>
-      <RouterLink :to="{ name: 'signup' }">
-        <div style="color: #F5F5F5; font-size: 14px; font-family: Inter; font-weight: 400; line-height: 16px; word-wrap: break-word;">
-          회원가입
-        </div>
-      </RouterLink>
-    </template>
-  </div>
-</div>
-
   </div>
 </template>
+
 
 <script>
 import { ref, onMounted, watch } from 'vue';
@@ -135,5 +93,116 @@ export default {
 </script>
 
 <style scoped>
-/* 필요한 스타일 추가 */
+.navbar {
+  width: 100%;
+  height: 80px;
+  padding: 0 24px;
+  background: #FBF9F4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  position: fixed;
+  top: 0;
+  z-index: 10;
+  font-family: 'Roboto', sans-serif;
+  left: 0px;
+}
+
+.logo {
+  width: 70px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.navbar-center {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-link {
+  font-size: 22px;
+  color: #585547;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.navbar-right {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.btn {
+  font-size: 18px;
+  color: #585547;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  background: #E3E3E3;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background: #f1f1f1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn_a {
+  font-size: 18px;
+  color: #E3E3E3;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  background: #E3E3E3;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.profile-btn {
+  background: #585547;
+}
+
+.profile-btn:hover {
+  background: rgb(70, 67, 56);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 16px;
+  }
+
+  .navbar-center {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .navbar-right {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+}
 </style>
