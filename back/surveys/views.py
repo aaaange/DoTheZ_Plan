@@ -319,7 +319,7 @@ def load_model(save_dir="model_files"):
 def initialize_model(request):
     try:
         # 1단계: 설문 데이터 생성
-        user_surveys = generate_survey_data(num_samples=5000)
+        user_surveys = generate_survey_data(num_samples=100)
 
         # 1.5단계: 각 사용자에 대해 상품 추천
         for user_survey in user_surveys:
@@ -344,19 +344,65 @@ def initialize_model(request):
 @api_view(['POST'])
 def recommend_product_for_user(request):
     try:
-        # 요청 데이터에서 새로운 사용자 설문 정보를 가져옵니다.
-        new_user_survey = request.data
+        # 요청 데이터에서 user_survey_id 추출
+        user_survey_id = request.data.get("user_survey_id")
+        if not user_survey_id:
+            return JsonResponse({"error": "user_survey_id is required"}, status=400)
 
-        # 저장된 모델과 데이터를 로드합니다.
+        # UserSurvey 모델 데이터 가져오기
+        user_survey = UserSurvey.objects.filter(pk=user_survey_id).first()
+        if not user_survey:
+            return JsonResponse({"error": "UserSurvey not found"}, status=404)
+
+        # 저장된 모델과 데이터를 로드
         kmeans, scaler, cluster_representatives = load_model()
 
-        # 새로운 사용자에 대해 추천 수행
-        recommended_product = recommend_for_new_user(new_user_survey, scaler, kmeans, cluster_representatives)
+        # 사용자 데이터를 변환하고 추천 수행
+        user_data = transform_user_survey(user_survey)
+        recommended_product = recommend_for_new_user(user_data, scaler, kmeans, cluster_representatives)
 
         return JsonResponse({"recommended_product": recommended_product})
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
 
+
+def transform_user_survey(user_survey):
+    return {
+        "age": int(user_survey.age),
+        "risk_tolerance": user_survey.risk_tolerance,
+        "fixed_income": float(user_survey.fixed_income),
+        "current_assets": float(user_survey.current_assets),
+        "deposit_or_saving": user_survey.deposit_or_saving,
+        "minimum_deposit": float(user_survey.minimum_deposit),
+        "investment_period": float(user_survey.investment_period),
+        "expected_return": float(user_survey.expected_return),
+        "interest_rate_type": user_survey.interest_rate_type,
+        "investment_goal": user_survey.investment_goal,
+        "spending_habit_1": user_survey.spending_habit_1,
+        "spending_habit_2": user_survey.spending_habit_2,
+        "spending_habit_3": user_survey.spending_habit_3,
+        "main_bank": user_survey.main_bank,
+        "household_type": user_survey.household_type,
+    }
+
+@api_view(['POST'])
+def get_product_by_name(request):
+    product_name = request.data.get('product_name')
+
+    if not product_name:
+        return Response({"error": "상품 이름이 필요합니다."}, status=400)
+
+    try:
+        # 상품명으로 Product 모델에서 상품 찾기
+        product = Product.objects.get(fin_prdt_nm=product_name['recommended_product'])
+        return Response({
+            "kor_co_nm": product.kor_co_nm,
+            "product_code": product.fin_prdt_cd,
+            "recommended_product": product.fin_prdt_nm
+        })
+    except Product.DoesNotExist:
+        return Response({"error": "해당 상품을 찾을 수 없습니다."}, status=404)
+    
 # # 실행 예시:
 # new_user_survey = {
 #     'deposit_or_saving': True,
