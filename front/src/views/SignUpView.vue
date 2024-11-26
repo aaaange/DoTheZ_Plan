@@ -1,7 +1,7 @@
 <template>
-  <div class="signup-page" style="width: 100%; height: 100vh; background: #F9EB87; display: flex; justify-content: center; align-items: center; ">
+  <div class="signup-page" style="width: 100%; height: 100vh; background: #F9EB87; display: flex; justify-content: center; align-items: center; margin-top: 110px;">
     <div class="signup-container" style="width: 800px; background: #FBF9F4; padding: 40px; border-radius: 20px; box-shadow: 6px 9px 4px rgba(0, 0, 0, 0.2);">
-      <h1 style="color: #585547; font-size: 32px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 700; margin-bottom: 10px;">회원가입</h1>
+      <h1 style="color: #585547; font-size: 40px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 700; margin-bottom: 10px;">회원가입</h1>
       <p style="color: #585547; font-size: 16px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 300; margin-bottom: 30px;">어서오세요! 두더Z와 깊이 있는 금융 생활 해요 :)</p>
 
       <h2 style="color: #585547; font-size: 18px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 600; margin-bottom: 15px;">기본 정보 입력</h2>
@@ -19,7 +19,8 @@
           />
           <button
             @click="checkUsername"
-            style="padding: 10px 20px; background: #F8C471; border: none; border-radius: 10px; font-size: 16px; color: white; cursor: pointer;"
+            class ='action-button'
+            style="padding: 10px 20px; background: #E6AF69; border: none; border-radius: 10px; font-size: 16px; color: white; cursor: pointer;"
           >
             중복 확인
           </button>
@@ -125,7 +126,7 @@
 
       <!-- 제출 버튼 -->
       <div style="text-align: center; margin-top: 30px;">
-        <button @click="handleSubmit" style="padding: 15px 30px; background: #E6AF69; color: #FBF9F4; border: none; border-radius: 15px; font-size: 18px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 700; cursor: pointer;">
+        <button class ='action-button' @click="handleSubmit" style="padding: 15px 30px; background: #E6AF69; color: #FBF9F4; border: none; border-radius: 15px; font-size: 18px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 700; cursor: pointer;">
           회원가입 하기
         </button>
       </div>
@@ -229,4 +230,13 @@ function handleSubmit() {
 
 <style scoped>
 /* 추가적인 스타일을 여기에 넣을 수 있습니다. */
+.action-button{
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s ease;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+.action-button:hover {
+  background: #E6AF69;
+  transform: scale(1.05);
+}
 </style>

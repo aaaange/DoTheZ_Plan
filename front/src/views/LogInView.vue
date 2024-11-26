@@ -23,6 +23,7 @@
           type="password"
           v-model="password"
           placeholder="비밀번호를 입력해주세요."
+          @keydown.enter="handleLogin"
         />
       </div>
 
@@ -62,7 +63,6 @@ export default {
       try {
         await store.logIn({ username: this.username, password: this.password });
         // 로그인 성공 후 메인 페이지로 이동
-        this.$router.push({ name: 'mainpage' });
       } catch (error) {
         // 오류 메시지 처리
         this.errorMessage = error.response ? error.response.data.detail : '로그인에 실패했습니다.';
@@ -139,7 +139,7 @@ export default {
 
 .login-button button {
   width: 100%;
-  padding: 15px;
+  padding: 15px ;
   background-color: #E6AF69;
   color: #FBF9F4;
   border: none;
@@ -148,5 +148,13 @@ export default {
   font-weight: 700;
   cursor: pointer;
   box-sizing: border-box;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s ease;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.login-button:hover {
+  /* background: #E6AF69; */
+  transform: scale(1.05);
 }
 </style>
