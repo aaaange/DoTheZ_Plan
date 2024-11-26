@@ -158,11 +158,13 @@ export default {
             headers: { Authorization: `Token ${token}` }, // 인증 헤더 추가
           }
         );
-
+        const newReview = response.data;
+        newReview.created_at = format(new Date(newReview.created_at), 'yyyy-MM-dd HH:mm:ss');
         // 서버에서 응답받은 리뷰 데이터를 로컬 배열에 추가
         reviews.value.push(response.data); 
         // 리뷰 내용 입력 필드 초기화
         newReviewContent.value = "";
+        
       } catch (error) {
         if (error.response) {
           console.error("리뷰 작성 중 서버 에러:", error.response.data);
