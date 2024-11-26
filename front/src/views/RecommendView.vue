@@ -11,7 +11,7 @@
             <div class="product-details">
               <p class="product-name">상품 이름 : {{ product['상품 이름'] }}</p>
               <p class="product-name">은행 이름 : {{ product['금융 회사'] }}</p>
-              <p class="product-name">예상 수익 : {{ product['예상 수익'] }}원</p>
+              <p class="product-name">예상 수익 : {{ product['예상 수익'] }}만 원</p>
             </div>
           </div>
           <router-link :to="'/productdetail/' + String(product['상품 코드'])">
@@ -19,6 +19,25 @@
           </router-link>
         </li>
       </ul>
+
+      <!-- 로딩 상태 표시 -->
+      <div v-if="isLoading" class="loading-message">
+        모델 생성 중입니다... 잠시만 기다려 주세요.
+      </div>
+
+      <!-- 추가 추천 버튼 -->
+      <button v-else @click="initializeAndFetchRecommendations" class="additional-recommendation-button">
+        추가 추천 받기
+      </button>
+
+      <!-- 추가 추천 리스트 -->
+      <div v-if="additionalRecommendations" class="additional-product-list">
+        <p class="product-name">상품 이름 : {{ additionalRecommendations.recommended_product }}</p>
+        <p class="product-name">은행 이름 : {{ additionalRecommendations.kor_co_nm }}</p>
+        <router-link :to="'/productdetail/' + String(additionalRecommendations.product_code)">
+          <button class="join-button">가입하기</button>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -28,25 +47,81 @@
   import axios from 'axios';
   import { useRoute } from 'vue-router';
 
+  // 기존 추천 리스트
   const recommendedProducts = ref([]);
-  const route = useRoute(); // useRoute 훅 사용하여 현재 라우트 정보 가져오기
-  const userSurveyId = route.params.userSurveyId; // URL 파라미터에서 user_survey_id 추출
-  const user_survey_id = parseInt(userSurveyId, 10)
 
-  // API 요청하여 상품 리스트 가져오기
+  // 추가 추천 리스트
+  const additionalRecommendations = ref([]);
+
+  // 로딩 상태 관리
+  const isLoading = ref(false);
+
+  // 라우트에서 userSurveyId 추출
+  const route = useRoute();
+  const userSurveyId = route.params.userSurveyId;
+  const user_survey_id = parseInt(userSurveyId, 10);
+
+  // 초기 추천 상품 요청
   onMounted(async () => {
     try {
       const response = await axios.get(`http://127.0.0.1:8000/surveys/api/v1/product-filtering/${user_survey_id}/`);
       recommendedProducts.value = response.data.recommended_products;
-      console.log(recommendedProducts.value)
     } catch (error) {
       console.error("상품 추천 정보를 가져오는 데 실패했습니다:", error);
     }
-  }); 
+  });
+
+  const fetchProductDetails = async (productName) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/surveys/api/v1/get_product_by_name/", {
+        product_name: productName
+      });
+
+      if (response.data.kor_co_nm) {
+        console.log("상품의 기업 이름:", response.data.kor_co_nm);
+        // 추가 처리: UI에 표시하거나 상태 업데이트
+        additionalRecommendations.value = response.data
+      } else {
+        console.error("상품을 찾을 수 없습니다.");
+      }
+    } catch (error) {
+      console.error("상품 조회 실패:", error);
+    }
+  };
+
+  // 추가 추천 요청
+  const initializeAndFetchRecommendations = async () => {
+    isLoading.value = true; // 로딩 상태 활성화
+    try {
+      // 모델 초기화 요청
+      const initResponse = await axios.post("http://127.0.0.1:8000/surveys/api/v1/initialize_model/");
+      if (initResponse.data.message) {
+        console.log("모델 초기화 성공:", initResponse.data.message);
+
+        // user_survey_id 기반으로 추천 요청
+        const recommendResponse = await axios.post(`http://127.0.0.1:8000/surveys/api/v1/recommend_product_for_user/`, {
+          user_survey_id: user_survey_id,
+        });
+        if (recommendResponse.data.recommended_product) {
+          fetchProductDetails(recommendResponse.data.recommended_product);
+        }
+        else {
+          console.warn("추천 상품이 없습니다.");
+        }
+      }
+    } catch (error) {
+      console.error("추가 추천 요청 실패:", error.response?.data || error.message);
+    } finally {
+      isLoading.value = false; // 로딩 상태 비활성화
+    }
+  };
+
+  // 상품 이름을 이용해서 추가 추천 상품의 세부 정보를 가져옵니다
+  
 </script>
 
-<style scoped>
 
+<style scoped>
 
 /* 전체 컨테이너 스타일 */
 .recommend-container {
@@ -131,5 +206,6 @@ h1 {
   background-color: #D69558; /* hover 색상 */
   transform: scale(1.05); /* hover 시 살짝 확대 */
 }
+
 
 </style>
