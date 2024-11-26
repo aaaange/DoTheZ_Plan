@@ -35,7 +35,7 @@
           <img class="product-image" 
             :src="getBankImage(option.product.kor_co_nm)" 
             :alt="option.product.kor_co_nm" 
-            style="width: 64px; height: 64px; margin-right: 16px; margin-left: 16px; border-radius: 8px; object-fit: cover;"/>
+          />
           
           <div class="product-details">
             <p class="product-name" style="font-size: 18px; font-weight: 500; text-align: left;">
@@ -191,7 +191,7 @@ export default {
   width: 100%; /* 부모 너비에 맞게 확장 */
   max-width: 100%; /* 부모 요소 기준 너비 제한 */
   padding: 16px;
-  background: #fbf9f4;
+  background: #FBF9F4;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 12px;
   font-family: "IBM Plex Sans KR", sans-serif;
@@ -204,9 +204,9 @@ export default {
   display: flex;
   align-items: center;
   width: 100%; /* 부모 너비에 맞게 확장 */
-  max-width: 100%; /* 부모 요소 기준 너비 제한 */
+  max-width: 90%; /* 부모 요소 기준 너비 제한 */
   padding: 16px;
-  background: #fbf9f4;
+  background: #FBF9F4;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 12px;
   font-family: "IBM Plex Sans KR", sans-serif;
@@ -224,22 +224,22 @@ export default {
   display: inline-block;
   padding: 4px 8px;
   margin-right: 8px;
-  background-color: #f4f4f4; /* 박스 배경색 */
+  background-color: #E3E3E3; /* 박스 배경색 */
   border-radius: 6px;       /* 둥근 모서리 */
   font-weight: bold;        /* 텍스트 굵게 */
   font-size: 14px;          /* 텍스트 크기 */
   color: #585547;           /* 텍스트 색상 */
-  border: 1px solid #d9d9d9; /* 테두리 */
+  border: 1px solid #E3E3E3; /* 테두리 */
 }
 
 /* 이미지 */
 .product-image {
-  width: 64px;
-  height: 64px;
-  margin-right: 16px;
+  position: relative;
+  width: 80px;
+  height: 80px;
   border-radius: 8px;
-  object-fit: cover;
-  background: #e0e0e0;
+  background: #FBF9F4;
+  margin-left: 30px;
 }
 
 /* 상품 세부정보 */
@@ -247,6 +247,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin-left: 40px;
   gap: 4px;
 }
 
@@ -259,7 +260,7 @@ input {
   padding: 12px;
   width: 300px;
   border-radius: 8px;
-  border: 1px solid #D9D9D9;
+  border: 1px solid #FBF9F4;
   font-size: 16px;
   outline: none;
 }

@@ -20,22 +20,13 @@
           <div
             style="width: 385px; left: 5px; top: 75px; position: absolute; color: #585547; font-size: 16px; font-family: IBM Plex Sans KR; font-weight: 300;"
           >
-            회원 프로필 페이지
+            유저의 프로필 페이지
           </div>
           <div
             class="Line1"
             style="width: 642px; height: 0px; left: 0px; top: 114px; position: absolute; border-top: 1px solid #CDC7C0;"
           ></div>
         </div>
-
-        <!-- 탈퇴하기 버튼 -->
-        <button
-          class="delete-button product-item"
-          style="position: absolute; top: 40px; right: 40px; background: #E6AF69; color: white; border: none; border-radius: 5px; padding: 10px 15px; cursor: pointer; font-size: 16px;"
-          @click="deleteAccount"
-        >
-          탈퇴하기
-        </button>
 
         <!-- 사용자 정보 -->
         <div
@@ -62,9 +53,15 @@
         <!-- 회원정보 수정 버튼 추가 -->
         <button
           @click="goToEditProfile"
-          style="position: absolute; top: 190px; right: 40px; background: #E6AF69; color: white; border: none; border-radius: 5px; padding: 10px 15px; cursor: pointer; font-size: 16px;"
-        >
+          class="edit_user">
           회원정보 수정
+        </button>
+        <!-- 탈퇴하기 버튼 -->
+        <button
+          @click="deleteAccount"
+          class="delete-button signout product-item"
+        >
+          탈퇴하기
         </button>
         <div style="margin-top: 370px; width: 90%;">
           <div style="max-height: 400px; overflow-y: auto; position: relative; margin-left: 100px;">
@@ -203,16 +200,16 @@ export default {
             {
               label: '기본 금리',  // 기본 금리 데이터
               data: interestRates,
-              backgroundColor: 'rgba(75, 192, 192, 0.5)',  // 기본 금리 색상 (반투명한 막대 색)
-              borderColor: 'rgba(75, 192, 192, 1)',  // 기본 금리 테두리 색상
+              backgroundColor: 'rgba(255, 161, 178, 0.5)',  // 기본 금리 색상 (반투명한 막대 색)
+              borderColor: 'rgba(255, 161, 178, 1)',  // 기본 금리 테두리 색상
               borderWidth: 1,  // 테두리 두께
               fill: true,  // 막대 내부 채우기
             },
             {
               label: '최고 우대 금리',  // 최고 우대 금리 데이터
               data: bestRates,
-              backgroundColor: 'rgba(153, 102, 255, 0.5)',  // 우대 금리 색상 (반투명한 막대 색)
-              borderColor: 'rgba(153, 102, 255, 1)',  // 우대 금리 테두리 색상
+              backgroundColor: 'rgba(161, 225, 255, 0.5)',  // 우대 금리 색상 (반투명한 막대 색)
+              borderColor: 'rgba(161, 225, 255, 1)',  // 우대 금리 테두리 색상
               borderWidth: 1,  // 테두리 두께
               fill: true,  // 막대 내부 채우기
             }
@@ -329,19 +326,43 @@ export default {
   transform: translateY(-4px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
-/* 회원정보 수정 버튼 스타일 */
-button {
-  background-color: #E6AF69;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 15px;
-  font-size: 16px;
-  cursor: pointer;
-  text-align: center;
+
+.signout {
+  position: absolute;
+  top: 300px; 
+  right: 140px; 
+  background: #c4c2c0; 
+  color: white; 
+  border: none; 
+  border-radius: 5px; 
+  padding: 5px 10px; 
+  cursor: pointer; 
+  font-size: 14px;
 }
 
-button:hover {
-  background-color: #D79852;
+.signout:hover {
+  background-color: #8a8885;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+
+.edit_user {
+  position: absolute; 
+  top: 300px; 
+  right: 230px; 
+  background: #c4c2c0; 
+  color: white; 
+  border: none; 
+  border-radius: 5px; 
+  padding: 5px 10px; 
+  cursor: pointer; 
+  font-size: 14px;
+}
+
+.edit_user:hover {
+  background-color: #8a8885;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 </style>
