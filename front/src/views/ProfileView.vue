@@ -59,6 +59,13 @@
             </p>
           </div>
         </div>
+        <!-- 회원정보 수정 버튼 추가 -->
+        <button
+          @click="goToEditProfile"
+          style="position: absolute; top: 190px; right: 40px; background: #E6AF69; color: white; border: none; border-radius: 5px; padding: 10px 15px; cursor: pointer; font-size: 16px;"
+        >
+          회원정보 수정
+        </button>
         <div style="margin-top: 370px; width: 90%;">
           <div style="max-height: 400px; overflow-y: auto; position: relative; margin-left: 100px;">
             <!-- 가입한 상품 목록 -->
@@ -103,16 +110,19 @@
 <script>
 import { useCounterStore } from "@/stores/counter";
 import axios from "axios";
-// import { Line } from 'chart.js';
 import { Chart } from 'chart.js/auto';
+import { useRouter } from "vue-router";
+
 
 export default {
   setup() {
     const store = useCounterStore();  // useCounterStore 호출
     const token = store.token;  // store에서 token 가져오기
+    const router = useRouter();
 
     return {
-      token,  // 반환하여 컴포넌트에서 사용
+      token,
+      router,  // 반환하여 컴포넌트에서 사용
     };
   },
   data() {
@@ -295,6 +305,9 @@ export default {
         }
       }
     },
+    goToEditProfile() {
+      this.router.push({ name: 'update' });  // UpdateUserInfo 이동
+    },
   },
 }
 
@@ -315,5 +328,20 @@ export default {
 .product-item:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+/* 회원정보 수정 버튼 스타일 */
+button {
+  background-color: #E6AF69;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+
+button:hover {
+  background-color: #D79852;
 }
 </style>
