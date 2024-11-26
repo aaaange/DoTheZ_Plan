@@ -268,10 +268,11 @@ export default {
 h1 {
   color: #585547;
   text-align: center;
-  margin-bottom: 70px;
+  margin-bottom: 10px;
   font-size: 50px;
   justify-content: left;
-  margin-top: 20px;
+  margin-top: 5px;
+  font-weight: 700;
 }
 
 .survey-form {
@@ -280,7 +281,7 @@ h1 {
   gap: 20px;
   overflow-y: auto;
   flex: 1;
-  padding-right: 10px;
+  padding: 40px;
 }
 
 .question-group {
