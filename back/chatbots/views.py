@@ -22,8 +22,9 @@ def chatbot_response(request):
 
             # OpenAI API 호출
             response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=[{"role": "user", "content": user_message}]
+                model="gpt-3.5-turbo",
+                messages=[{"role": "system", "content": "이제부터 모든 응답은 한국어로 해주세요."},
+                          {"role": "user", "content": user_message}]
             )
             logger.debug(f"Response: {response}")  # API 응답 출력
 
