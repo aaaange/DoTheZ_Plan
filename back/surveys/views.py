@@ -319,7 +319,7 @@ def load_model(save_dir="model_files"):
 def initialize_model(request):
     try:
         # 1단계: 설문 데이터 생성
-        user_surveys = generate_survey_data(num_samples=1000)
+        user_surveys = generate_survey_data(num_samples=500)
 
         # 1.5단계: 각 사용자에 대해 상품 추천
         for user_survey in user_surveys:

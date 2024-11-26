@@ -29,6 +29,7 @@ environ.Env.read_env(
 # 환경변수를 읽어오기
 PRODUCT_API_KEY = env('PRODUCT_API_KEY')
 EXCHANGE_API_KEY = env('EXCHANGE_API_KEY')
+CHATGPT_API_KEY = env('CHATGPT_API_KEY')
 
 
 # Quick-start development settings - unsuitable for production
@@ -46,6 +47,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'chatbots',
     'accounts',
     'product',
     'surveys',

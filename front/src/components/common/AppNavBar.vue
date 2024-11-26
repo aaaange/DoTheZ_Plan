@@ -29,6 +29,8 @@
         </template>
       </div>
     </div>
+    <!-- Chatbot 컴포넌트를 우측 하단에 추가 -->
+    <Chatbot class="chatbot-container" />
   </div>
 </template>
 
@@ -37,8 +39,12 @@
 import { ref, onMounted, watch } from 'vue';
 import { useCounterStore } from "@/stores/counter";
 import axios from 'axios';
+import Chatbot from '../ChatBot.vue';
 
 export default {
+  components: {
+    Chatbot, // 컴포넌트 등록
+  },
   setup() {
     const store = useCounterStore();
     const isAuthenticated = ref(store.isLogin);
@@ -187,6 +193,14 @@ export default {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+.chatbot-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
 
 @media (max-width: 768px) {
   .navbar {
