@@ -23,7 +23,7 @@ const props = defineProps({
 /* 전체 컨테이너 */
 .results-container {
   max-width: 700px;
-  height: 800px;
+  height: 600px;
   position: relative;
   top: -80px;
 }
@@ -31,7 +31,7 @@ const props = defineProps({
 /* 제목 스타일 */
 .results-title {
   font-size: 1.8em;
-  color: #2c3e50;
+  color: #585547;
   font-weight: bold;
   margin-bottom: 20px;
   text-align: left;
@@ -39,7 +39,7 @@ const props = defineProps({
 
 /* 리스트 스타일 */
 .bank-list {
-  max-height: 530px; /* 스크롤 높이 제한 */
+  max-height: 430px; /* 스크롤 높이 제한 */
   overflow-y: auto;
   list-style: none;
   text-align: left;
@@ -54,7 +54,7 @@ const props = defineProps({
 .bank-name {
   font-size: 1.2em;
   font-weight: bold;
-  color: #34495e;
+  color: #585547;
 }
 
 /* 은행 주소 */
@@ -67,7 +67,7 @@ const props = defineProps({
 /* 결과 없음 메시지 */
 .no-results {
   color: #e74c3c;
-  font-size: 1.2em;
+  font-size: 20px;
   font-weight: bold;
   margin-top: 20px;
 }

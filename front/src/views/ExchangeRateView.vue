@@ -33,7 +33,7 @@
             </select>
           </div>
         </div>
-        <p> > </p>
+        <p style="font-size: 20px;"> > </p>
         <div class="input-box">
           <input
             type="text"
@@ -260,48 +260,60 @@ export default {
 <style scoped>
 .calculator-container {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #f9eb87;
   padding-top: 50px; /* 상단 여백 추가 */
+  position: relative;
 }
+
 .calculator {
-  width: 660px;
-  padding: 20px;
-  background: #fbf9f4;
+  width: 1000px; /* 너비 설정 */
+  margin: 0 auto;
+  padding: 50px;
+  background: #FBF9F4;
+  border-radius: 30px;
   box-shadow: 6px 9px 4px rgba(0, 0, 0, 0.2);
-  border-radius: 20px;
-  text-align: center;
+  text-align: center;  
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 132px;
 }
+
 .title {
-  font-size: 40px;
+  font-size: 50px;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: -5px;
   color: #585547;
 }
+
 .subtitle {
-  font-size: 16px;
-  font-weight: 300;
+  font-size: 20px;
+  font-weight: 400;
   color: #585547;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
+
 .exchange-info {
-  margin: 20px 0;
-  font-size: 16px;
+  font-size: 18px;
   color: #585547;
-  
 }
+
 .exchange-rate {
   font-size: 32px;
   font-weight: 600;
+  margin-top: -5px;
 }
+
 .input-group {
   display: flex;
   justify-content: space-around;
-  margin-top: 20px;
+  margin-top: 10px;
 }
+
 .input-box {
   display: flex;
   align-items: center;
@@ -309,18 +321,18 @@ export default {
   border: 1px solid #d9d9d9;
   border-radius: 15px;
   padding: 10px 15px;
-  width: 250px;
+  width: 270px;
 }
 .input {
-  font-size: 16px;
+  font-size: 20px;
   padding: 10px;
-  width: 150px;
+  width: 180px;
   border: none;
   background: transparent;
   color: #585547;
 }
 .currency {
-  font-size: 16px;
+  font-size: 20px;
   color: #e6af69;
   cursor: pointer;
   margin-left: 10px;
@@ -335,7 +347,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
+  width: 80%;
+  height: 80%;
+  margin-left: 90px;
 }
 </style>

@@ -96,7 +96,6 @@ export default {
 .navbar {
   width: 100%;
   height: 80px;
-  padding: 0 24px;
   background: #FBF9F4;
   display: flex;
   align-items: center;
@@ -112,6 +111,8 @@ export default {
 .logo {
   width: 70px;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  margin-left: 50px;
+  border-radius: 50%;
 }
 
 .navbar-center {
@@ -138,6 +139,7 @@ export default {
   display: flex;
   gap: 16px;
   align-items: center;
+  margin-right: 40px;
 }
 
 .btn {

@@ -64,7 +64,7 @@ const searchNearbyBanks = (coords) => {
   <div class="map-view-container">
     <div class="box">
       <div class="header">
-        주변 은행 찾기
+        주변 은행 찾기🔍
       </div>
       <!-- 검색 입력 컴포넌트 -->
       <div class="search-container">
@@ -118,8 +118,8 @@ const searchNearbyBanks = (coords) => {
   color: #585547;
   font-size: 50px;
   font-family: 'IBM Plex Sans KR', sans-serif; /* 폰트 패밀리 추가 */
-  font-weight: 800;
-  margin-bottom: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
   display: flex;
   justify-content: center;
 }
@@ -127,26 +127,26 @@ const searchNearbyBanks = (coords) => {
 .search-container {
   display: flex;
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   justify-content: center;
 }
 
 .map-and-list-container {
   display: flex;
   justify-content: center;
-  margin-top: 70px;
+  margin-top: 50px;
 }
 
 .map-container {
-  flex: 0 0 50%;
+  flex: 0 0 40%;
   border-radius: 10px;
-  height: 500px;
+  height: 400px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .bank-list-container {
   flex: 0 0 35%;
-  height: 700px;
+  height: 600px;
   border-radius: 10px;
   margin-left: 30px;
   padding: 20px;

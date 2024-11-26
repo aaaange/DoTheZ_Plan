@@ -13,9 +13,9 @@
           style="width: 642px; height: 114px; left: 110px; top: 38px; position: absolute"
         >
           <div
-            style="width: 278px; height: 65px; top: 0px; position: absolute; color: #585547; font-size: 50px; font-family: IBM Plex Sans KR; font-weight: 700;"
+            style="width: 700px; height: 65px; top: 0px; position: absolute; color: #585547; font-size: 50px; font-family: IBM Plex Sans KR; font-weight: 700;"
           >
-            내 프로필
+            내 정보를 확인해요🔍
           </div>
           <div
             style="width: 385px; left: 5px; top: 75px; position: absolute; color: #585547; font-size: 16px; font-family: IBM Plex Sans KR; font-weight: 300;"
