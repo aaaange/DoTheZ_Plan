@@ -3,21 +3,21 @@
     class="main-page"
     style="
       width: 100%;
-      height: 100vh;
+      height: 100%;
       background: #F9EB87;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding-top: 50px;
+      padding-top: 140px;
     "
   >
     <div
       class="content-container"
       style="
-        width: 800px; /* Adjusted width to match sign-up form */
+        width: 1000px; /* Adjusted width to match sign-up form */
         background: #FBF9F4;
         box-shadow: 6px 9px 4px rgba(0, 0, 0, 0.2);
-        border-radius: 20px; /* Adjusted border-radius to match sign-up form */
+        border-radius: 30px; /* Adjusted border-radius to match sign-up form */
         padding: 40px;
       "
     >

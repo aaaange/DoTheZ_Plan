@@ -7,10 +7,10 @@ import ExchangeRateView from '@/views/ExchangeRateView.vue'
 import MapView from '@/views/MapView.vue'
 import SurveyView from '@/views/SurveyView.vue'
 import RecommendView from '@/views/RecommendView.vue'
-import LogOutView from '@/views/LogOutView.vue'
 
 import { createRouter, createWebHistory } from 'vue-router'
 import ProductDetailView from '@/views/ProductDetailView.vue'
+import UpdateUserInfo from '@/views/UpdateUserInfo.vue'
 
 
 const router = createRouter({
@@ -32,9 +32,9 @@ const router = createRouter({
       component: LogInView,
     },
     {
-      path: '/logout',
-      name: 'logout',
-      component: LogOutView,
+      path: '/upate',
+      name: 'update',
+      component: UpdateUserInfo
     },
     {
       path: '/profile/:userId',

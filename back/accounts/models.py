@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import get_user_model
-from product.models import Product
+from product.models import Product, ProductOption
 
 # Create your models here.
 
@@ -16,12 +16,12 @@ class UserProduct(models.Model):
     user = models.ForeignKey(
         User,  # User 모델 참조
         on_delete=models.CASCADE,
-        related_name="user_products"
+        related_name="user"
     )
     product = models.ForeignKey(
         Product,  # Product 모델 참조
         on_delete=models.CASCADE,
-        related_name="user_products"
+        related_name="product"
     )
     joined_at = models.DateTimeField(auto_now_add=True)  # 가입 날짜
 

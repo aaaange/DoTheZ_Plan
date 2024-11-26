@@ -37,7 +37,7 @@ const handleSearch = () => {
 
 .search-input {
   width: 50%;
-  padding: 20px;
+  padding: 15px;
   border-radius: 25px;
   border: 1px solid #ccc;
   font-size: 20px;
@@ -50,7 +50,7 @@ const handleSearch = () => {
 }
 
 .search-button {
-  padding: 18px 30px;
+  padding: 14px 30px;
   border-radius: 25px;
   background-color: #E6AF69;
   color: white;
