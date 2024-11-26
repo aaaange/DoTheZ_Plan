@@ -15,7 +15,7 @@
           <h1
             style="color: #585547; font-size: 50px; font-family: IBM Plex Sans KR; font-weight: 700; margin: 0;"
           >
-            회원정보 수정
+            내 정보 수정하기 📝
           </h1>
           <p
             style="color: #585547; font-size: 16px; font-family: IBM Plex Sans KR; font-weight: 300; margin-top: 15px;"
@@ -31,19 +31,19 @@
         <!-- 사용자 프로필 수정 폼 -->
         <div
           class="user-info"
-          style="width: 70%; margin-top: 30px; background-color: #EDEDED; padding: 20px; border-radius: 10px; display: flex; flex-direction: column; align-items: flex-start;"
+          style="width: 70%; margin-top: 50px; background-color: #EDEDED; padding: 20px; border-radius: 10px; display: flex; flex-direction: column; align-items: flex-start;"
         >
           <img
             src="@/image/dothez.jpg"
             alt="프로필 사진"
             class="user-avatar"
-            style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 15px; align-self: center;"
+            style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 30px; align-self: center;"
           />
           <!-- 이메일 입력 -->
           <div style="margin-bottom: 20px; width: 85%;">
             <label
               for="email"
-              style="display: block; color: #585547; font-size: 16px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 400; margin-bottom: 8px;"
+              style="display: block; color: #585547; font-size: 16px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 400; margin-bottom: 8px; margin-left: 40px;"
               >E-Mail</label
             >
             <div style="display: flex; gap: 10px;">
@@ -53,7 +53,7 @@
                 type="text"
                 v-model="emailId"
                 placeholder="이메일"
-                style="width: 30%; flex-grow: 1; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4;"
+                style="width: 30%; flex-grow: 1; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4; margin-left: 70px;"
               />
               <span style="padding: 10px 0; color: #585547; font-size: 16px;">@</span>
               <!-- 도메인 선택 또는 입력 -->
@@ -87,24 +87,24 @@
             </div>
           </div>
           <!-- 휴대폰 번호 입력 -->
-          <div style="margin-bottom: 20px; width: 80%;">
-            <label for="phone" style="display: block; color: #585547; font-size: 16px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 400; margin-bottom: 8px;">휴대폰 번호</label>
+          <div style="margin-bottom: 20px; width: 72%;">
+            <label for="phone" style="display: block; color: #585547; font-size: 16px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 400; margin-bottom: 8px; margin-left: 40px;">휴대폰 번호</label>
             <input
               id="phone"
               type="text"
               v-model="phone"
-              placeholder="휴대폰 번호를 입력해주세요. 예: 010-1234-5678"
-              style="width: 100%; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4;"
+              placeholder="예) 010-1234-5678"
+              style="width: 100%; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4; margin-left: 70px;"
             />
           </div>
           <!-- 생년월일 입력 -->
-          <div style="margin-bottom: 20px; width: 80%;">
-            <label for="birth" style="display: block; color: #585547; font-size: 16px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 400; margin-bottom: 8px;">생년월일</label>
+          <div style="margin-bottom: 20px; width: 72%;">
+            <label for="birth" style="display: block; color: #585547; font-size: 16px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 400; margin-bottom: 8px; margin-left: 40px;">생년월일</label>
             <input
               id="birth"
               type="date"
               v-model="birth"
-              style="width: 100%; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4;"
+              style="width: 100%; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4; margin-left: 70px;"
             />
           </div>
         </div>
@@ -114,8 +114,9 @@
           <button
             @click="updateProfile"
             style="background: #E6AF69; color: white; border: none; border-radius: 5px; padding: 10px 20px; cursor: pointer; font-size: 16px;"
+            class="button"
           >
-            수정
+            수정완료
           </button>
         </div>
       </div>
