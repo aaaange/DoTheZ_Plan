@@ -34,19 +34,30 @@
 
       <!-- 리뷰 섹션 -->
       <div class="review-page">
-        <div class="review-container">
+        <div class="review-container" >
+          <h1 style="color: #585547; font-size: 32px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 700; margin-bottom: 10px; margin-top: 100px;">이 상품에 대한 나의 생각은?</h1>
           <!-- 리뷰 입력 및 버튼 -->
-          <div style="display: flex; align-items: center; margin-bottom: 20px;">
-            <input id="review-content" type="text" v-model="newReviewContent" placeholder="리뷰를 입력해주세요." @keydown.enter="submitReview" />
-            <button @click="submitReview" class="action-button">리뷰 작성하기</button>
+          <hr class="title-divider" />
+          <div style="display: flex; align-items: center; margin-bottom: 20px; margin-top: 50px;">
+            <input 
+              id="review-content" 
+              type="text" 
+              v-model="newReviewContent" 
+              placeholder="리뷰를 입력해주세요." 
+              @keydown.enter="submitReview" 
+              style="flex-grow: 1; padding: 10px; border: 1px solid #CDC7C0; border-radius: 10px; font-size: 16px; color: #585547; background: #FBF9F4;" 
+              />
+            <button @click="submitReview" style="padding: 10px 20px; background: #E6AF69; color: #FBF9F4; border: none; border-radius: 15px; font-size: 18px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 700; cursor: pointer; margin-left: 10px;" class="action-button">리뷰 작성하기</button>
           </div>
 
           <!-- 작성된 리뷰 목록 -->
-          <div v-for="(review, index) in reviews" :key="index" style="margin-top: 30px;">
-            <div>{{ review.user.username }} | {{ review.created_at }}</div>
-            <div>{{ review.content }}</div>
-            <button @click="editReview(review)" class="action-button">수정</button>
-            <button @click="deleteReview(review)" class="action-button">삭제</button>
+          <div v-for="(review, index) in reviews" :key="index" style="margin-top: 30px; padding: 30px; border: 1px solid #E6AF69; border-radius: 10px; margin-bottom: 10px; background: #FBF9F4;">
+            <div style="font-size: 14px; color: #585547; " >{{ review.user.username }} | {{ review.created_at }}</div>
+            <div style="font-size: 20px; color: #585547; margin-top: 10px;">{{ review.content }}</div>
+            <div v-if="review.user.id === user_id"style="margin-top: 20px;">
+              <button @click="editReview(review)"  style="padding: 3px 10px; background: #E6AF69; color: #FBF9F4; border: none; border-radius: 15px; font-size: 16px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 700; cursor: pointer; " class="edit-action-button">수정</button>
+              <button @click="deleteReview(review)"  style="padding: 3px 10px; background: #E6AF69; color: #FBF9F4; border: none; border-radius: 15px; font-size: 16px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 700; cursor: pointer; margin-left: 10px;" class="edit-action-button">삭제</button>
+            </div>
           </div>
         </div>
       </div>
@@ -59,6 +70,7 @@ import { useCounterStore } from "@/stores/counter";
 import axios from "axios";
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from "vue-router";
+import { format } from 'date-fns';
 
 export default {
   setup() {
@@ -69,9 +81,26 @@ export default {
     const isSubscribed = ref(null)
     const productId = route.params.productId;
     // const productCode = 'productInfo.fin_prdt_cd';
+    const user_id = ref()
 
     const reviews = ref([]); // 리뷰 데이터 배열
     const newReviewContent = ref(""); // 새로운 리뷰 내용
+
+    // **유저 ID를 가져오는 함수 추가**
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get(
+          "http://127.0.0.1:8000/accounts/api/v1/user_info/",
+          {
+            headers: { Authorization: `Token ${token}` },
+          }
+        );
+        user_id.value = response.data.pk; // 서버로부터 받은 유저 ID 저장
+        console.log("User ID fetched successfully:", user_id.value);
+      } catch (error) {
+        console.error("Error fetching user ID:", error);
+      }
+    };
 
     const fetchSubscriptionStatus = async () => {
       try {
@@ -93,7 +122,10 @@ export default {
       const productId = route.params.productId;
       try {
         const response = await axios.get(`http://127.0.0.1:8000/product/product_detail/${productId}/reviews/`); // 리뷰 조회
-        reviews.value = response.data;
+        reviews.value = response.data.map(review => ({
+      ...review,
+      created_at: format(new Date(review.created_at), 'yyyy-MM-dd HH:mm:ss'), // 날짜 포맷 변경
+    }));
       } catch (error) {
         if (error.response) {
           // console.error("리뷰 조회 중 서버 에러:", error.response.data);
@@ -109,11 +141,12 @@ export default {
       if (!newReviewContent.value.trim()) return; // 리뷰 내용이 비어 있을 경우 중단
       if (!token) {
         console.error("사용자 인증이 필요합니다."); // 토큰이 없을 경우 에러
+        alert('로그인 후 이용해주세요');
         return;
       }
 
       try {
-        console.log("토큰 값:", token);  // 토큰 값 확인
+        // console.log("토큰 값:", token);  // 토큰 값 확인
         
         // 서버에 새로운 리뷰를 POST 요청
         const response = await axios.post(
@@ -159,6 +192,10 @@ export default {
         // 실제 서버에서 가져온 수정된 내용으로 업데이트하여 동기화
         const updatedReview = response.data;
 
+        // 'created_at'과 'updated_at' 날짜 포맷 변경
+        updatedReview.created_at = format(new Date(updatedReview.created_at), 'yyyy-MM-dd HH:mm:ss');
+        updatedReview.updated_at = format(new Date(updatedReview.updated_at), 'yyyy-MM-dd HH:mm:ss');
+
         // 리뷰 목록에서 수정된 리뷰 찾아서 업데이트
         const index = reviews.value.findIndex((r) => r.id === review.id);
         if (index !== -1) {
@@ -185,6 +222,7 @@ export default {
 
     // 3. 컴포넌트가 로드될 때 초기값 로드
     onMounted(() => {
+      fetchUserId();
       fetchSubscriptionStatus();
       fetchReviews();
     });
@@ -198,7 +236,7 @@ export default {
       submitReview,
       editReview,
       deleteReview,
-      
+      user_id,
     };
   },
   data() {
@@ -494,6 +532,24 @@ export default {
 }
 
 .action-button:hover {
+  background: #E6AF69;
+  transform: scale(1.05);
+}
+
+.edit-action-button {
+  background: #E6AF69;
+  color: #FBF9F4;
+  font-size: 15px;
+  font-family: "IBM Plex Sans KR", sans-serif;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s ease;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.edit-action-button:hover {
   background: #E6AF69;
   transform: scale(1.05);
 }
