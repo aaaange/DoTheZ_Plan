@@ -31,7 +31,7 @@
 |:-------------:|:-------:|:-------:|:-------:|
 | **Profile**   | <img src="https://avatars.githubusercontent.com/u/85845302?v=4" width="150"> |<img src="https://avatars.githubusercontent.com/u/128114236?v=4" width="150"> | <img src="https://avatars.githubusercontent.com/u/137850773?v=4" width="150"> |
 | **GitHub ID** | [@yejushin2000](https://github.com/yejushin2000) |[@aaaange](https://github.com/aaaange) | [@Da-413](https://github.com/Da-413) |
-| **Role**      |     인근 은행 조회(MAP), 프로필, 설문조사, 금융 상품 추천    | 회원가입, 로그인, 로그아웃, 회원탈퇴, 금융 상품 리뷰, 환율 계산기 | 메인페이지, 금융 상품 조회 및 상세 조회    |
+| **Role**      |     인근 은행 조회(MAP), 프로필, 설문조사, 금융 상품 추천    | 회원가입, 로그인, 로그아웃, 회원탈퇴, 금융 상품 리뷰, 환율 계산기 및 차트 | 메인페이지, 금융 상품 조회 및 상세 조회    |
 
 ---
 
@@ -153,7 +153,7 @@
 4. **상품 조회**: 사용자가 원하는 정보로 필터링하여 직접 금융 상품을 조회합니다.
    <img src="image/product.gif">
 
-5. **환율 계산기**: 사용자가 아이디와 비밀번호를 입력하여 로그인합니다.
+5. **환율 계산기**: 사용자가 원하는 국가의 환율을 계산하여 차트로 조회합니다.
    <img src="image/exchange-rate.png">
 
 2. **가까운 은행 찾기**: 사용자가 검색한 위치 기반 가까운 은행 정보를 제공합니다.
