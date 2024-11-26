@@ -319,7 +319,7 @@ def load_model(save_dir="model_files"):
 def initialize_model(request):
     try:
         # 1단계: 설문 데이터 생성
-        user_surveys = generate_survey_data(num_samples=500)
+        user_surveys = generate_survey_data(num_samples=10000)
 
         # 1.5단계: 각 사용자에 대해 상품 추천
         for user_survey in user_surveys:
@@ -340,7 +340,7 @@ def initialize_model(request):
         return JsonResponse({"message": "모델 초기화 및 저장 완료!"})
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
-    
+
 @api_view(['POST'])
 def recommend_product_for_user(request):
     try:

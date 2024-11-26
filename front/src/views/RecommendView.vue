@@ -101,9 +101,9 @@
     isLoading.value = true; // 로딩 상태 활성화
     try {
       // 모델 초기화 요청
-      const initResponse = await axios.post("http://127.0.0.1:8000/surveys/api/v1/initialize_model/");
-      if (initResponse.data.message) {
-        console.log("모델 초기화 성공:", initResponse.data.message);
+      // const initResponse = await axios.post("http://127.0.0.1:8000/surveys/api/v1/initialize_model/");
+      if (true) {
+        // console.log("모델 초기화 성공:", initResponse.data.message);
 
         // user_survey_id 기반으로 추천 요청
         const recommendResponse = await axios.post(`http://127.0.0.1:8000/surveys/api/v1/recommend_product_for_user/`, {
