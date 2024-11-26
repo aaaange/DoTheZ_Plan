@@ -45,16 +45,13 @@ export default {
 
       // 사용자 메시지를 메시지 배열에 추가
       this.messages.push({ role: "user", content: this.userMessage });
-
-      // 메시지를 전송하기 전에 입력 필드를 비움
-      this.userMessage = "";
-
+      
       try {
         const response = await axios.post("http://127.0.0.1:8000/chatbots/api/v1/chatbot/", {
           message: this.userMessage,
         });
-        console.log(response); // 응답 확인
         this.messages.push({ role: "bot", content: response.data.reply });
+        this.userMessage = "";
       } catch (error) {
         this.messages.push({
           role: "bot",

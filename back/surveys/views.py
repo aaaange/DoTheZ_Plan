@@ -28,9 +28,9 @@ def user_survey_view(request):
 def calculate_expected_return(deposit_or_saving, minimum_deposit, investment_period, interest_rate, interest_rate_type):
     # 단리 또는 복리 계산
     if interest_rate_type == "단리":
-        return minimum_deposit * interest_rate * (investment_period / 12)
+        return minimum_deposit * (1 + interest_rate / 100) * (investment_period) - (minimum_deposit * investment_period)
     elif interest_rate_type == "복리":
-        return minimum_deposit * ((1 + interest_rate / 100) ** (investment_period / 12)) - minimum_deposit
+        return minimum_deposit * ((1 + interest_rate / 100) ** (investment_period)) - (minimum_deposit)
     else:
         return minimum_deposit
 
