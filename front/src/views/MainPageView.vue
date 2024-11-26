@@ -41,7 +41,7 @@
         <!-- 예적금 상품 조회 카드 -->
         <div
           style="
-            background: #ffffff;
+            background: #FBF9F4;
             border: 1px solid #e6af69;
             box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
             border-radius: 12px;
@@ -64,7 +64,7 @@
         <!-- 환율 계산기 카드 -->
         <div
           style="
-            background: #ffffff;
+            background: #FBF9F4;
             border: 1px solid #e6af69;
             box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
             border-radius: 12px;
@@ -87,7 +87,7 @@
         <!-- 가까운 은행 찾기 카드 -->
         <div
           style="
-            background: #ffffff;
+            background: #FBF9F4;
             border: 1px solid #e6af69;
             box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
             border-radius: 12px;
@@ -110,7 +110,7 @@
         <!-- 금융 상품 추천 카드 -->
         <div
           style="
-            background: #ffffff;
+            background: #FBF9F4;
             border: 1px solid #e6af69;
             box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
             border-radius: 12px;

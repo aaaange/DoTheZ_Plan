@@ -53,7 +53,7 @@
           <!-- 작성된 리뷰 목록 -->
           <div v-for="(review, index) in reviews" :key="index" style="margin-top: 30px; padding: 30px; border: 1px solid #E6AF69; border-radius: 10px; margin-bottom: 10px; background: #FBF9F4;">
             <div style="font-size: 14px; color: #585547; " >{{ review.user.username }} | {{ review.created_at }}</div>
-            <div style="font-size: 20px; color: #585547; margin-top: 10px;">{{ review.content }}</div>
+            <div style="font-size: 18px; color: #585547; margin-top: 10px;">{{ review.content }}</div>
             <div v-if="review.user.id === user_id"style="margin-top: 20px;">
               <button @click="editReview(review)"  style="padding: 3px 10px; background: #E6AF69; color: #FBF9F4; border: none; border-radius: 15px; font-size: 16px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 700; cursor: pointer; " class="edit-action-button">수정</button>
               <button @click="deleteReview(review)"  style="padding: 3px 10px; background: #E6AF69; color: #FBF9F4; border: none; border-radius: 15px; font-size: 16px; font-family: 'IBM Plex Sans KR', sans-serif; font-weight: 700; cursor: pointer; margin-left: 10px;" class="edit-action-button">삭제</button>
