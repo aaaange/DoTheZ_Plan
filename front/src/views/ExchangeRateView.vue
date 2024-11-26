@@ -136,7 +136,7 @@ export default {
       const dateArray = [];
 
       // 오늘을 포함한 5일간의 날짜 계산
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 100; i++) {
         const date = new Date(today);
         date.setDate(today.getDate() - i); // 오늘부터 5일 전까지
         dateArray.push(date.toISOString().split("T")[0]); // 'yyyy-mm-dd' 형식으로 저장
@@ -154,7 +154,7 @@ export default {
       );
 
         // 여러 요청을 동시에 보냄 (병렬 요청)
-        const responses = await Promise.all(requests);
+        const responses = await Promise.allSettled(requests);
 
         // 데이터를 처리
         const historicalRates = [];
@@ -162,20 +162,24 @@ export default {
 
         // responses를 순회하여 환율 데이터 추출
         responses.forEach((response, index) => {
-          const data = response.data;
+      if (response.status === "fulfilled") {
+        const data = response.value.data;
+        const fromCurrency = data.find((item) => item.cur_unit === this.selectedFromCurrency);
+        const toCurrency = data.find((item) => item.cur_unit === this.selectedToCurrency);
 
-          const fromCurrency = data.find((item) => item.cur_unit === this.selectedFromCurrency);
-          const toCurrency = data.find((item) => item.cur_unit === this.selectedToCurrency);
-
-          if (fromCurrency && toCurrency) {
-            const fromRate = parseFloat(fromCurrency.deal_bas_r.replace(",", "").trim());
-            const toRate = parseFloat(toCurrency.deal_bas_r.replace(",", "").trim());
-            historicalRates.push(isNaN(fromRate) || isNaN(toRate) ? 0 : (fromRate / 1) * toRate);
+        if (fromCurrency && toCurrency) {
+          const fromRate = parseFloat(fromCurrency.deal_bas_r.replace(",", "").trim());
+          const toRate = parseFloat(toCurrency.deal_bas_r.replace(",", "").trim());
+          
+          if (!isNaN(fromRate) && !isNaN(toRate)) {
+            historicalRates.push((fromRate / 1) * toRate); // 환율 값을 배열에 추가
+            labels.push(dateArray[index]); // 날짜 추가
           }
-
-          // 각 응답의 날짜를 라벨로 사용
-          labels.push(dateArray[index]);
-        });
+        }
+      } else {
+        console.warn(`Failed to fetch data for ${dateArray[index]}. Skipping this date.`);
+      }
+    });
 
         // 날짜 순서를 반대로 뒤집기
         this.historicalRates = historicalRates.reverse();
