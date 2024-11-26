@@ -36,4 +36,4 @@ class UserProductSerializer(serializers.ModelSerializer):
             'product',  # Product 외래 키
             'joined_at',  # 가입 날짜
         ]
-        read_only_fields = ['joined_at']  # 자동 생성 필드
+        read_only_fields = ('user', 'product', 'productoption', 'joined_at', )  # 자동 생성 필드
