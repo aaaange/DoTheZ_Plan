@@ -1,7 +1,7 @@
 <template>
   <div class="background">
     <div class="container">
-      <h1>나와 꼭 맞는 상품을 알아봐요</h1>
+      <h1>나와 꼭 맞는 상품을 알아봐요🔍</h1>
       <form @submit.prevent="submitForm" class="survey-form">
 
         <!-- 기타 설문 항목 -->
@@ -34,7 +34,7 @@
               v-model.number="formData[question.field]"
               :placeholder="question.label"
             />
-            <span v-if="question.field === 'minimum_deposit' || question.field === 'fixed_income'">만 원</span>
+            <span v-if="question.field === 'minimum_deposit' || question.field === 'fixed_income' || question.field === 'current_assets'">만 원</span>
             <span v-else-if="question.field === 'investment_period'">개월</span>
             <span v-else-if="question.field === 'expected_return'">%</span>
             <span v-else-if="question.field === 'age'">세</span>
@@ -47,14 +47,6 @@
               v-model="formData[question.field]"
               :placeholder="question.label"
             />
-          </div>
-          <!-- JSON 입력 -->
-          <div v-else-if="question.type === 'json'" class="input-group">
-            <textarea
-              :id="question.field"
-              v-model="formData[question.field]"
-              placeholder="예) { '현금': 5000000, '주식': 20000000 }"
-            ></textarea>
           </div>
         </div>
         <!-- 소비 습관 항목: 가로 정렬 -->
@@ -274,11 +266,12 @@ export default {
 }
 
 h1 {
-  color: #2c3e50;
+  color: #585547;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 70px;
   font-size: 50px;
   justify-content: left;
+  margin-top: 20px;
 }
 
 .survey-form {
