@@ -16,5 +16,4 @@ urlpatterns = [
     path('api/v1/check_state/<str:fin_prdt_cd>/', views.check_state, name='check_state'),     # 구독 상태 확인
     path('api/v1/my/', views.my_subscribed_products, name='my_subscribed_products'),  # 내가 가입한 상품 목록을 반환
     path('api/v1/user_info/', views.user_info, name='user_info'),     # 로그인 인증 구현
-    path('api/v1/product_graph/', views.subscribed_products_graph, name="subscribed_products_graph"),  # 상품 금리 그래프 출력
 ]
