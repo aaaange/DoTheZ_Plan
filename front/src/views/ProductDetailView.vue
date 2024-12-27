@@ -341,6 +341,12 @@ export default {
 
     // 상품 등록 토글
     async toggleSubscription() {
+      if (!this.token) {
+        console.error("사용자 인증이 필요합니다."); // 토큰이 없을 경우 에러
+        alert('로그인 후 이용해주세요');
+        return;
+      }
+
       try {
         const productId = this.$route.params.productId; // 현재 상품 ID
 
