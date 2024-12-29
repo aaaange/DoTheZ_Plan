@@ -4,8 +4,8 @@
       <h1 class="title">환율 계산기</h1>
       <p class="subtitle">간편하게 환율 정보를 알아볼 수 있어요!</p>
       <div class="exchange-info">
-        <p>1 {{ selectedFromCurrencyName }} =</p> 
-        <p class="exchange-rate">{{ exchangeRate }} {{ selectedToCurrencyName }}</p>
+        <p>{{amount}} {{ selectedFromCurrencyName }} =</p> 
+        <p class="exchange-rate">{{ (amount * exchangeRate).toFixed(5) }} {{ selectedToCurrencyName }}</p>
       </div>
       <div class="input-group">
         <div class="input-box">
@@ -135,7 +135,7 @@ export default {
       const today = new Date();
       const dateArray = [];
 
-      // 오늘을 포함한 5일간의 날짜 계산
+      // 오늘을 포함한 100일간의 날짜 계산
       for (let i = 0; i < 100; i++) {
         const date = new Date(today);
         date.setDate(today.getDate() - i); // 오늘부터 5일 전까지
@@ -172,7 +172,7 @@ export default {
           const toRate = parseFloat(toCurrency.deal_bas_r.replace(",", "").trim());
           
           if (!isNaN(fromRate) && !isNaN(toRate)) {
-            historicalRates.push((fromRate / 1) * toRate); // 환율 값을 배열에 추가
+            historicalRates.push(fromRate / toRate); // 환율 값을 배열에 추가
             labels.push(dateArray[index]); // 날짜 추가
           }
         }
