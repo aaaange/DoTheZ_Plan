@@ -78,11 +78,11 @@ def exchange_rate(request):
     }
     
     # DB에 해당 날짜의 데이터가 없을 경우 가져와서 저장
-    # if not ExchangeRate.objects.filter(search_date=search_date).exists():
-    #     save_exchange_rate(search_date)
+    if not ExchangeRate.objects.filter(search_date=search_date).exists():
+        save_exchange_rate(search_date)
     
     # # 환율 정보 조회
-    # response_data, search_date = get_recent_exchange_date(search_date, base_url, params)
+    response_data, search_date = get_recent_exchange_date(search_date, base_url, params)
 
     # 필터링된 환율 데이터 가져오기
     exchange_rates = ExchangeRate.objects.filter(search_date=search_date, cur_unit__in=[country_from, country_to])
